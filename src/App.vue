@@ -1,13 +1,19 @@
 <script setup>
-import Home from "../src/views/home.vue"
+import Sidebar from "@/components/sidebar.vue"
+import Home from "@/views/home.vue"
 </script>
 
 <template>
-  <header>
-    <h1 class="bg-red-400">Inventario para vender</h1>
-    <Home/>
-  </header>
   <router-view></router-view>
+  <div>
+    <Sidebar/>
+    <Home />
+  </div>
+  
 </template>
 
-<style scoped></style>
+<style>
+body{
+  background-color: #E7E8F3;
+}
+</style>

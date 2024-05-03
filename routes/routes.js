@@ -1,5 +1,5 @@
-import Home from "../src/views/home.vue";
-
+import Sidebar from "@/components/sidebar.vue";
+import Home from "@/views/home.vue";
 
 // import { LoginStore } from "../src/store/login.js";
 
@@ -40,15 +40,20 @@ export const routes = [
     //     component: Login,
     //     beforeEnter: (to, from, next) => {
     //         if (checkAuth()) {
-    //           next({ name: "Inventario" });
+    //           next({ name: "Home" });
     //         } else {
     //           next();
     //         }
     //       },
     // },
     {
+      path:"/",
+      name:"sidebar",
+      component: Sidebar,
+    },
+    {
       path:"/home",
-      name:"home",
+      name:"Home",
       component: Home,
     },
 
