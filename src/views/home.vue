@@ -3,13 +3,13 @@
         <!-- title  -->
         <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
             <div>
-                <h1 class="text-[#5A30FC] text-3xl font-bold pt-4 rounded-xl">Home</h1>
+                <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl">Home</h1>
             </div>
             <!-- search  -->
             <div class='w-80'>
                 <div className="w-full relative">
                     <span
-                        className="material-icons text-lg text-[#5A30FC] font-bold absolute left-3 top-1/2 -translate-y-1/2">
+                        className="material-icons text-lg text-[#04162d] font-bold absolute left-3 top-1/2 -translate-y-1/2">
                         search
                     </span>
                     <input type="text" placeholder='Buscar'

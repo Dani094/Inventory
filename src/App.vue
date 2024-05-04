@@ -4,10 +4,10 @@ import Home from "@/views/home.vue"
 </script>
 
 <template>
-  <router-view></router-view>
   <div>
     <Sidebar/>
-    <Home />
+    <!-- <Home /> -->
+    <router-view></router-view>
   </div>
   
 </template>

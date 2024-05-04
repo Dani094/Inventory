@@ -1,4 +1,4 @@
-import Sidebar from "@/components/sidebar.vue";
+import Login from "@/views/login.vue"
 import Home from "@/views/home.vue";
 
 // import { LoginStore } from "../src/store/login.js";
@@ -46,15 +46,16 @@ export const routes = [
     //         }
     //       },
     // },
-    {
-      path:"/",
-      name:"sidebar",
-      component: Sidebar,
-    },
+
     {
       path:"/home",
       name:"Home",
       component: Home,
     },
-
+    {
+      path:"/",
+      name:"Login",
+      component: Login,
+    },
+    
 ]
