@@ -9,7 +9,7 @@
             </li>
             <!-- options  -->
             <li class='bg-[#E7E8F3] p-4 rounded-tl-xl rounded-bl-xl transition'>
-                <router-link to="">
+                <router-link to="/home">
                     <span class="material-icons bg-[#04162d] block rounded-xl text-center text-2xl">
                         home
                     </span>

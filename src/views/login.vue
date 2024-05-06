@@ -1,48 +1,104 @@
 <template>
-      <div className="grid grid-cols-12 h-[100vh] justify-center items-center bg-white fullscreen">
-      <div className="col-span-2"></div>
-      <!-- content login  -->
-      <div className="col-span-8 lg:rounded-lg lg:border border-black flex">
-        <!-- logo  -->
-        <div className="md:w-[40%] w-full  lg:p-10">
-          <div className="w-full mb-10">
-            <img
-              src=""
-              alt="logo"
-              className="w-[90%]"
-            />
+  <div className="grid grid-cols-12 h-[100vh] justify-center items-center bg-[#E7E8F3] fullscreen">
+    <div className="col-span-1 lg:col-span-2"></div>
+    <!-- container -->
+    <div className="col-span-10 lg:col-span-8 flex justify-center items-center">
+      <!-- content login -->
+      
+      <q-form @submit.prevent.stop="validar()" class="flex w-full lg:w-[40%] justify-center items-center shadow-md">
+        <!-- titulo -->
+        <div class="bg-white rounded-xl w-full">
+          <div
+            class="mx-4 -mt-10  mb-4 flex h-28 items-center justify-center rounded-xl bg-[#04162d] shadow-lg shadow-[#04162d]">
+            <h3 class="font-sans text-3xl font-semibold text-white">
+              BIENVENIDO
+            </h3>
           </div>
-          <!-- inputs   -->
-          <form>
-            <div>
-              <h4 className="lg:text-[17px]">
-                <strong>Usuario</strong>
-              </h4>
-              
+          <!-- inputs -->
+          <div class="p-8">
+            <div class="w-full mt-6">
+              <h5 class="text-xl font-serif"><strong>Usuario</strong></h5>
+              <q-input autocomplete="current-text" v-model="user" label="DIGITE SU CORREO" stack-label>
+                <template v-slot:append>
+                  <q-icon name="person" class="person text-[#04162d]" />
+                </template>
+              </q-input>
             </div>
+            <div class="w-full mt-6">
+              <h5 class="text-xl font-serif"><strong>Contraseña</strong></h5>
+              <q-input class="input" autocomplete="new-password" :type="isPwd ? 'password' : 'text'" v-model="password"
+                label="DIGITE SU CONTRASEÑA" stack-label>
+                <template v-slot:append>
+                  <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer text-[#04162d]"
+                    @click="isPwd = !isPwd" />
+                </template>
+              </q-input>
+              <div class="-ml-2.5">
 
-            <div>
-              <h4 className="lg:text-[17px]">
-                <strong>Contraseña</strong>
-              </h4>
-              
+              </div>
             </div>
-          </form>
-          <!-- boton ingresar -->
-          <div className="w-full flex items-center justify-center mt-5 ">
-            <button class="border rounded-lg p-2 bg-[#04162d] text-white w-full lg:w-[150px] font-serif">
-              INICIAR SESIÓN
-            </button>
+            <!-- btn ingresar  -->
+            <div class="p-6 pt-10">
+              <q-btn type="submit" :loading="loading"
+                class="w-full rounded-lg bg-[#04162d] py-3 px-6 text-center font-sans text-xs font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-[#04162d] active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+                Ingresar
+              </q-btn>
+              <p class="mt-6 flex justify-center font-sans text-sm font-light leading-normal text-inherit antialiased">
+                No tienes una cuenta?
+                <a class="ml-1 block font-sans text-sm font-bold leading-normal text-[#04162d] antialiased"
+                  href="#signup">
+                  Registrarse
+                </a>
+              </p>
+            </div>
           </div>
+
         </div>
-         <!-- img login -->
-        <div className="w-[60%] hidden lg:block border-t border-r border-b rounded-tr-lg rounded-br-lg">
-          <img src="" className="w-full h-full" />
-        </div>
+      </q-form>
+      <!-- img login -->
+      <div class="w-[60%] hidden lg:block  border-t border-r border-b rounded-tr-lg rounded-br-lg">
+        <img src="https://img.freepik.com/free-photo/computer-security-with-login-password-padlock_107791-16191.jpg"
+          class="w-full h-full" />
       </div>
-      <div className="col-span-2"></div>
     </div>
+    <div className="col-span-1 lg:col-span-2"></div>
+  </div>
 </template>
 
-<!-- it-comunicaciones-logo.png  -->
-<!-- img-login-it.jpg -->
+<script setup>
+import { ref } from "vue"
+import { useRouter } from "vue-router";
+// import { LoginStore } from "../store/login.js";
+
+// const store = LoginStore();
+
+let user = ref("")
+let password = ref("")
+let isPwd = ref(true);
+let router = useRouter();
+let loading = ref(false);
+
+async function validar() {
+  pasarHome();
+  try {
+    loading.value = true;
+    return await store
+      .newLogin({
+        user: user.value,
+        password: password.value,
+      })
+      .then((res) => {
+        pasarHome();
+      });
+  } catch (error) {
+    console.log(error);
+    loading.value = false;
+  }
+  loading.value = false;
+}
+
+function pasarHome() {
+  router.push("/home");
+}
+
+</script>
