@@ -4,18 +4,17 @@
     <!-- container -->
     <div className="col-span-10 lg:col-span-8 flex justify-center items-center">
       <!-- content login -->
-      
       <q-form @submit.prevent.stop="validar()" class="flex w-full lg:w-[40%] justify-center items-center shadow-md">
         <!-- titulo -->
         <div class="bg-white rounded-xl w-full">
           <div
-            class="mx-4 -mt-10  mb-4 flex h-28 items-center justify-center rounded-xl bg-[#04162d] shadow-lg shadow-[#04162d]">
+            class="mx-4 -mt-10 mb-4 flex h-28 items-center justify-center rounded-xl bg-[#04162d] shadow-lg shadow-[#04162d]">
             <h3 class="font-sans text-3xl font-semibold text-white">
               BIENVENIDO
             </h3>
           </div>
           <!-- inputs -->
-          <div class="p-8">
+          <div class="p-10">
             <div class="w-full mt-6">
               <h5 class="text-xl font-serif"><strong>Usuario</strong></h5>
               <q-input autocomplete="current-text" v-model="user" label="DIGITE SU CORREO" stack-label>
@@ -68,9 +67,9 @@
 <script setup>
 import { ref } from "vue"
 import { useRouter } from "vue-router";
-// import { LoginStore } from "../store/login.js";
+import { LoginStore } from "../services/login.js";
 
-// const store = LoginStore();
+const store = LoginStore();
 
 let user = ref("")
 let password = ref("")
@@ -79,11 +78,9 @@ let router = useRouter();
 let loading = ref(false);
 
 async function validar() {
-  pasarHome();
   try {
     loading.value = true;
-    return await store
-      .newLogin({
+    return await store.newLogin({
         user: user.value,
         password: password.value,
       })

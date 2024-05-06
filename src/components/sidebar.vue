@@ -16,7 +16,7 @@
                 </router-link>
             </li>
             <li class='hover:bg-[#E7E8F3] group p-4 rounded-tl-xl rounded-bl-xl transition'>
-                <router-link to="">
+                <router-link to="/inventory">
                     <span class="material-icons group-hover:bg-[#04162d] block rounded-xl text-center text-2xl">
                         inventory
                     </span>
@@ -48,7 +48,7 @@
         <div>
             <ul class="pl-4">
                 <li class="hover:bg-[#E7E8F3] rounded-tl-xl rounded-bl-xl p-4 text-center transition">
-                    <router-link to="/">
+                    <router-link to="/" @click="logout()">
                         <span class="material-icons bg-[#04162d] block rounded-xl text-2xl font-bold">
                             logout
                         </span>
@@ -86,11 +86,29 @@
 
 <script setup>
 import {ref} from "vue"
+import { LoginStore } from "../services/login.js";
+import { useRouter } from "vue-router";
 
 let showSidebar=ref(false)
 
 function toggleSidebar() {
     showSidebar.value = !showSidebar.value
 }
+
+const storelogin = LoginStore();
+const router = useRouter();
+
+const logout = () => {
+  storelogin.logoutUser();
+  router.push("/");
+};
+
+const currentDate = new Date();
+const dateLogin = new Date(storelogin.dateLogin);
+
+//si la fecha actual es mayor a la fecha de inicio de sesion + 1 dia
+if (currentDate > dateLogin.setDate(dateLogin.getDate() + 1)) {
+  logout();
+};
 
 </script>
