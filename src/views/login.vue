@@ -40,7 +40,7 @@
             <!-- btn ingresar  -->
             <div class="p-6 pt-10">
               <q-btn type="submit" :loading="loading"
-                class="w-full rounded-lg bg-[#04162d] py-3 px-6 text-center font-sans text-xs font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-[#04162d] active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none">
+                class="w-full rounded-lg bg-[#04162d] py-3 px-6 text-center font-sans text-xs font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-[#04162d] ">
                 Ingresar
               </q-btn>
               <p class="mt-6 flex justify-center font-sans text-sm font-light leading-normal text-inherit antialiased">
