@@ -38,9 +38,7 @@
             </li>
             <li class='hover:bg-[#E7E8F3] group p-4 rounded-tl-xl rounded-bl-xl transition'>
                 <router-link to="">
-                    <span class="material-icons group-hover:bg-[#04162d] block rounded-xl text-center text-2xl">
-                        notifications
-                    </span>
+                        <i class="fa-solid fa-file-excel group-hover:bg-[#04162d] block rounded-xl text-center text-2xl"></i>
                 </router-link>
             </li>
         </ul>

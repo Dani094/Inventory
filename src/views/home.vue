@@ -1,21 +1,16 @@
 <template>
-    <div class="lg:pl-40 lg:pr-10 p-4">
+    <div class="lg:pl-40 lg:pr-20 p-4">
         <!-- title  -->
         <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
             <div>
-                <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl">Home</h1>
+                <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl">
+                    <span class="material-icons text-5xl">
+                        arrow_right
+                    </span>
+                    HOME</h1>
             </div>
             <!-- search  -->
-            <div class='w-80'>
-                <div className="w-full relative">
-                    <span
-                        className="material-icons text-lg text-[#04162d] font-bold absolute left-3 top-1/2 -translate-y-1/2">
-                        search
-                    </span>
-                    <input type="text" placeholder='Buscar'
-                        className="bg-white w-full py-2 pl-10 pr-4 rounded-lg outline-none" />
-                </div>
-            </div>
+           <Search />
         </div>
         <!-- graficas  -->
         <div class="bg-white rounded-2xl">
@@ -23,3 +18,7 @@
         </div>
     </div>
 </template>
+
+<script setup>
+import Search from "@/components/search.vue"
+</script>

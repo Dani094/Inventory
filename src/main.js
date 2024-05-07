@@ -6,6 +6,7 @@ import '@quasar/extras/material-symbols-outlined/material-symbols-outlined.css'
 import '@quasar/extras/material-symbols-rounded/material-symbols-rounded.css'
 import '@quasar/extras/material-symbols-sharp/material-symbols-sharp.css'
 import '@quasar/extras/bootstrap-icons/bootstrap-icons.css'
+import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
 
 import 'quasar/src/css/index.sass'
 
