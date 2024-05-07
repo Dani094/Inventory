@@ -23,7 +23,7 @@
                 </router-link>
             </li>
             <li class='hover:bg-[#E7E8F3] group p-4 rounded-tl-xl rounded-bl-xl transition'>
-                <router-link to="">
+                <router-link to="/exits">
                     <span class="material-icons group-hover:bg-[#04162d] block rounded-xl text-center text-2xl">
                         production_quantity_limits
                     </span>

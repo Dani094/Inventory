@@ -1,7 +1,7 @@
 import Login from "@/views/login.vue"
 import Home from "@/views/home.vue";
 import Inventory from "@/views/inventory.vue";
-
+import Exits from "@/views/exits.vue";
 import { LoginStore } from "../src/services/login.js";
 
 const checkAuth = () => {
@@ -57,5 +57,9 @@ export const routes = [
       name:"Inventory",
       component: Inventory,
     },
-    
+    {
+      path:"/exits",
+      name:"Exits",
+      component: Exits,
+    },
 ]
