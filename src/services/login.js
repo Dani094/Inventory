@@ -53,7 +53,7 @@ const logoutUser= ()=>{
   user.value = ""
   dateLogin.value = ""
   Email.value = ""
-  notifySuccess('Sesión Cerrada');
+  notifySuccess('Se ha cerrado la sesión.');
 }
 
 
