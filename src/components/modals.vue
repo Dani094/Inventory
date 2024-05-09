@@ -2,13 +2,13 @@
   <q-card class="w-[400px]">
     <q-card-section class="bg-[#04162d]">
       <h5 class="text-center text-white font-bold p-2 text-xl">
-        DILIGENCIA LA INFORMACIÓN
+        INGRESA LOS DATOS
       </h5>
     </q-card-section>
-    <div class="py-4">
+    <div class="p-4">
       <q-form ref="myForm" @submit.prevent.stop="InventarioPost()">
-        <div class="flex justify-center">
-          <div class="">
+        <div class="flex w-full justify-center">
+          <div class="w-[45%]">
             <q-input
               type="text"
               v-model="proveedor"
@@ -19,53 +19,22 @@
                   (val && val.trim().length > 0) || 'Digite el Proveedor',
               ]"
             />
-            <q-select
-              v-model="categoria"
-              :options="categorias"
-              label="Categoria"
+            <q-input
+              type="text"
+              v-model="name"
+              label="Nombre del Producto"
               lazy-rules
               :rules="[
                 (val) =>
                   (val && val.toString().trim().length > 0) ||
-                  'Escoja La Categoria',
-              ]"
-            />
-            <q-input
-              type="text"
-              v-model="modelo"
-              label="Modelo"
-              lazy-rules
-              :rules="[
-                (val) => (val && val.trim().length > 0) || 'Digite el Modelo',
+                  'Digite el Nombre',
               ]"
             />
             <q-input
               type="text"
               v-model="serial"
               label="Serial"
-              style="margin-bottom: 20px"
-            />
-            <q-input
-              type="number"
-              v-model="idInvent"
-              label="ID"
-              lazy-rules
-              :rules="[
-                (val) => (val && val.trim().length > 0) || 'Dijite el ID',
-              ]"
-            />
-          </div>
-          <div>
-            <q-select
-              v-model="estadoFisico"
-              :options="estadosFisico"
-              label="Estado Físico"
-              lazy-rules
-              :rules="[
-                (val) =>
-                  (val && val.toString().trim().length > 0) ||
-                  'Escoja el Estado Físico',
-              ]"
+              class="mb-5"
             />
             <q-input
               type="number"
@@ -73,22 +42,29 @@
               label="Unidades"
               lazy-rules
               :rules="[
-                (val) =>
-                  (val && val.trim().length > 0) || 'Digite las Unidades',
+                (val) => (val && val.trim().length > 0) || 'Digite las Unidades',
               ]"
             />
+          </div>
+          <div class="w-[45%] ml-4">
             <q-input
               type="number"
-              v-model="precio"
+              v-model="price"
               label="Precio Unitario"
               lazy-rules
               :rules="[
                 (val) => (val && val.trim().length > 0) || 'Digite el Precio',
               ]"
             />
+            <q-input
+              type="date"
+              v-model="expirationDate"
+              label="Fecha de Vencimiento"
+              class="mb-5"
+            />
             <q-select
-              v-model="estado"
-              :options="estados"
+              v-model="state"
+              :options="states"
               label="Estado"
               lazy-rules
               :rules="[
@@ -98,8 +74,8 @@
               ]"
             />
             <q-select
-              v-model="crearCopias"
-              :options="opExiste"
+              v-model="Copias"
+              :options="opCopias"
               label="¿Copias?"
               lazy-rules
               :rules="[
@@ -111,13 +87,13 @@
             <q-input
               v-if="crearCopias == 'Si'"
               type="number"
-              v-model="existencias"
+              v-model="copias"
               label="Copias"
               lazy-rules
               :rules="[
                 (val) =>
                   (val && val.trim().length > 0) ||
-                  'Digite la Cantidad de Existencias',
+                  'Digite la Cantidad de Copias',
               ]"
             />
           </div>
@@ -146,7 +122,29 @@
 
 <script>
 import { ref } from "vue";
+import { defineProps } from 'vue';
 
-let showModal = ref(false);
 let InventarioPost=ref()
+
+let proveedor=ref('');
+let name=ref('');
+let serial=ref('');
+let unidades=ref(0);
+let price=ref(0);
+let expirationDate=ref('');
+let state=ref('');
+let Copias =ref('');
+let opCopias=ref(["Sí", "No"])
+
+const props = defineProps({
+  proveedor: String,
+  name: String,
+  serial: String,
+  unidades: Number,
+  price: Number,
+  expirationDate: String,
+  state: String,
+  copias: Number,
+  opcionesCopias: Array,
+});
 </script>

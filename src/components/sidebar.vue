@@ -30,14 +30,14 @@
                 </router-link>
             </li>
             <li class='hover:bg-[#E7E8F3] group p-4 rounded-tl-xl rounded-bl-xl transition'>
-                <router-link to="">
+                <router-link to="/quotation">
                     <span class="material-icons group-hover:bg-[#04162d] block rounded-xl text-center text-2xl">
                         attach_money
                     </span>
                 </router-link>
             </li>
             <li class='hover:bg-[#E7E8F3] group p-4 rounded-tl-xl rounded-bl-xl transition'>
-                <router-link to="">
+                <router-link to="/reports">
                         <i class="fa-solid fa-file-excel group-hover:bg-[#04162d] block rounded-xl text-center text-2xl"></i>
                 </router-link>
             </li>
@@ -84,7 +84,7 @@
 
 <script setup>
 import {ref} from "vue"
-import { LoginStore } from "../services/login.js";
+import { LoginStore } from "../store/login.js";
 import { useRouter } from "vue-router";
 
 let showSidebar=ref(false)

@@ -1,0 +1,346 @@
+import { defineStore } from 'pinia'
+import {requestAxios} from "../Global/axios.js"
+import { notifyError, notifySuccess } from "../Global/notify.js";
+import {LoginStore} from "./login.js"
+
+
+export const inventoryStore = defineStore('inventoryStore', () => {
+  const useToken = LoginStore();
+
+    async function GetInventory() {
+        try {
+          return await requestAxios.get("/inventory/all", {
+            headers: {
+              token: useToken.token,
+            },
+        });
+  
+        } catch (error) {
+          notifyError('No fue posible obtener el Inventario');
+        }
+      }
+      
+      async function Filter(filter) {
+        console.log(filter);
+        try {
+          return await requestAxios.get(`/inventory/${filter}`, {
+            headers: {
+              token: useToken.token,
+            },
+        });
+  
+        } catch (error) {
+            notifyError('No Se Encuentra en el Inventario');
+        }
+      }
+
+
+      async function listInvenCharala() {
+        try {
+          return await requestAxios.get(`/inventario/all/charala`, {
+            headers: {
+              token: useToken.token,
+            },
+        });
+  
+        } catch (error) {
+          notifyError('No fue posible obtener el Inventario');
+        }
+      }
+
+      async function listInvenVilla() {
+        try {
+          return await requestAxios.get(`/inventario/all/villanueva`, {
+            headers: {
+              token: useToken.token,
+            },
+        });
+  
+        } catch (error) {
+          notifyError('No fue posible obtener el Inventario');
+        }
+      }
+
+      async function listInventarioEntradas() {
+        try {
+          return await requestAxios.get("/inventario/entradas", {
+            headers: {
+              token: useToken.token,
+            },
+        });
+  
+        } catch (error) {
+          notifyError('No fue posible obtener las Entradas');
+        }
+      }
+
+      async function listEntradasBarichara() {
+        try {
+          return await requestAxios.get("/inventario/entradas/barichara", {
+            headers: {
+              token: useToken.token,
+            },
+        });
+  
+        } catch (error) {
+          notifyError('No fue posible obtener las Entradas');
+        }
+      }
+
+      async function listEntradasVilla() {
+        try {
+          return await requestAxios.get("/inventario/entradas/villa", {
+            headers: {
+              token: useToken.token,
+            },
+        });
+  
+        } catch (error) {
+          notifyError('No fue posible obtener las Entradas');
+        }
+      }
+
+      async function listEntradasCharala() {
+        try {
+          return await requestAxios.get("/inventario/entradas/charalá", {
+            headers: {
+              token: useToken.token,
+            },
+        });
+  
+        } catch (error) {
+          notifyError('No fue posible obtener las Entradas');
+        }
+      }
+
+      async function listFiltro(filtro) {
+        try {
+          return await requestAxios.get(`/inventario/name/${filtro}`
+         
+           );
+  
+        } catch (error) {
+          notifyError('No Se Encuentra en el Inventario');
+        }
+      }
+
+      async function listFiltroBarichara(filtro) {
+        try {
+          return await requestAxios.get(`/inventario/name/${filtro}/barichara`
+         
+           );
+  
+        } catch (error) {
+          notifyError('No Se Encuentra en el Inventario');
+        }
+      }
+
+      async function listFiltroCharala(filtro) {
+        try {
+          return await requestAxios.get(`/inventario/name/${filtro}/charala`
+         
+           );
+  
+        } catch (error) {
+          notifyError('No Se Encuentra en el Inventario');
+        }
+      }
+
+      async function listFiltroVilla(filtro) {
+        try {
+          return await requestAxios.get(`/inventario/name/${filtro}/villa`
+         
+           );
+  
+        } catch (error) {
+          notifyError('No Se Encuentra en el Inventario');
+        }
+      }
+
+      async function FiltroEntradas(filtro) {
+        try {
+          return await requestAxios.get(`/inventario/entradas/${filtro}`
+         
+           );
+  
+        } catch (error) {
+          notifyError('No Se Encuentra en las Entradas');
+        }
+      }
+
+      async function FiltroEntradasBarichara(filtro) {
+        try {
+          return await requestAxios.get(`/inventario/entradas/${filtro}/barichara`
+         
+           );
+  
+        } catch (error) {
+          notifyError('No Se Encuentra en las Entradas');
+        }
+      }
+
+      async function FiltroEntradasCharala(filtro) {
+        try {
+          return await requestAxios.get(`/inventario/entradas/${filtro}/charala`
+         
+           );
+  
+        } catch (error) {
+          notifyError('No Se Encuentra en las Entradas');
+        }
+      }
+
+      async function FiltroEntradasVilla(filtro) {
+        try {
+          return await requestAxios.get(`/inventario/entradas/${filtro}/villa`
+         
+           );
+  
+        } catch (error) {
+          notifyError('No Se Encuentra en las Entradas');
+        }
+      }
+
+      async function listarFecha(fecha) {
+        try {
+          return await requestAxios.get(`/inventario/getFechas/${fecha}`
+         
+           );
+  
+        } catch (error) {
+          notifyError('No Se Encuentra datos en esa Fecha');
+        }
+      }
+
+
+      async function listarForGrafica(proveedor,categoria,categoria2,filFecha) {
+
+        try {
+          return await requestAxios.get(`/inventario/filtroGrafica/${proveedor}/${categoria}/${categoria2}/${filFecha}`
+         
+           );
+  
+        } catch (error) {
+          console.error(error);
+          notifyError('No Se Encuentran Datos');
+        }
+      }
+
+
+      async function PostInventory(Proveedor,Categoria,Modelo,Serial, IdInvent, Oficina, Unidades,Precio,Estado, EstadoFisico) {
+        try {
+           return await requestAxios.post('/inventario/post',{
+                Proveedor: Proveedor,
+                Categoria: Categoria,
+                Modelo: Modelo,
+                Serial: Serial, 
+                IdInvent: IdInvent,
+                Oficina: Oficina,  
+                Unidades: Unidades,
+                Precio: Precio,
+                Estado: Estado,
+                EstadoFisico:EstadoFisico
+            },
+            { headers: {
+              token: useToken.token,
+            },
+          }
+          ),
+            notifySuccess('Registrado correctamente');
+          } catch (error) {
+            console.log(error);
+            notifyError('No fue posible registrar o el serial ya existen en la base de datos');
+          }
+      }
+
+
+      async function InventarioPut(id,proveedor,categoria,modelo,serial, idInvent, oficina, unidades,precio,estado,estadoFisico ) { 
+        try {
+            return await requestAxios.put(`/inventario/put/${id}`,
+            {
+              Proveedor: proveedor,
+              Categoria: categoria,
+              Modelo: modelo,
+              Serial: serial, 
+              IdInvent: idInvent,
+              Oficina: oficina,  
+              Unidades: unidades,
+              Precio: precio,
+              Estado: estado,
+              EstadoFisico: estadoFisico
+            },
+            { headers: {
+              token: useToken.token,
+            },
+          }
+          ),
+            notifySuccess('Inventario Actualizado Correctamente');
+          } catch (error) {
+            console.log(error);
+            notifyError('No se pudo Actualizar el Inventario Correctamente');
+          }
+      }
+
+
+      async function SalidaPost(serialInvent,idInvent2,categoriaS,modeloS,tipoSalida,nametecnico,oficinaS,municipioSalida,cliente, direccionCliente,cantidadSalida )
+      { 
+        console.log(cantidadSalida);
+        try {
+            return await requestAxios.post(`/salidas/post`,
+            {
+              Serial:serialInvent,
+              IdInvent:idInvent2,
+              Categoria: categoriaS,
+              Modelo: modeloS,
+              TipoSalida: tipoSalida,
+              NameTecnico: nametecnico,
+              Oficina: oficinaS,
+              MunicipioSalida: municipioSalida,
+              Cliente: cliente, 
+              Direccion: direccionCliente,
+              Unidades: cantidadSalida,
+            },
+            { headers: {
+              token: useToken.token,
+            },
+          }
+          ),
+            notifySuccess('Salida Registrada Correctamente');
+          } catch (error) {
+            console.log(error);
+            notifyError('No se pudo Registrar la Salida Correctamente');
+          }
+      }
+
+      async function UnidadesPut(id, unidadesTotales,cantidadSalida) { 
+        try {
+            return await requestAxios.put(`/inventario/putUnidades/${id}`,
+            {
+              Unidades: unidadesTotales-cantidadSalida,  
+            }
+          ),
+            notifySuccess('Cantidad Actualizada Correctamente');
+          } catch (error) {
+            console.log(error);
+            notifyError('No se pudo Actualizar la Cantidad Correctamente');
+          }
+      }
+
+      async function Inventariodelete(id) {
+        try {
+          return await requestAxios.delete(`/inventario/delete/${id}`
+      ),
+            notifySuccess('Articulo Eliminado Correctamente');
+          }  catch (error) {
+          console.error(error);
+          return error;
+        }
+      }
+      
+
+    return {GetInventory,Filter,PostInventory }
+  },
+  {
+    persist: true,
+  }
+  );

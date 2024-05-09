@@ -67,7 +67,7 @@
 <script setup>
 import { ref } from "vue"
 import { useRouter } from "vue-router";
-import { LoginStore } from "../services/login.js";
+import { LoginStore } from "../store/login.js";
 
 const store = LoginStore();
 
