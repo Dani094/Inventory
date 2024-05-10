@@ -6,12 +6,12 @@
       </h5>
     </q-card-section>
     <div class="p-4">
-      <q-form ref="myForm" @submit.prevent.stop="InventarioPost()">
+      <q-form ref="myForm" @submit.prevent.stop="handleSubmit()">
         <div class="flex w-full justify-center">
           <div class="w-[45%]">
             <q-input
               type="text"
-              v-model="proveedor"
+              v-model="supplier"
               label="Proveedor"
               lazy-rules
               :rules="[
@@ -38,7 +38,7 @@
             />
             <q-input
               type="number"
-              v-model="unidades"
+              v-model="units"
               label="Unidades"
               lazy-rules
               :rules="[
@@ -74,7 +74,7 @@
               ]"
             />
             <q-select
-              v-model="Copias"
+              v-model="copias"
               :options="opCopias"
               label="¿Copias?"
               lazy-rules
@@ -85,9 +85,9 @@
               ]"
             />
             <q-input
-              v-if="crearCopias == 'Si'"
+              v-if="copias == 'Sí'"
               type="number"
-              v-model="copias"
+              v-model="crearCopias"
               label="Copias"
               lazy-rules
               :rules="[
@@ -117,34 +117,91 @@
         </div>
       </q-form>
     </div>
-  </q-card>
+  </q-card>        
 </template>
 
-<script>
-import { ref } from "vue";
-import { defineProps } from 'vue';
+<script setup>
+import { ref,onMounted } from "vue";
+import { inventoryStore } from "@/store/inventory.js";
+import { LoginStore } from "../store/login.js";
 
-let InventarioPost=ref()
 
-let proveedor=ref('');
+const storeInventory = inventoryStore();
+const storeLogin = LoginStore();
+
+let loading=ref()
+
+let supplier=ref('');
 let name=ref('');
 let serial=ref('');
-let unidades=ref(0);
-let price=ref(0);
+let units=ref();
+let price=ref();
 let expirationDate=ref('');
-let state=ref('');
-let Copias =ref('');
+let state=ref('Disponible');
+let states=ref(["Disponible","Agotado", "Oferta"])
+let copias =ref('');
 let opCopias=ref(["Sí", "No"])
+let crearCopias=ref()
+let user=ref(storeLogin.Email)
 
-const props = defineProps({
-  proveedor: String,
-  name: String,
-  serial: String,
-  unidades: Number,
-  price: Number,
-  expirationDate: String,
-  state: String,
-  copias: Number,
-  opcionesCopias: Array,
+
+function handleSubmit() {
+  // Ejecutar la función que se pasa por prop (en este caso, `inventoryPost`)
+  inventoryPost();
+}
+
+
+async function InventoryPost() {
+  loading.value = true;
+  await storeInventory.PostInventory(
+    supplier.value,
+    name.value,
+    serial.value,
+    units.value,
+    price.value,
+    expirationDate.value,
+    state.value,
+    user.value
+  );
+  if (crearCopias.value >= 1) {
+    // Crea una copia del elemento sin duplicar el serial
+    const itemToDuplicate = {
+      Supplier: supplier.value,
+      Name: name.value,
+      Serial: serial.value,
+      Units: units.value,
+      Price: price.value,
+      ExpirationDate: expirationDate.value,
+      State: state.value,
+      UserEmail: user.value
+    };
+    for (let i = 0; i < crearCopias.value; i++) {
+      const duplicatedItem = {
+        ...itemToDuplicate,
+      };
+      // Realiza la petición al servidor para guardar la duplicación
+      await storeInventory.PostInventory(
+        duplicatedItem.Supplier,
+        duplicatedItem.Name,
+        duplicatedItem.Serial,
+        duplicatedItem.Units,
+        duplicatedItem.Price,
+        duplicatedItem.ExpirationDate,
+        duplicatedItem.State,
+        duplicatedItem.UserEmail
+      );
+    }
+  }
+  showModal.value = false;
+  // search();
+  loading.value = false;
+}
+
+
+
+onMounted(() => {
+  // setInterval(() => {
+  //   console.log(showModal.value);
+  // }, 2000);
 });
 </script>

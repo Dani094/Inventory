@@ -227,19 +227,17 @@ export const inventoryStore = defineStore('inventoryStore', () => {
       }
 
 
-      async function PostInventory(Proveedor,Categoria,Modelo,Serial, IdInvent, Oficina, Unidades,Precio,Estado, EstadoFisico) {
+      async function PostInventory(supplier,name,serial,units, price, expirationDate, state, user) {
         try {
-           return await requestAxios.post('/inventario/post',{
-                Proveedor: Proveedor,
-                Categoria: Categoria,
-                Modelo: Modelo,
-                Serial: Serial, 
-                IdInvent: IdInvent,
-                Oficina: Oficina,  
-                Unidades: Unidades,
-                Precio: Precio,
-                Estado: Estado,
-                EstadoFisico:EstadoFisico
+           return await requestAxios.post('/inventory/post',{
+              Supplier: supplier,
+              Name: name,
+              Serial: serial,
+              Units: units,
+              Price: price,
+              ExpirationDate: expirationDate,
+              State: state,
+              UserEmail: user
             },
             { headers: {
               token: useToken.token,

@@ -13,7 +13,6 @@
 <script setup>
 import { ref,onMounted } from 'vue';
 // import { inventoryStore } from "@/store/inventory.js";
-import { defineProps } from 'vue';
 
 // const storeInventory = inventoryStore();
 

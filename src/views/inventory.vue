@@ -12,13 +12,13 @@
             <div class="flex items-center">
                 <Search :filter="filter" :onSearch="search"/>
             </div>
-            <q-btn icon="add" class="rounded-xl bg-[#04162d] text-white " @click="showModal = true"></q-btn>
+            <q-btn icon="add" class="rounded-xl bg-[#04162d] text-white " @click="showModal= true"></q-btn>
         </div>
         <!-- table  -->
         <Tables :rows="rows" :columns="columns" />
         <!-- modals  -->
         <q-dialog v-model="showModal">
-            <Modal :proveedor="proveedor" :name="name" :serial="serial" :unidades="unidades" :price="price" :expirationDate="expirationDate" :state="state" :copias="copias" :opcionesCopias="opcionesCopias"/>
+            <Modal :showModal="showModal"/>
         </q-dialog>
     </div>
 </template>
@@ -32,7 +32,12 @@ import { inventoryStore } from "@/store/inventory.js";
 
 const storeInventory = inventoryStore();
 
-let showModal = ref(false);
+const showModal = ref(false)
+
+function toggleModal() {
+    showModal.value= true
+}
+
 let filter=ref("")
 let TotalUnits=ref();
 
