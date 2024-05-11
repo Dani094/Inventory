@@ -34,11 +34,7 @@ const storeInventory = inventoryStore();
 
 const showModal = ref(false)
 
-function toggleModal() {
-    showModal.value= true
-}
-
-let filter=ref("")
+let filter=ref("2")
 let TotalUnits=ref();
 
 
@@ -77,7 +73,7 @@ let columns = ref([
     {
         name: "proveedor",
         align: "center",
-        label: "PRECIO VENTA",
+        label: "PRECIO COMPRA",
         field: (row) => parseFloat(row.SellingPrice).toLocaleString()
     },
     {
@@ -146,7 +142,7 @@ async function search(filter) {
       row.index = index + 1;
       TotalUnits.value = 0;
       for (let i in res.data) {
-        let object = { label: res.data[i].Unidades };
+        let object = { label: res.data[i].Units };
         TotalUnits.value += object.label;
       }})
     }

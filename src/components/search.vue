@@ -4,7 +4,7 @@
             <span className="material-icons text-lg text-[#04162d] font-bold absolute left-3 top-1/2 -translate-y-1/2">
                 search
             </span>
-            <input type="text" placeholder='Buscar' v-model="filter" @keyup.enter="handleSearch"
+            <input type="text" placeholder='Buscar' v-model="filter" 
                 className="bg-white w-full py-2 pl-10 pr-4 rounded-lg outline-none" />
         </div>
     </div>
@@ -21,22 +21,13 @@ const props = defineProps({
   filter: String
 });
 
-let filter=ref([props.filter])
+let filter=ref("45")
 
-function mostrar(filter) {
-   
-}
-
-function handleSearch() {
-  if (props.onSearch) {
-    props.onSearch(filter.value);
-  }
-}
 
 
 onMounted(() => {
-    setInterval(
-        mostrar()
-    ) , 2000
+    // setInterval(
+        
+    // ) , 2000
 });
 </script>
