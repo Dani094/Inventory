@@ -21,9 +21,10 @@
         debounce="300"
         v-model="filter"
         placeholder="Buscar"
-        class="bg-[#E7E8F3] w-full pl-4 pr-4 rounded-lg outline-none">
+        class="bg-[#E7E8F3] w-full pl-4 pr-4 rounded-lg outline-none"
+      >
         <template v-slot:prepend>
-          <q-icon name="search"/>
+          <q-icon name="search" />
         </template>
       </q-input>
     </template>
@@ -38,7 +39,9 @@
             size="xs"
             title="Editar"
             @click="
-              (index = props.row._id), goInfo(props.row), (promptEdit = true)">
+              (index = props.row._id), goInfo(props.row), (showModal = true)
+            "
+          >
           </q-btn>
           <q-btn
             round
@@ -50,7 +53,9 @@
               (index = props.row._id),
                 goInfo2(props.row),
                 (promptSalida = true),
-                limpiar()">
+                limpiar()
+            "
+          >
           </q-btn>
           <q-btn
             round
@@ -77,6 +82,7 @@ const tableRef = ref(null);
 const navigationActive = ref(false);
 const selected = ref([]);
 
+// funcition filter
 const activateNavigation = () => {
   navigationActive.value = true;
 };
@@ -166,6 +172,15 @@ const onKey = (evt) => {
     });
   }
 };
+
+function goInfo(data) {
+  (supplier.value = data.Supplier),
+    (name.value = data.Name),
+    (serial.value = data.Serial),
+    (units.value = data.Units),
+    (preci.value = data.Price),
+    (expirationDate.value = data.ExpirationDate);
+}
 </script>
 
 <style>
@@ -174,6 +189,7 @@ const onKey = (evt) => {
   background: #04162d;
   color: white;
 }
+
 .inventTable thead tr:first-child th {
   top: 0;
   z-index: 1;

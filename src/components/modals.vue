@@ -6,7 +6,7 @@
       </h5>
     </q-card-section>
     <div class="p-4">
-      <q-form ref="myForm" @submit.prevent.stop="handleSubmit()">
+      <q-form ref="myForm" @submit.prevent.stop="InventoryPost()">
         <div class="flex w-full justify-center">
           <div class="w-[45%]">
             <q-input
@@ -130,6 +130,12 @@ const storeInventory = inventoryStore();
 const storeLogin = LoginStore();
 
 let loading=ref()
+
+const showModal = ref(false); // Cambiado a ref(false) para que pueda ser modificado desde fuera
+
+const props= defineProps({
+  showModal: Boolean
+})
 
 let supplier=ref('');
 let name=ref('');
