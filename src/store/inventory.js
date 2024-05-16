@@ -251,21 +251,27 @@ export const inventoryStore = defineStore('inventoryStore', () => {
           }
       }
 
-
-      async function InventarioPut(id,proveedor,categoria,modelo,serial, idInvent, oficina, unidades,precio,estado,estadoFisico ) { 
+      async function PutInventory(id,supplier,name,serial,units, price, expirationDate, state,user ) { 
+        console.log(id);
+        console.log(supplier);
+        console.log(name);
+        console.log(serial);
+        console.log(units);
+        console.log(price);
+        console.log(expirationDate);
+        console.log(state);
+        console.log(user);
         try {
-            return await requestAxios.put(`/inventario/put/${id}`,
+            return await requestAxios.put(`/inventory/put/${id}`,
             {
-              Proveedor: proveedor,
-              Categoria: categoria,
-              Modelo: modelo,
-              Serial: serial, 
-              IdInvent: idInvent,
-              Oficina: oficina,  
-              Unidades: unidades,
-              Precio: precio,
-              Estado: estado,
-              EstadoFisico: estadoFisico
+              Supplier: supplier,
+              Name: name,
+              Serial: serial,
+              Units: units,
+              Price: price,
+              ExpirationDate: expirationDate,
+              State: state,
+              UserUpdate: user
             },
             { headers: {
               token: useToken.token,
@@ -336,7 +342,7 @@ export const inventoryStore = defineStore('inventoryStore', () => {
       }
       
 
-    return {GetInventory,Filter,PostInventory }
+    return {GetInventory,Filter,PostInventory,PutInventory }
   },
   {
     persist: true,

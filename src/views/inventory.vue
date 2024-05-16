@@ -10,166 +10,55 @@
         <!-- btns y search-->
         <div class="flex justify-between py-4">
             <div class="flex items-center">
-                <Search :filter="filter" :onSearch="search"/>
+                <div class="bg-[#04162d] px-4 p-2 rounded-2xl">
+                  <h4 class="text-xl text-white font-bold">Total Unidades: {{ TotalUnits }}</h4>
+                </div>
             </div>
             <q-btn icon="add" class="rounded-xl bg-[#04162d] text-white " @click="showModal= true"></q-btn>
         </div>
         <!-- table  -->
-        <Tables :rows="rows" :columns="columns" :showModal="showModal"/>
+        <Tables :rows="rows" :columns="columns" :showModal="showModal" :Post="InventoryPut"/>
         <!-- modals  -->
-        <q-dialog v-model="showModal">
-            <q-card class="w-[400px]">
-    <q-card-section class="bg-[#04162d]">
-      <h5 class="text-center text-white font-bold p-2 text-xl">
-        INGRESA LOS DATOS
-      </h5>
-    </q-card-section>
-    <div class="p-4">
-      <q-form ref="myForm" @submit.prevent.stop="InventoryPost()">
-        <div class="flex w-full justify-center">
-          <div class="w-[45%]">
-            <q-input
-              type="text"
-              v-model="supplier"
-              label="Proveedor"
-              lazy-rules
-              :rules="[
-                (val) =>
-                  (val && val.trim().length > 0) || 'Digite el Proveedor',
-              ]"
-            />
-            <q-input
-              type="text"
-              v-model="name"
-              label="Nombre del Producto"
-              lazy-rules
-              :rules="[
-                (val) =>
-                  (val && val.toString().trim().length > 0) ||
-                  'Digite el Nombre',
-              ]"
-            />
-            <q-input
-              type="text"
-              v-model="serial"
-              label="Serial"
-              class="mb-5"
-            />
-            <q-input
-              type="number"
-              v-model="units"
-              label="Unidades"
-              lazy-rules
-              :rules="[
-                (val) => (val && val.trim().length > 0) || 'Digite las Unidades',
-              ]"
-            />
-          </div>
-          <div class="w-[45%] ml-4">
-            <q-input
-              type="number"
-              v-model="price"
-              label="Precio Unitario"
-              lazy-rules
-              :rules="[
-                (val) => (val && val.trim().length > 0) || 'Digite el Precio',
-              ]"
-            />
-            <q-input
-              type="date"
-              v-model="expirationDate"
-              label="Fecha de Vencimiento"
-              class="mb-5"
-            />
-            <q-select
-              v-model="state"
-              :options="states"
-              label="Estado"
-              lazy-rules
-              :rules="[
-                (val) =>
-                  (val && val.toString().trim().length > 0) ||
-                  'Escoja el Estado',
-              ]"
-            />
-            <q-select
-              v-model="copias"
-              :options="opCopias"
-              label="¿Copias?"
-              lazy-rules
-              :rules="[
-                (val) =>
-                  (val && val.toString().trim().length > 0) ||
-                  'Escoja la opcion',
-              ]"
-            />
-            <q-input
-              v-if="copias == 'Sí'"
-              type="number"
-              v-model="crearCopias"
-              label="Copias"
-              lazy-rules
-              :rules="[
-                (val) =>
-                  (val && val.trim().length > 0) ||
-                  'Digite la Cantidad de Copias',
-              ]"
-            />
-          </div>
-        </div>
-        <!-- div botones  -->
-        <div class="flex justify-center items-center gap-4">
-          <q-btn
-            icon="save_as"
-            label="GUARDAR"
-            :loading="loading"
-            type="submit"
-            class="text-white bg-green-800 rounded-2xl"
-          ></q-btn>
-          <q-btn
-            icon="cancel"
-            type="button"
-            class="text-white bg-red-700 rounded-2xl"
-            v-close-popup
-            >CERRAR
-          </q-btn>
-        </div>
-      </q-form>
-    </div>
-  </q-card>   
-        </q-dialog>
+        <Modal :showModal="showModal" />
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted} from "vue";
-import Search from "@/components/search.vue";
 import Tables from "@/components/table.vue";
-// import Modal from "@/components/modals.vue";
+import Modal from "@/components/modals.vue";
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
+
+const props= defineProps({
+   index: String,
+   supplier: String,
+   name: String,
+   serial: String,
+   units: Number,
+   price: Number,
+   expirationDate: String,
+   state: String,
+   crearCopias: String
+})
 
 
 const storeInventory = inventoryStore();
 const storeLogin = LoginStore();
 
-const showModal = ref(false)
+let showModal = ref(false)
 let loading=ref(false)
-let filter=ref("2")
 let TotalUnits=ref();
 
-
-let supplier=ref('');
-let name=ref('');
-let serial=ref('');
-let units=ref();
-let price=ref();
-let expirationDate=ref('');
-let state=ref('Disponible');
-let states=ref(["Disponible","Agotado", "Oferta"])
-let copias =ref('');
-let opCopias=ref(["Sí", "No"])
-let crearCopias=ref()
+let index=ref(props.index)
+let supplier=ref(props.supplier);
+let name=ref(props.name);
+let serial=ref(props.serial);
+let units=ref(props.units);
+let price=ref(props.price);
+let expirationDate=ref(props.expirationDate);
+let state=ref(props.state);
+let crearCopias=ref(props.crearCopias);
 let user=ref(storeLogin.Email)
 
 
@@ -274,24 +163,14 @@ async function GetInventario() {
     rows.value.forEach((row, index) => {
       row.index = index + 1;
       TotalUnits.value = 0;
-      
+      for (let i in res.data) {
+        let unidad = { value: res.data[i].Units };
+        TotalUnits.value += unidad.value;
+      }
     });
   }
 }
 
-async function search(filter) {
-    const res= await storeInventory.Filter(filter.value)
-    if (res && res.status < 299) {
-    rows.value = res.data;
-    rows.value.forEach((row, index) => {
-      row.index = index + 1;
-      TotalUnits.value = 0;
-      for (let i in res.data) {
-        let object = { label: res.data[i].Units };
-        TotalUnits.value += object.label;
-      }})
-    }
-}
 
 async function InventoryPost() {
   loading.value = true;
@@ -334,9 +213,28 @@ async function InventoryPost() {
       );
     }
   }
+  clean()
   showModal.value = false;
   // search();
   GetInventario();
+  loading.value = false;
+}
+
+async function InventoryPut() {
+  loading.value = true;
+  const res = await storeInventory.PutInventory(
+    index.value,
+    supplier.value,
+    name.value,
+    serial.value,
+    units.value,
+    price.value,
+    expirationDate.value,
+    state.value,
+    user.value
+  );
+  showModal.value = false;
+  // search();
   loading.value = false;
 }
 
