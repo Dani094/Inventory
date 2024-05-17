@@ -12,14 +12,14 @@
             <div class="flex items-center">
                 <Search :filter="filter" :onSearch="search"/>
             </div>
-            <q-btn icon="add" class="rounded-xl bg-[#04162d] text-white " @click="showModal= true"></q-btn>
+            <q-btn icon="add" class="rounded-xl bg-[#04162d] text-white " @click="openModal"></q-btn>
         </div>
         <!-- table  -->
         <Tables :rows="rows" :columns="columns" />
         <!-- modals  -->
-        <q-dialog v-model="showModal">
-            <Modal :showModal="showModal"/>
-        </q-dialog>
+       
+            <Modal />
+        
     </div>
 </template>
 
@@ -29,10 +29,16 @@ import Search from "@/components/search.vue";
 import Tables from "@/components/table.vue";
 import Modal from "@/components/modals.vue";
 import { inventoryStore } from "@/store/inventory.js";
+import Login from "./login.vue";
 
+console.log(Modal);
 const storeInventory = inventoryStore();
+import { useModalStore } from '../store/modal.js';
 
-const showModal = ref(false)
+const modalStore = useModalStore();
+const openModal = modalStore.openModal;
+const value = modalStore.showModal
+
 
 let filter=ref("2")
 let TotalUnits=ref();
@@ -150,5 +156,6 @@ async function search(filter) {
 
 onMounted(() => {
   GetInventario();
+  console.log(value);
 });
 </script>

@@ -1,7 +1,7 @@
 <template>
   <q-table
     flat
-    :separator="'cell'"
+    :separator="'horizontal'"
     bordered
     :rows="rows"
     :columns="columns"

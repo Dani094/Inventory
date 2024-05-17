@@ -13,7 +13,7 @@
                 </div>
                 <hr class="border border-dashed border-gray-500/50 my-4">
                 <!-- btn -->
-                <q-btn class="rounded-2xl bg-[#04162d] text-white font-sans"><router-link :to="newRoute">Ver</router-link></q-btn>
+                <router-link :to="newRoute"><q-btn class="rounded-2xl bg-[#04162d] text-white font-sans">Ver</q-btn></router-link>
             </div>
 </template>
 
@@ -21,8 +21,11 @@
 const props = defineProps({
   num: Number,
   title: String,
-  newRoute: String
+  newRoute: String,
+
 });
+
+
 
 const getTicketColors = (title) => {
   let ticketColors = {

@@ -1,4 +1,5 @@
 <template>
+   <q-dialog v-model="showModal">
   <q-card class="w-[400px]">
     <q-card-section class="bg-[#04162d]">
       <h5 class="text-center text-white font-bold p-2 text-xl">
@@ -6,7 +7,7 @@
       </h5>
     </q-card-section>
     <div class="p-4">
-      <q-form ref="myForm" @submit.prevent.stop="handleSubmit()">
+      <q-form ref="myForm" @submit.prevent.stop="InventoryPost()">
         <div class="flex w-full justify-center">
           <div class="w-[45%]">
             <q-input
@@ -117,13 +118,22 @@
         </div>
       </q-form>
     </div>
-  </q-card>        
+  </q-card>   
+  </q-dialog>     
 </template>
 
 <script setup>
 import { ref,onMounted } from "vue";
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
+import { useModalStore } from '../store/modal.js';
+const modalValue = useModalStore();
+const showModal = ref(modalValue.showModal)
+
+
+
+
+
 
 
 const storeInventory = inventoryStore();
@@ -192,7 +202,7 @@ async function InventoryPost() {
       );
     }
   }
-  showModal.value = false;
+
   // search();
   loading.value = false;
 }
@@ -200,6 +210,7 @@ async function InventoryPost() {
 
 
 onMounted(() => {
+  
   // setInterval(() => {
   //   console.log(showModal.value);
   // }, 2000);
