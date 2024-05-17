@@ -133,7 +133,7 @@ const props= defineProps({
 
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 // const showModal = ref(false);
 // const formData = ref({}); 
