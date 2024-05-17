@@ -1,5 +1,6 @@
 <template>
   <q-dialog v-model="props.showModal">
+    <q-form @submit="handleSubmit">
     <q-card class="w-[400px]">
       <q-card-section class="bg-[#04162d]">
         <h5 class="text-center text-white font-bold p-2 text-xl">
@@ -120,6 +121,7 @@
         </q-form>
       </div>
     </q-card>
+  </q-form>
   </q-dialog>
 </template>
 
@@ -129,9 +131,13 @@ const props= defineProps({
   Post:Function
 })
 
-import { ref, onMounted } from "vue";
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
+import { ref } from "vue";
+
+const showModal = ref(false);
+const formData = ref({}); // Aquí almacenarás los datos del formulario
+
 
 const storeInventory = inventoryStore();
 const storeLogin = LoginStore();

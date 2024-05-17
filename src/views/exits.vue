@@ -35,7 +35,7 @@
 <script setup>
 import {ref} from "vue"
 import Search from "@/components/search.vue"
-import Tables from "@/components/table.vue";
+// import Tables from "@/components/tableInventory.vue";
 import Modal from "@/components/modals.vue";
 
 let showModal = ref(false);
