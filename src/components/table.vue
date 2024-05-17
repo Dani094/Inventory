@@ -224,7 +224,7 @@
 <!-- table  -->
   <q-table
     flat
-    :separator="'cell'"
+    :separator="'horizontal'"
     bordered
     :rows="props.rows"
     :columns="props.columns"

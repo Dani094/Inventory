@@ -6,6 +6,27 @@
         <span class="material-icons text-5xl"> arrow_right </span>
         INVENTARIO
       </h1>
+    <div class="lg:pl-40 lg:pr-20 p-4">
+        <!-- title -->
+            <div class="mb-4">
+                <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl">
+                    <span class="material-icons text-5xl"> arrow_right </span>
+                    INVENTARIO
+                </h1>
+            </div>
+        <!-- btns y search-->
+        <div class="flex justify-between py-4">
+            <div class="flex items-center">
+                <div class="bg-[#04162d] px-4 p-2 rounded-2xl">
+                  <h4 class="text-xl text-white font-bold">Total Unidades: {{ TotalUnits }}</h4>
+                </div>
+            </div>
+            <q-btn icon="add" class="rounded-xl bg-[#04162d] text-white " @click="openModal"></q-btn>
+        </div>
+        <!-- table  -->
+        <Tables :rows="rows" :columns="columns" :showModal="showModal" :Post="InventoryPut"/>
+        <!-- modals  -->
+        <Modal :showModal="showModal" />
     </div>
     <!-- head-->
     <div class="flex justify-between py-4">
@@ -333,6 +354,18 @@ import Tables from "@/components/table.vue"
 import Modal from "@/components/modals.vue"
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
+
+const props= defineProps({
+   index: String,
+   supplier: String,
+   name: String,
+   serial: String,
+   units: Number,
+   price: Number,
+   expirationDate: String,
+   state: String,
+   crearCopias: String
+})
 
 const storeInventory = inventoryStore();
 const storeLogin = LoginStore();

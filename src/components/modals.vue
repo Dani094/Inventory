@@ -135,8 +135,15 @@ import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
 import { ref } from "vue";
 
-const showModal = ref(false);
-const formData = ref({}); // Aquí almacenarás los datos del formulario
+// const showModal = ref(false);
+// const formData = ref({}); 
+// import { useModalStore } from '../store/modal.js';
+// const modalValue = useModalStore();
+// const showModal = ref(modalValue.showModal)
+
+
+
+
 
 
 const storeInventory = inventoryStore();
@@ -172,7 +179,58 @@ function clean() {
   copias.value = ""
   crearCopias.value = ""
 }
+
+
+async function InventoryPost() {
+  loading.value = true;
+  await storeInventory.PostInventory(
+    supplier.value,
+    name.value,
+    serial.value,
+    units.value,
+    price.value,
+    expirationDate.value,
+    state.value,
+    user.value
+  );
+  if (crearCopias.value >= 1) {
+    // Crea una copia del elemento sin duplicar el serial
+    const itemToDuplicate = {
+      Supplier: supplier.value,
+      Name: name.value,
+      Serial: serial.value,
+      Units: units.value,
+      Price: price.value,
+      ExpirationDate: expirationDate.value,
+      State: state.value,
+      UserEmail: user.value
+    };
+    for (let i = 0; i < crearCopias.value; i++) {
+      const duplicatedItem = {
+        ...itemToDuplicate,
+      };
+      // Realiza la petición al servidor para guardar la duplicación
+      await storeInventory.PostInventory(
+        duplicatedItem.Supplier,
+        duplicatedItem.Name,
+        duplicatedItem.Serial,
+        duplicatedItem.Units,
+        duplicatedItem.Price,
+        duplicatedItem.ExpirationDate,
+        duplicatedItem.State,
+        duplicatedItem.UserEmail
+      );
+    }
+  }
+
+  // search();
+  loading.value = false;
+}
+
+
+
 onMounted(() => {
+  
   // setInterval(() => {
   //   console.log(showModal.value);
   // }, 2000);
