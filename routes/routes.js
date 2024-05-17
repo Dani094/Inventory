@@ -23,11 +23,9 @@ const auth = (to, from, next) => {
   if (checkAuth()) {
     const userStore = LoginStore();
     const userRole = userStore.rol;
-
     if (!to.meta.rol.includes(userRole)) {
       userStore.logoutUser();
-      return next({ name: "Login" });
-      
+      return next({ name: "Home" }); 
     }
     next();
   } else {
@@ -53,25 +51,45 @@ export const routes = [
       path:"/home",
       name:"Home",
       component: Home,
+      meta: {
+        rol: ["Admin", "Cliente"],
+        },
+        beforeEnter: auth,
     },
     {
       path:"/inventory",
       name:"Inventory",
       component: Inventory,
+      meta: {
+        rol: ["Admin", "Cliente"],
+        },
+        beforeEnter: auth,
     },
     {
       path:"/exits",
       name:"Exits",
       component: Exits,
+      meta: {
+        rol: ["Admin", "Cliente"],
+        },
+        beforeEnter: auth,
     },
     {
       path:"/quotation",
       name:"Quotation",
       component:Quotation,
+      meta: {
+        rol: ["Admin", "Cliente"],
+        },
+        beforeEnter: auth,
     },
     {
       path:"/reports",
       name:"Reports",
       component: Reports,
+      meta: {
+        rol: ["Admin", "Cliente"],
+        },
+        beforeEnter: auth,
     },
   ]
