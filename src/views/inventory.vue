@@ -79,8 +79,8 @@
               @click="
                 (index = props.row._id),
                   goInfo2(props.row),
-                  (promptSalida = true),
-                  limpiar()
+                  (showModalExits = true),
+                  cleanForm()
               "
             >
             </q-btn>
@@ -320,6 +320,100 @@
       </div>
     </q-card>
   </q-dialog>
+  <!-- modal exits -->
+  <q-dialog v-model="showModalExits">
+    <q-card class="w-[400px]">
+      <q-card-section class="bg-[#04162d]">
+        <h5 class="text-center text-white font-bold p-2 text-xl">
+          INGRESA LOS DATOS
+        </h5>
+      </q-card-section>
+      <div class="p-4">
+        <q-form ref="myForm" @submit.prevent.stop="ExitsPost()">
+          <div class="flex w-full justify-center">
+            <div class="w-[45%]">
+              <q-input
+                type="text"
+                v-model="nameExit"
+                label="Nombre del Producto"
+                lazy-rules
+                :rules="[
+                  (val) =>
+                    (val && val.toString().trim().length > 0) ||
+                    'Digite el Nombre',
+                ]"
+              />
+              <q-input
+                type="text"
+                v-model="serialExit"
+                label="Serial"
+                class="mb-5"
+              />
+              <q-input
+                type="number"
+                v-model="units2"
+                label="Unidades Disponibles"
+                lazy-rules
+                :rules="[
+                  (val) =>
+                  (val && val.toString().trim().length > 0) || 'Digite las Unidades',
+                ]"
+              />
+            </div>
+            <div class="w-[45%] ml-4">
+              <q-input
+                type="number"
+                v-model="unitsExit"
+                label="Unidades a Sacar"
+                lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val &&
+                        val.toString().length > 0 &&
+                        parseInt(val) > 0 &&
+                        parseInt(val) <= units2) ||
+                      'La Cantidad no puede ser 0, Mayor o Menor a las Unidades Disponibles',
+                  ]"
+                />
+                <q-input
+                  type="number"
+                  v-model="priceExit"
+                  label="Precio Unitario"
+                  lazy-rules
+                  :rules="[
+                    (val) => (val && val.toString().trim().length > 0) || 'Digite el Precio',
+                  ]"
+                /><q-input
+                  type="number"
+                  v-model="descount"
+                  label="Descuento"
+                  lazy-rules
+                  :rules="[
+                    (val) => (val && val.toString().trim().length > 0) || 'Digite el Descuento',
+                  ]"
+                />     
+            </div>
+          </div>
+          <div class="flex justify-center items-center gap-4">
+            <q-btn
+              icon="save_as"
+              label="GUARDAR"
+              :loading="loading"
+              type="submit"
+              class="text-white bg-green-800 rounded-2xl"
+            ></q-btn>
+            <q-btn
+              icon="cancel"
+              type="button"
+              class="text-white bg-red-700 rounded-2xl"
+              v-close-popup
+              >CERRAR
+            </q-btn>
+          </div>
+        </q-form>
+      </div>
+    </q-card>
+  </q-dialog>
   </div>
  
 </template>
@@ -330,17 +424,19 @@ import Tables from "@/components/table.vue"
 import Modal from "@/components/modals.vue"
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
+import { exitStore } from "../store/exits.js";
 import {sweetDelete} from "@/Global/notify"
 
 
 const storeInventory = inventoryStore();
 const storeLogin = LoginStore();
+const storeExits = exitStore();
 
 let showModal = ref(false);
 let showModalEdit=ref(false)
-
-
+let showModalExits=ref(false)
 let loading = ref(false);
+// variables inventory
 let index=ref()
 let supplier = ref("");
 let name = ref("");
@@ -355,6 +451,13 @@ let opCopias = ref(["Sí", "No"]);
 let crearCopias = ref();
 let user = ref(storeLogin.Email);
 let TotalUnits = ref();
+// variables exits 
+let nameExit=ref("")
+let serialExit=ref("")
+let units2=ref()
+let unitsExit=ref()
+let priceExit=ref()
+let descount=ref("")
 
 
 let rows = ref([]);
@@ -416,7 +519,6 @@ async function InventoryPost() {
   InventoryGet();
   loading.value = false;
 }
-
 async function InventoryPut() {
   loading.value = true;
   const res = await storeInventory.PutInventory(
@@ -448,7 +550,21 @@ async function deleteItem(data) {
   });
 }
 
-
+// post exits 
+async function ExitsPost() {
+  loading.value = true;
+  const res = await storeExits.PostExits(
+    nameExit.value,
+    serialExit.value,
+    unitsExit.value,
+    priceExit.value,
+    descount.value,
+    user.value,
+  );
+  showModalExits.value = false;
+  InventoryGet();
+  loading.value = false;
+}
 
 
 function cleanForm() {
@@ -649,6 +765,12 @@ function goInfo(data) {
     (price.value = data.Price),
     (expirationDate.value = data.ExpirationDate),
     (state.value = data.State)
+}
+function goInfo2(data) {
+    (nameExit.value = data.Name),
+    (serialExit.value = data.Serial),
+    (units2.value = data.Units),
+    (priceExit.value = data.Price)
 }
 
 onMounted(() => {

@@ -33,6 +33,7 @@ const storeExits = exitStore();
 
 let showModal = ref(false);
 
+// variables 
 let TotalUnits=ref(0)
 
 // peticiones get,put,delete
@@ -47,40 +48,64 @@ async function ExitsGet() {
     });
   } 
 }
-
+async function ExitsPut() {
+  loading.value = true;
+  const res = await storeExits.PutInventory(
+    index.value,
+    supplier.value,
+    name.value,
+    serial.value,
+    units.value,
+    price.value,
+    expirationDate.value,
+    state.value,
+    user.value
+  );
+  showModalEdit.value = false;
+  ExitsGet();
+  loading.value = false;
+}
 
 // table  
 let rows = ref([]);
-rows.value.forEach((row, index) => {
-    row.index = index + 1;
-});
-
 let columns = ref([
     { name: "index", label: "N°", field: "index", align: "center" },
     {
-        name: "proveedor",
+        name: "name",
         align: "center",
         label: "NOMBRE",
-        field: "Proveedor",
+        field: "Name",
     },
     {
-        name: "proveedor",
+        name: "serial",
         align: "center",
-        label: "Cantidad",
-        field: "Cantidad",
+        label: "SERIAL",
+        field: "Serial",
     },
     {
-        name: "state",
+        name: "units",
         align: "center",
-        label: "ESTADO",
-        field: "Estado",
-        style: (row) => {
-        if (row.Estado === 'Activo') {
-          return 'color: green';
-        }
-        // Estilo por defecto
-        return '';
-      },
+        label: "UNIDADES",
+        field: "Units",
+    },
+    {
+        name: "price",
+        align: "center",
+        label: "PRECIO",
+        field: (row) => parseFloat(row.Price).toLocaleString(),
+
+    },
+    {
+        name: "discount",
+        align: "center",
+        label: "DESCUENTO",
+        field: (row) => parseFloat(row.Discount).toLocaleString(),
+    },
+    {
+        name: "total",
+        align: "center",
+        label: "TOTAL",
+        field: (row) => parseFloat(row.Total).toLocaleString(),
     },
     {
         name: "options",

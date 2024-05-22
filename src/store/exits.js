@@ -18,10 +18,45 @@ export const exitStore = defineStore("exitStore", () => {
       notifyError("No fue posible obtener el Inventario");
     }
   }
-  
+  async function PostExits(
+    name,
+    serial,
+    units,
+    price,
+    discount,
+    user,
+  ) {
+    try {
+      return (
+        await requestAxios.post(
+          "/exits/post",
+          {
+            Name: name,
+            Serial: serial,
+            Units: units,
+            Price: price,
+            Discount: discount,
+            UserEmail: user,
+          },
+          {
+            headers: {
+              token: useToken.token,
+            },
+          }
+        ),
+        notifySuccess("Salida Exitosa")
+      );
+    } catch (error) {
+      console.log(error);
+      notifyError(
+        "No fue posible registrar o el serial ya existen en la base de datos"
+      );
+    }
+  }
   
   return {
-    GetExits
+    GetExits,
+    PostExits
   };
 },
   {
