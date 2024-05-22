@@ -26,7 +26,7 @@
 <script setup>
 import {ref, onMounted} from "vue"
 import Tables from "@/components/table.vue"
-import exitStore from "@/store/exits.js"
+import {exitStore} from "@/store/exits.js"
 
 const storeExits = exitStore();
 
