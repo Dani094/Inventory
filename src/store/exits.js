@@ -53,10 +53,22 @@ export const exitStore = defineStore("exitStore", () => {
       );
     }
   }
+  async function DeleteExits(id) {
+    try {
+      return (
+        await requestAxios.delete(`/exits/delete/${id}`),
+        notifySuccess("Producto Eliminado Correctamente")
+      );
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  }
   
   return {
     GetExits,
-    PostExits
+    PostExits,
+    DeleteExits
   };
 },
   {

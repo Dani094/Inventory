@@ -7,8 +7,6 @@
                     HOME
                 </h1>
             </div>
-            <!-- search  -->
-            <Search />
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-6">
             <!-- Card -->

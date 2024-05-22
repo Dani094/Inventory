@@ -27,6 +27,7 @@
 import {ref, onMounted} from "vue"
 import Tables from "@/components/table.vue"
 import {exitStore} from "@/store/exits.js"
+import {sweetDelete} from "@/Global/notify"
 
 const storeExits = exitStore();
 
@@ -65,7 +66,18 @@ async function ExitsPut() {
   ExitsGet();
   loading.value = false;
 }
-
+async function deleteItem(data) {
+  loading.value = true;
+  sweetDelete(data, async () => {
+    try {
+      await storeExits.DeleteExits(data._id);
+      InventoryGet();
+      loading.value = false;
+    } catch (error) {
+      console.log(error);
+    }
+  });
+}
 // table  
 let rows = ref([]);
 let columns = ref([

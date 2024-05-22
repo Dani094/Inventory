@@ -46,6 +46,13 @@
         <div>
             <ul class="pl-4">
                 <li class="hover:bg-[#E7E8F3] hover:text-black rounded-tl-xl rounded-bl-xl p-4 text-center transition">
+                    <router-link to="/">
+                        <span class="material-icons block rounded-xl text-2xl font-bold">
+                            person
+                        </span>
+                    </router-link>
+                </li>
+                <li class="hover:bg-[#E7E8F3] hover:text-black rounded-tl-xl rounded-bl-xl p-4 text-center transition">
                     <router-link to="/" @click="logout()">
                         <span class="material-icons block rounded-xl text-2xl font-bold">
                             logout
@@ -57,22 +64,24 @@
     </div>
     <!-- menu movil  -->
     <nav class='bg-[#04162d] lg:hidden fixed w-full bottom-0 left-0 text-2xl text-white py-2 px-8 flex items-center
-    justify-between rounded-tl-md rounded-tr-md'>
+    justify-between rounded-tl-md rounded-tr-md z-50'>
       <button class='p-2'>
         <span class="material-icons">
           person
         </span>
       </button>
-      <button class='p-2'>
+    <router-link to="/home"><button class='p-2'>
         <span class="material-icons">
           home
         </span>
       </button>
-      <button class='p-2'>
+    </router-link>
+    <router-link to="/inventory"><button class='p-2'>
         <span class="material-icons">
-          shopping_cart
+            inventory
         </span>
       </button>
+    </router-link>
       <button @click="toggleSidebar()" class='p-2'>
         <span class="material-icons">
             {{showSidebar ? "close" : "menu" }}
