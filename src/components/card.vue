@@ -26,7 +26,6 @@ const props = defineProps({
 });
 
 
-
 const getTicketColors = (title) => {
   let ticketColors = {
     iconColor: '',
@@ -47,8 +46,8 @@ const getTicketColors = (title) => {
       ticketColors.textColor = "text-pink-500";
       break;
     default:
-      ticketColors.iconColor = "text-[#04162d]"; // Color por defecto
-      ticketColors.textColor = "text-[04162d]"; // Color por defecto
+      ticketColors.iconColor = "text-[#04162d]";
+      ticketColors.textColor = "text-[04162d]";
       break;
   }
   return ticketColors;

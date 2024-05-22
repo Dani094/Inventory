@@ -4,7 +4,6 @@
         <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
             <div>
                 <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl">
-                
                     HOME
                 </h1>
             </div>
@@ -13,7 +12,7 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-6">
             <!-- Card -->
-            <CardInfo :iconColor="'#04162d'" :num="prueba" :title="'Total Inventario'" :newRoute="'/inventory'"/>
+            <CardInfo :num="20000" :title="'Total Inventario'" :newRoute="'/inventory'"/>
             <CardInfo :num="80000" :title="'Total Salidas'" :newRoute="'/exits'"/>
             <CardInfo :num="1300000" :title="'Total'" :newRoute="'/home'"/>
             <CardInfo :num="300000" :title="'Total Todo'" :newRoute="'/inventory'"/>
@@ -31,8 +30,4 @@
 import { ref } from "vue";
 import Search from "@/components/search.vue";
 import CardInfo from "@/components/card.vue";
-
-console.log(CardInfo);
-
-let prueba=ref(200000)
 </script>
