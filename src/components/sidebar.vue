@@ -8,7 +8,7 @@
                 </h1>
             </li>
             <!-- options  -->
-            <li class='hover:bg-[#E7E8F3] hover:text-black p-4  rounded-tl-[100px]  rounded-bl-[100px]  transition'>
+            <li class='hover:bg-[#E7E8F3] hover:text-black p-4  rounded-tl-xl rounded-bl-xl  transition'>
                 <router-link to="/home">
                     <span class="material-icons  block rounded-xl text-center text-2xl">
                         home
@@ -30,7 +30,7 @@
                 </router-link>
             </li>
             <li class='hover:bg-[#E7E8F3] hover:text-black group p-4 rounded-tl-xl rounded-bl-xl transition'>
-                <router-link to="/quotation">
+                <router-link to="/bill">
                     <span class="material-icons  block rounded-xl text-center text-2xl">
                         attach_money
                     </span>
@@ -57,7 +57,7 @@
     </div>
     <!-- menu movil  -->
     <nav class='bg-[#04162d] lg:hidden fixed w-full bottom-0 left-0 text-2xl text-white py-2 px-8 flex items-center
-    justify-between rounded-tl-xl rounded-tr-xl'>
+    justify-between rounded-tl-md rounded-tr-md'>
       <button class='p-2'>
         <span class="material-icons">
           person

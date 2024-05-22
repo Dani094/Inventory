@@ -23,308 +23,12 @@
       ></q-btn>
     </div>
     <!-- table  -->
-    <!-- <Tables :rows="rows" :columns="columns" :showModal="showModal" :Post="InventoryPut"/> -->
-    <q-table
-      flat
-      :separator="'cell'"
-      bordered
-      :rows="rows"
-      :columns="columns"
-      row-key="index"
-      virtual-scroll
-      v-model:pagination="pagination"
-      class="inventTable h-[550px] lg:h-[720px] rounded-2xl"
-      :filter="filter"
-      @focusin="activateNavigation"
-      @focusout="deactivateNavigation"
-      @keydown="onKey"
-    >
-      <template v-slot:top-left>
-        <q-input
-          borderless
-          dense
-          debounce="300"
-          v-model="filter"
-          placeholder="Buscar"
-          class="bg-[#E7E8F3] w-full pl-4 pr-4 rounded-lg outline-none"
-        >
-          <template v-slot:prepend>
-            <q-icon name="search" class="text-[#04162d]" />
-          </template>
-        </q-input>
-      </template>
-      <!-- opciones  -->
-      <template v-slot:body-cell-options="props">
-        <q-td :props="props">
-          <div class="text-white">
-            <q-btn
-              round
-              icon="edit"
-              class="q-mx bg-[#04162d]"
-              size="xs"
-              title="Editar"
-              @click="
-                (index = props.row._id),
-                  goInfo(props.row),
-                  (showModalEdit = true)
-              "
-            >
-            </q-btn>
-            <q-btn
-              round
-              icon="remove_circle_outline"
-              class="q-mx-md bg-[#FF0000]"
-              size="xs"
-              title="Salida"
-              @click="
-                (index = props.row._id),
-                  goInfo2(props.row),
-                  (promptSalida = true),
-                  limpiar()
-              "
-            >
-            </q-btn>
-            <q-btn
-              round
-              icon="delete"
-              class="q-mx bg-[#04162d]"
-              size="xs"
-              title="Borrar"
-              @click="(promptEliminar = true), (inventarioId = props.row)"
-            ></q-btn>
-          </div>
-        </q-td>
-      </template>
-    </q-table>
-    <!-- modals  -->
-    <!-- modal crear -->
-<q-dialog v-model="showModal">
-    <q-card class="w-[400px]">
-      <q-card-section class="bg-[#04162d]">
-        <h5 class="text-center text-white font-bold p-2 text-xl">
-          INGRESA LOS DATOS
-        </h5>
-      </q-card-section>
-      <div class="p-4">
-        <q-form ref="myForm" @submit.prevent.stop="InventoryPost()">
-          <div class="flex w-full justify-center">
-            <div class="w-[45%]">
-              <q-input
-                type="text"
-                v-model="supplier"
-                label="Proveedor"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.trim().length > 0) || 'Digite el Proveedor',
-                ]"
-              />
-              <q-input
-                type="text"
-                v-model="name"
-                label="Nombre del Producto"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Digite el Nombre',
-                ]"
-              />
-              <q-input
-                type="text"
-                v-model="serial"
-                label="Serial"
-                class="mb-5"
-              />
-              <q-input
-                type="number"
-                v-model="units"
-                label="Unidades"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.trim().length > 0) || 'Digite las Unidades',
-                ]"
-              />
-            </div>
-            <div class="w-[45%] ml-4">
-              <q-input
-                type="number"
-                v-model="price"
-                label="Precio Unitario"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.trim().length > 0) || 'Digite el Precio',
-                ]"
-              />
-              <q-input
-                type="date"
-                v-model="expirationDate"
-                label="Fecha de Vencimiento"
-                class="mb-5"
-              />
-              <q-select
-                v-model="state"
-                :options="states"
-                label="Estado"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Escoja el Estado',
-                ]"
-              />
-              <q-select
-                v-if="showModal = true"
-                v-model="copias"
-                :options="opCopias"
-                label="¿Copias?"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Escoja la opcion',
-                ]"
-              />
-              <q-input
-                v-if="copias == 'Sí'"
-                type="number"
-                v-model="crearCopias"
-                label="Copias"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.trim().length > 0) ||
-                    'Digite la Cantidad de Copias',
-                ]"
-              />
-            </div>
-          </div>
-          <!-- div botones  -->
-          <div class="flex justify-center items-center gap-4">
-            <q-btn
-              icon="save_as"
-              label="GUARDAR"
-              :loading="loading"
-              type="submit"
-              class="text-white bg-green-800 rounded-2xl"
-            ></q-btn>
-            <q-btn
-              icon="cancel"
-              type="button"
-              class="text-white bg-red-700 rounded-2xl"
-              v-close-popup
-              >CERRAR
-            </q-btn>
-          </div>
-        </q-form>
-      </div>
-    </q-card>
-  </q-dialog>
-<!-- modal editar -->
-  <q-dialog v-model="showModalEdit">
-    <q-card class="w-[400px]">
-      <q-card-section class="bg-[#04162d]">
-        <h5 class="text-center text-white font-bold p-2 text-xl">
-          INGRESA LOS DATOS
-        </h5>
-      </q-card-section>
-      <div class="p-4">
-        <q-form ref="myForm" @submit.prevent.stop="InventoryPut()">
-          <div class="flex w-full justify-center">
-            <div class="w-[45%]">
-              <q-input
-                type="text"
-                v-model="supplier"
-                label="Proveedor"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.trim().length > 0) || 'Digite el Proveedor',
-                ]"
-              />
-              <q-input
-                type="text"
-                v-model="name"
-                label="Nombre del Producto"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Digite el Nombre',
-                ]"
-              />
-              <q-input
-                type="text"
-                v-model="serial"
-                label="Serial"
-                class="mb-5"
-              />
-              <q-input
-                type="number"
-                v-model="units"
-                label="Unidades"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                  (val && val.toString().trim().length > 0) || 'Digite las Unidades',
-                ]"
-              />
-            </div>
-            <div class="w-[45%] ml-4">
-              <q-input
-                type="number"
-                v-model="price"
-                label="Precio Unitario"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.toString().trim().length > 0) || 'Digite el Precio',
-                ]"
-              />
-              <q-input
-                type="date"
-                v-model="expirationDate"
-                label="Fecha de Vencimiento"
-                class="mb-5"
-              />
-              <q-select
-                v-model="state"
-                :options="states"
-                label="Estado"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Escoja el Estado',
-                ]"
-              />
-            </div>
-          </div>
-          <div class="flex justify-center items-center gap-4">
-            <q-btn
-              icon="save_as"
-              label="GUARDAR"
-              :loading="loading"
-              type="submit"
-              class="text-white bg-green-800 rounded-2xl"
-            ></q-btn>
-            <q-btn
-              icon="cancel"
-              type="button"
-              class="text-white bg-red-700 rounded-2xl"
-              v-close-popup
-              >CERRAR
-            </q-btn>
-          </div>
-        </q-form>
-      </div>
-    </q-card>
-  </q-dialog>
+    <Tables :rows="rows" :columns="columns" :showModal="showModal" :Post="InventoryPut"/>
+
+    <modal /> 
+
   </div>
-  <!-- <Modal  :showModal="showModal"
-  @closeModal="showModal = false"
-  @submitForm="handleSubmitForm"
-  :data="formData"/> -->
+ 
 </template>
 
 <script setup>
@@ -333,6 +37,13 @@ import Tables from "@/components/table.vue"
 import Modal from "@/components/modals.vue"
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
+
+
+
+function togglePoppUp(params) {
+  
+}
+
 
 const props= defineProps({
    index: String,
@@ -352,9 +63,7 @@ const storeLogin = LoginStore();
 let showModal = ref(false);
 let showModalEdit=ref(false)
 
-function openModal() {
-  
-}
+
 
 let loading = ref(false);
 
