@@ -57,7 +57,7 @@
     </div>
     <!-- menu movil  -->
     <nav class='bg-[#04162d] lg:hidden fixed w-full bottom-0 left-0 text-2xl text-white py-2 px-8 flex items-center
-    justify-between rounded-tl-xl rounded-tr-xl'>
+    justify-between rounded-tl-md rounded-tr-md'>
       <button class='p-2'>
         <span class="material-icons">
           person

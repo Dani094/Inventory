@@ -321,10 +321,7 @@
     </q-card>
   </q-dialog>
   </div>
-  <!-- <Modal  :showModal="showModal"
-  @closeModal="showModal = false"
-  @submitForm="handleSubmitForm"
-  :data="formData"/> -->
+ 
 </template>
 
 <script setup>

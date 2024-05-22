@@ -2,7 +2,7 @@ import Login from "@/views/login.vue"
 import Home from "@/views/home.vue";
 import Inventory from "@/views/inventory.vue";
 import Exits from "@/views/exits.vue";
-import Quotation from "@/views/quotation.vue";
+import Bill from "@/views/Billing.vue";
 import Reports from "@/views/reports.vue";
 import { LoginStore } from "../src/store/login.js";
 
@@ -75,9 +75,9 @@ export const routes = [
         beforeEnter: auth,
     },
     {
-      path:"/quotation",
-      name:"Quotation",
-      component:Quotation,
+      path:"/bill",
+      name:"Bill",
+      component:Bill,
       meta: {
         rol: ["Admin", "Cliente"],
         },

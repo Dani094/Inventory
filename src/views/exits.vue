@@ -18,7 +18,8 @@
         <Tables :rows="rows" :columns="columns" />
         <!-- modals  -->
         <q-dialog v-model="showModal">
-            <Modal  > <q-input
+            <Modal  >
+                 <q-input
               type="text"
               v-model="proveedor"
               label="Proveedor"
@@ -26,8 +27,7 @@
               :rules="[
                 (val) =>
                   (val && val.trim().length > 0) || 'Digite el Proveedor',
-              ]"
-            /></Modal>
+              ]" /></Modal>
         </q-dialog>
     </div>
 </template>
@@ -35,7 +35,7 @@
 <script setup>
 import {ref} from "vue"
 import Search from "@/components/search.vue"
-// import Tables from "@/components/tableInventory.vue";
+import Tables from "@/components/table.vue"
 import Modal from "@/components/modals.vue";
 
 let showModal = ref(false);
