@@ -29,8 +29,8 @@
                     </span>
                 </router-link>
             </li>
-            <li :class="[$route.path == '/quotation' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition'>
-                <router-link to="/quotation">
+            <li :class="[$route.path == '/bill' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition'>
+                <router-link to="/bill">
                     <span class="material-icons  block rounded-xl text-center text-2xl">
                         attach_money
                     </span>
