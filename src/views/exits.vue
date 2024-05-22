@@ -10,50 +10,47 @@
             <!-- btns y search-->
         <div class="flex justify-between py-4">
             <div class="flex items-center">
-                <Search />
+                <div class="bg-[#04162d] px-4 p-2 rounded-2xl">
+                    <h4 class="text-xl text-white font-bold">
+                        Total Unidades: {{ TotalUnits }}
+                    </h4>
+                </div>
             </div>
             <q-btn icon="add" class="rounded-xl bg-[#04162d] text-white " @click="showModal = true"></q-btn>
         </div>
         <!-- table  -->
         <Tables :rows="rows" :columns="columns" />
-        <!-- modals  -->
-        <q-dialog v-model="showModal">
-            <Modal  >
-                 <q-input
-              type="text"
-              v-model="proveedor"
-              label="Proveedor"
-              lazy-rules
-              :rules="[
-                (val) =>
-                  (val && val.trim().length > 0) || 'Digite el Proveedor',
-              ]" /></Modal>
-        </q-dialog>
     </div>
 </template>
 
 <script setup>
-import {ref} from "vue"
-import Search from "@/components/search.vue"
+import {ref, onMounted} from "vue"
 import Tables from "@/components/table.vue"
-import Modal from "@/components/modals.vue";
+import exitStore from "@/store/exits.js"
+
+const storeExits = exitStore();
+
 
 let showModal = ref(false);
-let state = ref("Activo");
 
+let TotalUnits=ref(0)
+
+// peticiones get,put,delete
+async function ExitsGet() {
+  const res = await storeExits.GetExits();
+  if (res && res.status < 299) {
+    rows.value = res.data;
+    rows.value.forEach((row, index) => {
+      row.index= index + 1;
+      TotalUnits.value = 0;
+      TotalUnits.value = rows.value.reduce((total, row) => total + row.Units, 0);
+    });
+  } 
+}
+
+
+// table  
 let rows = ref([]);
-rows.value = [
-    { Proveedor: "Cliente 1", Cantidad: "1", Estado:state },
-    { Proveedor: "Cliente 2", Cantidad: "3", Estado:state },
-    { Proveedor: "Cliente 3", Cantidad: "1", Estado:state },
-    { Proveedor: "Cliente 4", Cantidad: "1", Estado:state },
-    { Proveedor: "Cliente 4", Cantidad: "3", Estado:state },
-    { Proveedor: "Cliente 4", Cantidad: "1", Estado:state },
-    { Proveedor: "Cliente 4", Cantidad: "1", Estado:state },
-    { Proveedor: "Cliente 4", Cantidad: "3", Estado:state },
-    { Proveedor: "Cliente 4", Cantidad: "3", Estado:state },
-];
-
 rows.value.forEach((row, index) => {
     row.index = index + 1;
 });
@@ -91,4 +88,22 @@ let columns = ref([
         label: "OPCIONES",
     },
 ]);
+
+
+
+function cleanForm() {
+  supplier.value = ""
+  name.value = ""
+  serial.value = ""
+  units.value = ""
+  price.value = "",
+  expirationDate.value = ""
+  state.value = "Disponible";
+  copias.value = ""
+  crearCopias.value = ""
+}
+
+onMounted(() => {
+  ExitsGet();
+});
 </script>
