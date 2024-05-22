@@ -90,7 +90,7 @@
               class="q-mx bg-[#04162d]"
               size="xs"
               title="Borrar"
-              @click="(promptEliminar = true), (inventarioId = props.row)"
+              @click="deleteItem(props.row)"
             ></q-btn>
           </div>
         </q-td>
@@ -333,18 +333,8 @@ import Tables from "@/components/table.vue"
 import Modal from "@/components/modals.vue"
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
+import {sweetDelete} from "@/Global/notify"
 
-const props= defineProps({
-   index: String,
-   supplier: String,
-   name: String,
-   serial: String,
-   units: Number,
-   price: Number,
-   expirationDate: String,
-   state: String,
-   crearCopias: String
-})
 
 const storeInventory = inventoryStore();
 const storeLogin = LoginStore();
@@ -352,12 +342,8 @@ const storeLogin = LoginStore();
 let showModal = ref(false);
 let showModalEdit=ref(false)
 
-function openModal() {
-  
-}
 
 let loading = ref(false);
-
 let index=ref()
 let supplier = ref("");
 let name = ref("");
@@ -452,16 +438,19 @@ async function InventoryPut() {
   InventoryGet();
   loading.value = false;
 }
-async function deleteItem(ID) {
+async function deleteItem(data) {
   loading.value = true;
-  let res = "";
-  res = await storeInventory.DeleteInventory(ID._id);
-  if (res.status < 299) {
-    InventoryGet();
-    promptEliminar.value = false;
-    loading.value = false;
-  }
+  sweetDelete(data, async () => {
+    try {
+      await storeInventory.DeleteInventory(data._id);
+      InventoryGet();
+      loading.value = false;
+    } catch (error) {
+      console.log(error);
+    }
+  });
 }
+
 
 
 

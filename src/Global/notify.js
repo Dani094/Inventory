@@ -1,5 +1,5 @@
 import { Notify } from "quasar";
-
+import Swal from "sweetalert2";
 export const notifyError = (msg, position = "top") => {
   Notify.create({
     color: "negative",
@@ -19,3 +19,26 @@ export const notifySuccess = (msg, position = "top") => {
     timeout: 3000,
   });
 };
+
+export const sweetDelete = (data, onDelete) => {
+  Swal.fire({
+    title: `¿Seguro que quieres eliminar ${data.Name}?`,
+    text: "¡No podrás revertir esto!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Sí, Eliminar"
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      onDelete();
+      Swal.fire({
+        title: "Deleted!",
+        text: "Tu Producto se ha eliminado.",
+        icon: "success",
+        timer: 2000
+      });
+    }
+  });
+};
+
