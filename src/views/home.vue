@@ -10,22 +10,35 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-6">
             <!-- Card -->
-            <CardInfo :num="20000" :title="'Total Inventario'" :newRoute="'/inventory'"/>
-            <CardInfo :num="80000" :title="'Total Salidas'" :newRoute="'/exits'"/>
-            <CardInfo :num="1300000" :title="'Total'" :newRoute="'/home'"/>
-            <CardInfo :num="300000" :title="'Total Todo'" :newRoute="'/inventory'"/>
+            <CardInfo :num="20000" :title="'Total Inventario'" :newRoute="'/inventory'" />
+            <CardInfo :num="80000" :title="'Total Salidas'" :newRoute="'/exits'" />
+            <CardInfo :num="1300000" :title="'Total'" :newRoute="'/home'" />
+            <CardInfo :num="300000" :title="'Total Todo'" :newRoute="'/inventory'" />
         </div>
         <!-- graficas  -->
         <div class="bg-white rounded-2xl">
-            <img class="rounded-2xl"
-                src="https://apiumhub.com/wp-content/uploads/2020/03/Attract-new-software-developers.png"
-                alt="grafica" />
         </div>
+        <!-- charts -->
+        <div class="flex gap-4">
+            <div class="w-[45%] bg-white rounded-2xl">
+                <ChartUse :names="names" :valores="valores" :newType="'bar'" chartId="chart1" />
+            </div>
+            <div class="w-[53%] bg-white rounded-2xl">
+                <ChartUse :names="names" :valores="valores" :newType="'line'" chartId="chart2" />
+            </div>
+            <div class="w-full bg-white rounded-2xl flex justify-center">
+                <div class="w-[30%] bg-white rounded-2xl">
+                    <ChartUse :names="names" :valores="valores" :newType="'pie'" chartId="chart3" />
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import Search from "@/components/search.vue";
 import CardInfo from "@/components/card.vue";
+import ChartUse from "@/components/charts.vue"
+
+
 </script>
