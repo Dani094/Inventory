@@ -122,62 +122,17 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   }
 
   // Funciones para manejar las salidas de inventario
-  async function SalidaPost(
-    serialInvent,
-    idInvent2,
-    categoriaS,
-    modeloS,
-    tipoSalida,
-    nametecnico,
-    oficinaS,
-    municipioSalida,
-    cliente,
-    direccionCliente,
-    cantidadSalida
-  ) {
-    console.log(cantidadSalida);
+  async function PutUnits(id, units2, unitsExit) {
     try {
       return (
-        await requestAxios.post(
-          `/salidas/post`,
-          {
-            Serial: serialInvent,
-            IdInvent: idInvent2,
-            Categoria: categoriaS,
-            Modelo: modeloS,
-            TipoSalida: tipoSalida,
-            NameTecnico: nametecnico,
-            Oficina: oficinaS,
-            MunicipioSalida: municipioSalida,
-            Cliente: cliente,
-            Direccion: direccionCliente,
-            Unidades: cantidadSalida,
-          },
-          {
-            headers: {
-              token: useToken.token,
-            },
-          }
-        ),
-        notifySuccess("Salida Registrada Correctamente")
-      );
-    } catch (error) {
-      console.log(error);
-      notifyError("No se pudo Registrar la Salida Correctamente");
-    }
-  }
-
-  async function UnidadesPut(id, unidadesTotales, cantidadSalida) {
-    try {
-      return (
-        await requestAxios.put(`/inventario/putUnidades/${id}`, {
-          Unidades: unidadesTotales - cantidadSalida,
+        await requestAxios.put(`/inventory/putUnits/${id}`, {
+          Units: units2 - unitsExit,
         }),
-        notifySuccess("Cantidad Actualizada Correctamente")
+        notifySuccess("Cantidad Actualizada")
       );
     } catch (error) {
       console.log(error);
-      notifyError("No se pudo Actualizar la Cantidad Correctamente");
+      notifyError("No se pudo Actualizar la Cantidad");
     }
   }
 
@@ -187,6 +142,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     PostInventory,
     PutInventory,
     DeleteInventory,
+    PutUnits
   };
 },
   {

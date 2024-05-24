@@ -334,6 +334,7 @@
             <div class="w-[45%]">
               <q-input
                 type="text"
+                readonly
                 v-model="nameExit"
                 label="Nombre del Producto"
                 lazy-rules
@@ -345,12 +346,14 @@
               />
               <q-input
                 type="text"
+                readonly
                 v-model="serialExit"
                 label="Serial"
                 class="mb-5"
               />
               <q-input
                 type="number"
+                readonly
                 v-model="units2"
                 label="Unidades Disponibles"
                 lazy-rules
@@ -372,7 +375,7 @@
                         val.toString().length > 0 &&
                         parseInt(val) > 0 &&
                         parseInt(val) <= units2) ||
-                      'La Cantidad no puede ser 0, Mayor o Menor a las Unidades Disponibles',
+                      'No puede ser 0, Mayor o Menor a las Unidades Disponibles',
                   ]"
                 />
                 <q-input
@@ -419,7 +422,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineSSRCustomElement } from "vue";
 import Tables from "@/components/table.vue"
 import Modal from "@/components/modals.vue"
 import { inventoryStore } from "@/store/inventory.js";
@@ -550,7 +553,7 @@ async function deleteItem(data) {
   });
 }
 
-// post exits 
+// post exits, put cantidad
 async function ExitsPost() {
   loading.value = true;
   const res = await storeExits.PostExits(
@@ -562,9 +565,16 @@ async function ExitsPost() {
     user.value,
   );
   showModalExits.value = false;
+  await putUnidades()
   InventoryGet();
   loading.value = false;
 }
+async function putUnidades() {
+   const res = await storeInventory.PutUnits(
+      index.value,
+      units2.value,
+      unitsExit.value
+)}
 
 
 function cleanForm() {
@@ -572,11 +582,13 @@ function cleanForm() {
   name.value = ""
   serial.value = ""
   units.value = ""
-  price.value = "",
+  price.value = ""
   expirationDate.value = ""
-  state.value = "Disponible";
+  state.value = "Disponible"
   copias.value = ""
   crearCopias.value = ""
+  unitsExit.value=""
+  descount.value=""
 }
 
 // <---------------------------------------------------------------------> 
