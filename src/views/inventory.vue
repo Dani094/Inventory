@@ -1,12 +1,12 @@
 <template>
-    <div class="lg:pl-40 lg:pr-20 p-4">
-        <!-- title -->
-            <div class="mb-4">
-                <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl">
-                    <span class="material-icons text-5xl"> arrow_right </span>
-                    INVENTARIO
-                </h1>
-            </div>
+  <div class="lg:pl-40 lg:pr-20 p-4">
+    <!-- title -->
+    <div class="mb-4">
+      <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl">
+        <span class="material-icons text-5xl"> arrow_right </span>
+        INVENTARIO
+      </h1>
+    </div>
     <!-- count and add-->
     <div class="flex justify-between py-4">
       <div class="flex items-center">
@@ -19,7 +19,7 @@
       <q-btn
         icon="add"
         class="rounded-xl bg-[#04162d] text-white"
-        @click="showModal = true,cleanForm()"
+        @click="(showModal = true), cleanForm()"
       ></q-btn>
     </div>
     <!-- table  -->
@@ -98,277 +98,282 @@
     </q-table>
     <!-- modals  -->
     <!-- modal crear -->
-<q-dialog v-model="showModal">
-    <q-card class="w-[400px]">
-      <q-card-section class="bg-[#04162d]">
-        <h5 class="text-center text-white font-bold p-2 text-xl">
-          INGRESA LOS DATOS
-        </h5>
-      </q-card-section>
-      <div class="p-4">
-        <q-form ref="myForm" @submit.prevent.stop="InventoryPost()">
-          <div class="flex w-full justify-center">
-            <div class="w-[45%]">
-              <q-input
-                type="text"
-                v-model="supplier"
-                label="Proveedor"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.trim().length > 0) || 'Digite el Proveedor',
-                ]"
-              />
-              <q-input
-                type="text"
-                v-model="name"
-                label="Nombre del Producto"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Digite el Nombre',
-                ]"
-              />
-              <q-input
-                type="text"
-                v-model="serial"
-                label="Serial"
-                class="mb-5"
-              />
-              <q-input
-                type="number"
-                v-model="units"
-                label="Unidades"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.trim().length > 0) || 'Digite las Unidades',
-                ]"
-              />
+    <q-dialog v-model="showModal">
+      <q-card class="w-[400px]">
+        <q-card-section class="bg-[#04162d]">
+          <h5 class="text-center text-white font-bold p-2 text-xl">
+            INGRESA LOS DATOS
+          </h5>
+        </q-card-section>
+        <div class="p-4">
+          <q-form ref="myForm" @submit.prevent.stop="InventoryPost()">
+            <div class="flex w-full justify-center">
+              <div class="w-[45%]">
+                <q-input
+                  type="text"
+                  v-model="supplier"
+                  label="Proveedor"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite el Proveedor',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  v-model="name"
+                  label="Nombre del Producto"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite el Nombre',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  v-model="serial"
+                  label="Serial"
+                  class="mb-5"
+                />
+                <q-input
+                  type="number"
+                  v-model="units"
+                  label="Unidades"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite las Unidades',
+                  ]"
+                />
+              </div>
+              <div class="w-[45%] ml-4">
+                <q-input
+                  type="number"
+                  v-model="price"
+                  label="Precio Unitario"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite el Precio',
+                  ]"
+                />
+                <q-input
+                  type="date"
+                  v-model="expirationDate"
+                  label="Fecha de Vencimiento"
+                  class="mb-5"
+                />
+                <q-select
+                  v-model="state"
+                  :options="states"
+                  label="Estado"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Escoja el Estado',
+                  ]"
+                />
+                <q-select
+                  v-if="(showModal = true)"
+                  v-model="copias"
+                  :options="opCopias"
+                  label="¿Copias?"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Escoja la opcion',
+                  ]"
+                />
+                <q-input
+                  v-if="copias == 'Sí'"
+                  type="number"
+                  v-model="crearCopias"
+                  label="Copias"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) ||
+                      'Digite la Cantidad de Copias',
+                  ]"
+                />
+              </div>
             </div>
-            <div class="w-[45%] ml-4">
-              <q-input
-                type="number"
-                v-model="price"
-                label="Precio Unitario"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.trim().length > 0) || 'Digite el Precio',
-                ]"
-              />
-              <q-input
-                type="date"
-                v-model="expirationDate"
-                label="Fecha de Vencimiento"
-                class="mb-5"
-              />
-              <q-select
-                v-model="state"
-                :options="states"
-                label="Estado"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Escoja el Estado',
-                ]"
-              />
-              <q-select
-                v-if="showModal = true"
-                v-model="copias"
-                :options="opCopias"
-                label="¿Copias?"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Escoja la opcion',
-                ]"
-              />
-              <q-input
-                v-if="copias == 'Sí'"
-                type="number"
-                v-model="crearCopias"
-                label="Copias"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.trim().length > 0) ||
-                    'Digite la Cantidad de Copias',
-                ]"
-              />
+            <!-- div botones  -->
+            <div class="flex justify-center items-center gap-4">
+              <q-btn
+                icon="save_as"
+                label="GUARDAR"
+                :loading="loading"
+                type="submit"
+                class="text-white bg-green-800 rounded-2xl"
+              ></q-btn>
+              <q-btn
+                icon="cancel"
+                type="button"
+                class="text-white bg-red-700 rounded-2xl"
+                v-close-popup
+                >CERRAR
+              </q-btn>
             </div>
-          </div>
-          <!-- div botones  -->
-          <div class="flex justify-center items-center gap-4">
-            <q-btn
-              icon="save_as"
-              label="GUARDAR"
-              :loading="loading"
-              type="submit"
-              class="text-white bg-green-800 rounded-2xl"
-            ></q-btn>
-            <q-btn
-              icon="cancel"
-              type="button"
-              class="text-white bg-red-700 rounded-2xl"
-              v-close-popup
-              >CERRAR
-            </q-btn>
-          </div>
-        </q-form>
-      </div>
-    </q-card>
-  </q-dialog>
-<!-- modal editar -->
-  <q-dialog v-model="showModalEdit">
-    <q-card class="w-[400px]">
-      <q-card-section class="bg-[#04162d]">
-        <h5 class="text-center text-white font-bold p-2 text-xl">
-          INGRESA LOS DATOS
-        </h5>
-      </q-card-section>
-      <div class="p-4">
-        <q-form ref="myForm" @submit.prevent.stop="InventoryPut()">
-          <div class="flex w-full justify-center">
-            <div class="w-[45%]">
-              <q-input
-                type="text"
-                v-model="supplier"
-                label="Proveedor"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.trim().length > 0) || 'Digite el Proveedor',
-                ]"
-              />
-              <q-input
-                type="text"
-                v-model="name"
-                label="Nombre del Producto"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Digite el Nombre',
-                ]"
-              />
-              <q-input
-                type="text"
-                v-model="serial"
-                label="Serial"
-                class="mb-5"
-              />
-              <q-input
-                type="number"
-                v-model="units"
-                label="Unidades"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                  (val && val.toString().trim().length > 0) || 'Digite las Unidades',
-                ]"
-              />
+          </q-form>
+        </div>
+      </q-card>
+    </q-dialog>
+    <!-- modal editar -->
+    <q-dialog v-model="showModalEdit">
+      <q-card class="w-[400px]">
+        <q-card-section class="bg-[#04162d]">
+          <h5 class="text-center text-white font-bold p-2 text-xl">
+            INGRESA LOS DATOS
+          </h5>
+        </q-card-section>
+        <div class="p-4">
+          <q-form ref="myForm" @submit.prevent.stop="InventoryPut()">
+            <div class="flex w-full justify-center">
+              <div class="w-[45%]">
+                <q-input
+                  type="text"
+                  v-model="supplier"
+                  label="Proveedor"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite el Proveedor',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  v-model="name"
+                  label="Nombre del Producto"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite el Nombre',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  v-model="serial"
+                  label="Serial"
+                  class="mb-5"
+                />
+                <q-input
+                  type="number"
+                  v-model="units"
+                  label="Unidades"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite las Unidades',
+                  ]"
+                />
+              </div>
+              <div class="w-[45%] ml-4">
+                <q-input
+                  type="number"
+                  v-model="price"
+                  label="Precio Unitario"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite el Precio',
+                  ]"
+                />
+                <q-input
+                  type="date"
+                  v-model="expirationDate"
+                  label="Fecha de Vencimiento"
+                  class="mb-5"
+                />
+                <q-select
+                  v-model="state"
+                  :options="states"
+                  label="Estado"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Escoja el Estado',
+                  ]"
+                />
+              </div>
             </div>
-            <div class="w-[45%] ml-4">
-              <q-input
-                type="number"
-                v-model="price"
-                label="Precio Unitario"
-                lazy-rules
-                :rules="[
-                  (val) => (val && val.toString().trim().length > 0) || 'Digite el Precio',
-                ]"
-              />
-              <q-input
-                type="date"
-                v-model="expirationDate"
-                label="Fecha de Vencimiento"
-                class="mb-5"
-              />
-              <q-select
-                v-model="state"
-                :options="states"
-                label="Estado"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Escoja el Estado',
-                ]"
-              />
+            <div class="flex justify-center items-center gap-4">
+              <q-btn
+                icon="save_as"
+                label="GUARDAR"
+                :loading="loading"
+                type="submit"
+                class="text-white bg-green-800 rounded-2xl"
+              ></q-btn>
+              <q-btn
+                icon="cancel"
+                type="button"
+                class="text-white bg-red-700 rounded-2xl"
+                v-close-popup
+                >CERRAR
+              </q-btn>
             </div>
-          </div>
-          <div class="flex justify-center items-center gap-4">
-            <q-btn
-              icon="save_as"
-              label="GUARDAR"
-              :loading="loading"
-              type="submit"
-              class="text-white bg-green-800 rounded-2xl"
-            ></q-btn>
-            <q-btn
-              icon="cancel"
-              type="button"
-              class="text-white bg-red-700 rounded-2xl"
-              v-close-popup
-              >CERRAR
-            </q-btn>
-          </div>
-        </q-form>
-      </div>
-    </q-card>
-  </q-dialog>
-  <!-- modal exits -->
-  <q-dialog v-model="showModalExits">
-    <q-card class="w-[400px]">
-      <q-card-section class="bg-[#04162d]">
-        <h5 class="text-center text-white font-bold p-2 text-xl">
-          INGRESA LOS DATOS
-        </h5>
-      </q-card-section>
-      <div class="p-4">
-        <q-form ref="myForm" @submit.prevent.stop="ExitsPost()">
-          <div class="flex w-full justify-center">
-            <div class="w-[45%]">
-              <q-input
-                type="text"
-                readonly
-                v-model="nameExit"
-                label="Nombre del Producto"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                    (val && val.toString().trim().length > 0) ||
-                    'Digite el Nombre',
-                ]"
-              />
-              <q-input
-                type="text"
-                readonly
-                v-model="serialExit"
-                label="Serial"
-                class="mb-5"
-              />
-              <q-input
-                type="number"
-                readonly
-                v-model="units2"
-                label="Unidades Disponibles"
-                lazy-rules
-                :rules="[
-                  (val) =>
-                  (val && val.toString().trim().length > 0) || 'Digite las Unidades',
-                ]"
-              />
-            </div>
-            <div class="w-[45%] ml-4">
-              <q-input
-                type="number"
-                v-model="unitsExit"
-                label="Unidades a Sacar"
-                lazy-rules
+          </q-form>
+        </div>
+      </q-card>
+    </q-dialog>
+    <!-- modal exits -->
+    <q-dialog v-model="showModalExits">
+      <q-card class="w-[400px]">
+        <q-card-section class="bg-[#04162d]">
+          <h5 class="text-center text-white font-bold p-2 text-xl">
+            INGRESA LOS DATOS
+          </h5>
+        </q-card-section>
+        <div class="p-4">
+          <q-form ref="myForm" @submit.prevent.stop="ExitsPost()">
+            <div class="flex w-full justify-center">
+              <div class="w-[45%]">
+                <q-input
+                  type="text"
+                  readonly
+                  v-model="nameExit"
+                  label="Nombre del Producto"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite el Nombre',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  readonly
+                  v-model="serialExit"
+                  label="Serial"
+                  class="mb-5"
+                />
+                <q-input
+                  type="number"
+                  readonly
+                  v-model="units2"
+                  label="Unidades Disponibles"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite las Unidades',
+                  ]"
+                />
+              </div>
+              <div class="w-[45%] ml-4">
+                <q-input
+                  type="number"
+                  v-model="unitsExit"
+                  label="Unidades a Sacar"
+                  lazy-rules
                   :rules="[
                     (val) =>
                       (val &&
@@ -384,7 +389,9 @@
                   label="Precio Unitario"
                   lazy-rules
                   :rules="[
-                    (val) => (val && val.toString().trim().length > 0) || 'Digite el Precio',
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite el Precio',
                   ]"
                 /><q-input
                   type="number"
@@ -392,55 +399,59 @@
                   label="Descuento"
                   lazy-rules
                   :rules="[
-                    (val) => (val && val.toString().trim().length > 0) || 'Digite el Descuento',
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite el Descuento',
                   ]"
-                />     
+                />
+              </div>
             </div>
-          </div>
-          <div class="flex justify-center items-center gap-4">
-            <q-btn
-              icon="save_as"
-              label="GUARDAR"
-              :loading="loading"
-              type="submit"
-              class="text-white bg-green-800 rounded-2xl"
-            ></q-btn>
-            <q-btn
-              icon="cancel"
-              type="button"
-              class="text-white bg-red-700 rounded-2xl"
-              v-close-popup
-              >CERRAR
-            </q-btn>
-          </div>
-        </q-form>
-      </div>
-    </q-card>
-  </q-dialog>
+            <div class="flex justify-center items-center gap-4">
+              <q-btn
+                icon="save_as"
+                label="GUARDAR"
+                :loading="loading"
+                type="submit"
+                class="text-white bg-green-800 rounded-2xl"
+              ></q-btn>
+              <q-btn
+                icon="cancel"
+                type="button"
+                class="text-white bg-red-700 rounded-2xl"
+                v-close-popup
+                >CERRAR
+              </q-btn>
+            </div>
+          </q-form>
+        </div>
+      </q-card>
+    </q-dialog>
   </div>
- 
 </template>
 
 <script setup>
 import { ref, onMounted, defineSSRCustomElement } from "vue";
-import Tables from "@/components/table.vue"
-import Modal from "@/components/modals.vue"
+import Tables from "@/components/table.vue";
+import Modal from "@/components/modals.vue";
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
 import { exitStore } from "../store/exits.js";
-import {sweetDelete} from "@/Global/notify"
-
+import { sweetDelete } from "@/Global/notify";
 
 const storeInventory = inventoryStore();
 const storeLogin = LoginStore();
 const storeExits = exitStore();
 
+console.log(LoginStore.Email);
+console.log(LoginStore.rol);
+
+
 let showModal = ref(false);
-let showModalEdit=ref(false)
-let showModalExits=ref(false)
+let showModalEdit = ref(false);
+let showModalExits = ref(false);
 let loading = ref(false);
 // variables inventory
-let index=ref()
+let index = ref();
 let supplier = ref("");
 let name = ref("");
 let serial = ref("");
@@ -454,17 +465,15 @@ let opCopias = ref(["Sí", "No"]);
 let crearCopias = ref();
 let user = ref(storeLogin.Email);
 let TotalUnits = ref();
-// variables exits 
-let nameExit=ref("")
-let serialExit=ref("")
-let units2=ref()
-let unitsExit=ref()
-let priceExit=ref()
-let descount=ref("")
-
+// variables exits
+let nameExit = ref("");
+let serialExit = ref("");
+let units2 = ref();
+let unitsExit = ref();
+let priceExit = ref();
+let descount = ref("");
 
 let rows = ref([]);
-
 
 // peticiones
 async function InventoryGet() {
@@ -472,11 +481,14 @@ async function InventoryGet() {
   if (res && res.status < 299) {
     rows.value = res.data;
     rows.value.forEach((row, index) => {
-      row.index= index + 1;
+      row.index = index + 1;
       TotalUnits.value = 0;
-      TotalUnits.value = rows.value.reduce((total, row) => total + row.Units, 0);
+      TotalUnits.value = rows.value.reduce(
+        (total, row) => total + row.Units,
+        0
+      );
     });
-  } 
+  }
 }
 async function InventoryPost() {
   loading.value = true;
@@ -562,36 +574,36 @@ async function ExitsPost() {
     unitsExit.value,
     priceExit.value,
     descount.value,
-    user.value,
+    user.value
   );
   showModalExits.value = false;
-  await putUnidades()
+  await putUnidades();
   InventoryGet();
   loading.value = false;
 }
 async function putUnidades() {
-   const res = await storeInventory.PutUnits(
-      index.value,
-      units2.value,
-      unitsExit.value
-)}
-
-
-function cleanForm() {
-  supplier.value = ""
-  name.value = ""
-  serial.value = ""
-  units.value = ""
-  price.value = ""
-  expirationDate.value = ""
-  state.value = "Disponible"
-  copias.value = ""
-  crearCopias.value = ""
-  unitsExit.value=""
-  descount.value=""
+  const res = await storeInventory.PutUnits(
+    index.value,
+    units2.value,
+    unitsExit.value
+  );
 }
 
-// <---------------------------------------------------------------------> 
+function cleanForm() {
+  supplier.value = "";
+  name.value = "";
+  serial.value = "";
+  units.value = "";
+  price.value = "";
+  expirationDate.value = "";
+  state.value = "Disponible";
+  copias.value = "";
+  crearCopias.value = "";
+  unitsExit.value = "";
+  descount.value = "";
+}
+
+// <--------------------------------------------------------------------->
 // all table
 let pagination = { rowsPerPage: 50 };
 
@@ -770,19 +782,19 @@ const onKey = (evt) => {
 };
 
 function goInfo(data) {
-    (supplier.value = data.Supplier),
+  (supplier.value = data.Supplier),
     (name.value = data.Name),
     (serial.value = data.Serial),
     (units.value = data.Units),
     (price.value = data.Price),
     (expirationDate.value = data.ExpirationDate),
-    (state.value = data.State)
+    (state.value = data.State);
 }
 function goInfo2(data) {
-    (nameExit.value = data.Name),
+  (nameExit.value = data.Name),
     (serialExit.value = data.Serial),
     (units2.value = data.Units),
-    (priceExit.value = data.Price)
+    (priceExit.value = data.Price);
 }
 
 onMounted(() => {

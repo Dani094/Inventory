@@ -1,6 +1,6 @@
 <template>
     <div>
-        <canvas :id="chartId" class="flex justify-center items-center p-10" :style="{ width: chartWidth, height: chartHeight }"></canvas> 
+        <canvas :id="chartId" class="flex justify-center items-center p-4 lg:p-10" :style="{ width: chartWidth, height: chartHeight }"></canvas> 
     </div>
 </template>
 

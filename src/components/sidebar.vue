@@ -63,7 +63,7 @@
         </div>
     </div>
     <!-- menu movil  -->
-    <nav class='bg-[#04162d] lg:hidden fixed w-full bottom-0 left-0 text-2xl text-white py-2 px-8 flex items-center
+    <nav class='bg-[#04162d] lg:hidden fixed w-full mb-0 bottom-[0] left-0 text-2xl text-white py-2 px-8 flex items-center
     justify-between rounded-tl-md rounded-tr-md z-50'>
       <button class='p-2'>
         <span class="material-icons">
@@ -96,14 +96,14 @@ import {ref} from "vue"
 import { LoginStore } from "../store/login.js";
 import { useRouter } from "vue-router";
 
-let showSidebar=ref(false)
+const storelogin = LoginStore();
+const router = useRouter();
 
+let showSidebar=ref(false)
 function toggleSidebar() {
     showSidebar.value = !showSidebar.value
 }
 
-const storelogin = LoginStore();
-const router = useRouter();
 
 const logout = () => {
   storelogin.logoutUser();
