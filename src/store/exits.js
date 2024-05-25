@@ -53,11 +53,46 @@ export const exitStore = defineStore("exitStore", () => {
       );
     }
   }
+  async function PutExits(
+    id,
+    nameExit,
+    serialExit,
+    unitsExit,
+    priceExit,
+    discount,
+    user
+  ) 
+  {
+    try {
+      return (
+        await requestAxios.put(
+          `/exits/put/${id}`,
+          {
+            Name: nameExit,
+            Serial: serialExit,
+            Units: unitsExit,
+            Price: priceExit,
+            Discount: discount,
+            UserUpdate: user,
+          },
+          {
+            headers: {
+              token: useToken.token,
+            },
+          }
+        ),
+        notifySuccess("Salida Actualizada Correctamente")
+      );
+    } catch (error) {
+      console.log(error);
+      notifyError("No se pudo Actualizar la Salida Correctamente");
+    }
+  }
   async function DeleteExits(id) {
     try {
       return (
         await requestAxios.delete(`/exits/delete/${id}`),
-        notifySuccess("Producto Eliminado Correctamente")
+        notifySuccess("Salida Eliminada Correctamente")
       );
     } catch (error) {
       console.error(error);
@@ -68,6 +103,7 @@ export const exitStore = defineStore("exitStore", () => {
   return {
     GetExits,
     PostExits,
+    PutExits,
     DeleteExits
   };
 },

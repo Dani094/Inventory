@@ -395,7 +395,7 @@
                   ]"
                 /><q-input
                   type="number"
-                  v-model="descount"
+                  v-model="discount"
                   label="Descuento"
                   lazy-rules
                   :rules="[
@@ -468,7 +468,7 @@ let serialExit = ref("");
 let units2 = ref();
 let unitsExit = ref();
 let priceExit = ref();
-let descount = ref("");
+let discount = ref("");
 
 let rows = ref([]);
 
@@ -503,7 +503,6 @@ async function InventoryPost() {
     const itemToDuplicate = {
       Supplier: supplier.value,
       Name: name.value,
-      Serial: serial.value,
       Units: units.value,
       Price: price.value,
       ExpirationDate: expirationDate.value,
@@ -517,7 +516,6 @@ async function InventoryPost() {
       await storeInventory.PostInventory(
         duplicatedItem.Supplier,
         duplicatedItem.Name,
-        duplicatedItem.Serial,
         duplicatedItem.Units,
         duplicatedItem.Price,
         duplicatedItem.ExpirationDate,
@@ -550,12 +548,10 @@ async function InventoryPut() {
   loading.value = false;
 }
 async function deleteItem(data) {
-  loading.value = true;
   sweetDelete(data, async () => {
     try {
       await storeInventory.DeleteInventory(data._id);
       InventoryGet();
-      loading.value = false;
     } catch (error) {
       console.log(error);
     }
@@ -570,7 +566,7 @@ async function ExitsPost() {
     serialExit.value,
     unitsExit.value,
     priceExit.value,
-    descount.value,
+    discount.value,
     user.value
   );
   showModalExits.value = false;
@@ -597,7 +593,7 @@ function cleanForm() {
   copias.value = "";
   crearCopias.value = "";
   unitsExit.value = "";
-  descount.value = "";
+  discount.value = "";
 }
 
 // <--------------------------------------------------------------------->
@@ -788,10 +784,10 @@ function goInfo(data) {
     (state.value = data.State);
 }
 function goInfo2(data) {
-  (nameExit.value = data.Name),
+    (nameExit.value = data.Name),
     (serialExit.value = data.Serial),
     (units2.value = data.Units),
-    (priceExit.value = data.Price);
+    (priceExit.value = data.Price)
 }
 
 onMounted(() => {

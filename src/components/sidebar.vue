@@ -8,53 +8,53 @@
                 </h1>
             </li>
             <!-- options  -->
-            <li :class="[$route.path == '/home' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition'>
+            <li :class="[$route.path == '/home' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition text-center'>
                 <router-link to="/home">
-                    <span class="material-icons  block rounded-xl text-center text-2xl">
+                    <span class="material-icons text-2xl">
                         home
                     </span>
                 </router-link>
             </li>
-            <li :class="[$route.path == '/inventory' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition'>
+            <li :class="[$route.path == '/inventory' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition text-center'>
                 <router-link to="/inventory">
-                    <span class="material-icons  block rounded-xl text-center text-2xl">
+                    <span class="material-icons text-2xl">
                         inventory
                     </span>
                 </router-link>
             </li>
-            <li :class="[$route.path == '/exits' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition'>
+            <li :class="[$route.path == '/exits' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition text-center'>
                 <router-link to="/exits">
-                    <span class="material-icons  block rounded-xl text-center text-2xl">
+                    <span class="material-icons text-2xl">
                         production_quantity_limits
                     </span>
                 </router-link>
             </li>
-            <li :class="[$route.path == '/bill' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition'>
+            <li :class="[$route.path == '/bill' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition text-center'>
                 <router-link to="/bill">
-                    <span class="material-icons  block rounded-xl text-center text-2xl">
+                    <span class="material-icons text-2xl">
                         attach_money
                     </span>
                 </router-link>
             </li>
-            <li :class="[$route.path == '/reports' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition'>
+            <li :class="[$route.path == '/reports' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition text-center'>
                 <router-link to="/reports">
-                        <i class="fa-solid fa-file-excel  block rounded-xl text-center text-2xl"></i>
+                        <i class="fa-solid fa-file-excel text-2xl"></i>
                 </router-link>
             </li>
         </ul>
         <!-- div logout  -->
         <div>
             <ul class="pl-4">
-                <li class="hover:bg-[#E7E8F3] hover:text-black rounded-tl-xl rounded-bl-xl p-4 text-center transition">
+                <li class="hover:bg-[#E7E8F3] hover:text-[#04162d] rounded-tl-xl rounded-bl-xl p-4 text-center transition">
                     <router-link to="/">
-                        <span class="material-icons block rounded-xl text-2xl font-bold">
+                        <span class="material-icons text-2xl">
                             person
                         </span>
                     </router-link>
                 </li>
-                <li class="hover:bg-[#E7E8F3] hover:text-black rounded-tl-xl rounded-bl-xl p-4 text-center transition">
+                <li class="hover:bg-[#E7E8F3] hover:text-[#04162d] rounded-tl-xl rounded-bl-xl p-4 text-center transition">
                     <router-link to="/" @click="logout()">
-                        <span class="material-icons block rounded-xl text-2xl font-bold">
+                        <span class="material-icons text-2xl">
                             logout
                         </span>
                     </router-link>

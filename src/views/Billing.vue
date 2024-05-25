@@ -1,17 +1,18 @@
 <template>
-        <div class="lg:pl-40 lg:pr-20 p-4 ">
+        <div class="lg:pl-40 lg:pr-20 p-4">
           
         <!-- title -->
-            <div class="mb-4 ">
+            <div class="mb-4">
                 <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl">
-                    Facturación
+                    <span class="material-icons text-5xl"> arrow_right </span>
+                    FACTURACIÓN
                 </h1>
             </div>
         <!-- btns y search-->
         <div class="flex justify-between py-4 ">
             <div class="flex items-center ">
                 <div class="bg-[#04162d] px-4 p-2 rounded-2xl">
-                  <h4 class="text-xl text-white font-bold">Cantidad de Facturas: {{ TotalUnits }}</h4>
+                  <h4 class="text-xl text-white font-bold">Total Facturas: {{ TotalUnits }}</h4>
                 </div>
             </div>
             <q-btn icon="add" class="rounded-xl bg-[#04162d] text-white " @click="dialog = true"></q-btn>
@@ -26,7 +27,7 @@
                    
           
           <!-- tables -->
-            <div class="mr-2 w-full mt-6" >
+            <div class="mr-2 w-full">
              <Tables :rows="rows" :columns="columns"  /> 
           </div>
           
@@ -46,7 +47,7 @@ import Modal from "@/components/modals.vue"
 import { bill } from "../store/billing.js";
 const storeBilling = bill()
 
-let TotalUnits = ref()
+let TotalUnits = ref("")
 let loading = ref(false)
 let dialog = ref(false)
 let index = ref()
@@ -109,8 +110,7 @@ const getBill = async () => {
   if (res.status < 299) {
     rows.value = res.data;
     rows.value.forEach((row, index) => {
-   row.index = index + 1;
-    
+        row.index = index + 1;
 });
      
   }
