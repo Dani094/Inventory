@@ -9,16 +9,16 @@
                 </h1>
             </div>
             <div>
-                <div class="q-pa-md" style="max-width: 350px">
+                <div class="q-pa-md">
                     <q-expansion-item
                     v-model="expanded"
                     icon="person"
                     :label="storeLogin.Name"
                     :caption="storeLogin.Email"
                     >
-                    <q-card>
+                    <q-card class="fixed">
                         <q-card-section>
-                        hola
+                            hola
                         </q-card-section>
                     </q-card>
                     </q-expansion-item>

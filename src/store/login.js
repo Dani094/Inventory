@@ -24,7 +24,6 @@ export const LoginStore = defineStore('LoginStore', () => {
           user.value = decoded.user
           Name.value = decoded.Name
           Email.value = decoded.Email
-          console.log(Name.value);
           notifySuccess('BIENVENIDO');
           return response
         } catch (error) {
@@ -61,7 +60,7 @@ const logoutUser= ()=>{
 
 
 
-  return {  newLogin, newContraseña, logoutUser ,login, token,rol, Email, user, dateLogin } },
+  return {  newLogin, newContraseña, logoutUser ,login, token,rol, Email, user, Name, dateLogin } },
   {
     persist: true,
   },);

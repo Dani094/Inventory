@@ -430,9 +430,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineSSRCustomElement } from "vue";
-import Tables from "@/components/table.vue";
-import Modal from "@/components/modals.vue";
+import { ref, onMounted } from "vue";
+// import Tables from "@/components/table.vue";
+// import Modal from "@/components/modals.vue";
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
 import { exitStore } from "../store/exits.js";
@@ -441,9 +441,6 @@ import { sweetDelete } from "@/Global/notify";
 const storeInventory = inventoryStore();
 const storeLogin = LoginStore();
 const storeExits = exitStore();
-
-console.log(LoginStore.Email);
-console.log(LoginStore.rol);
 
 
 let showModal = ref(false);
