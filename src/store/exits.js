@@ -100,11 +100,43 @@ export const exitStore = defineStore("exitStore", () => {
     }
   }
   
+
+
+  // get for date 
+  async function GetForDate(fecha) {
+    try {
+      const response = await requestAxios.get(
+        `/exits/getFechas/${fecha}`
+      );
+      if (response.data && response.data.length === 0) {
+        notifyError("No Se Encuentran datos en esa Fecha");
+      } else {
+        return response;
+      }
+    } catch (error) {
+      notifyError("No Se Encuentran Datos en esa Fecha");
+    }
+  }
+  async function GetForDay(fecha) {
+    try {
+      const response = await requestAxios.get(`/exits/getDay/${fecha}`);
+      if (response.data && response.data.length === 0) {
+        notifyError("No Se Encuentran Datos en ese Día");
+      } else {
+        return response;
+      }
+    } catch (error) {
+      notifyError("No Se Encuentra datos en esa Fecha");
+    }
+  }
+
   return {
     GetExits,
     PostExits,
     PutExits,
-    DeleteExits
+    DeleteExits,
+    GetForDate,
+    GetForDay
   };
 },
   {

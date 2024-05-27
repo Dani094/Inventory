@@ -9,18 +9,22 @@
     </div>
     <!-- count and add-->
     <div class="flex justify-between py-4">
-      <div class="flex items-center">
-        <div class="bg-[#04162d] px-4 p-2 rounded-2xl">
-          <h4 class="text-xl text-white font-bold">
-            Total Unidades: {{ TotalUnits }}
-          </h4>
+        <div class="flex items-center">
+          <div class="bg-[#04162d] px-4 p-2 rounded-2xl">
+            <h4 class="text-xl text-white font-bold">
+              Total Unidades: {{ TotalUnits }}
+            </h4>
+          </div>
         </div>
+      <div class="flex gap-2">
+        <Report :inventory="true"/>
+          <q-btn
+            icon="add"
+            class="rounded-xl bg-[#04162d] text-white"
+            @click="(showModal = true), cleanForm()">
+          </q-btn>
       </div>
-      <q-btn
-        icon="add"
-        class="rounded-xl bg-[#04162d] text-white"
-        @click="(showModal = true), cleanForm()"
-      ></q-btn>
+      
     </div>
     <!-- table  -->
     <!-- <Tables :rows="rows" :columns="columns" :showModal="showModal" :Post="InventoryPut"/> -->
@@ -431,6 +435,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import Report from "@/views/reports.vue"
 // import Tables from "@/components/table.vue";
 // import Modal from "@/components/modals.vue";
 import { inventoryStore } from "@/store/inventory.js";

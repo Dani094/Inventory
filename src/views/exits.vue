@@ -7,7 +7,7 @@
                     SALIDAS
                 </h1>
             </div>
-            <!-- btns y search-->
+            <!-- total y download-->
         <div class="flex justify-between py-4">
             <div class="flex items-center">
                 <div class="bg-[#04162d] px-4 p-2 rounded-2xl">
@@ -16,6 +16,8 @@
                     </h4>
                 </div>
             </div>
+            <Report :exits="true"/>
+
         </div>
         <!-- table  -->
         <!-- <Tables :rows="rows" :columns="columns" /> -->
@@ -167,7 +169,7 @@
 
 <script setup>
 import {ref, onMounted} from "vue"
-import Tables from "@/components/table.vue"
+import Report from "@/views/reports.vue"
 import {exitStore} from "@/store/exits.js"
 import { LoginStore } from "../store/login.js";
 import {sweetDelete} from "@/Global/notify"
@@ -275,6 +277,12 @@ let columns = ref([
         align: "center",
         label: "TOTAL",
         field: (row) => parseFloat(row.Total).toLocaleString(),
+    },
+    {
+        name: "date",
+        label: "FECHA",
+        field: (row) => row.createdAt.slice(0, 10),
+        align: "center",
     },
     {
         name: "options",

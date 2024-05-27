@@ -19,7 +19,6 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     }
   }
   async function Filter(filter) {
-    console.log(filter);
     try {
       return await requestAxios.get(`/inventory/${filter}`, {
         headers: {
@@ -136,13 +135,43 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     }
   }
 
+  // get for date 
+  async function GetForDate(fecha) {
+    try {
+      const response = await requestAxios.get(
+        `/inventory/getFechas/${fecha}`
+      );
+      if (response.data && response.data.length === 0) {
+        notifyError("No Se Encuentran datos en esa Fecha");
+      } else {
+        return response;
+      }
+    } catch (error) {
+      notifyError("No Se Encuentran Datos en esa Fecha");
+    }
+  }
+  async function GetForDay(fecha) {
+    try {
+      const response = await requestAxios.get(`/inventory/getDia/${fecha}`);
+      if (response.data && response.data.length === 0) {
+        notifyError("No Se Encuentran Datos en ese Día");
+      } else {
+        return response;
+      }
+    } catch (error) {
+      notifyError("No Se Encuentra datos en esa Fecha");
+    }
+  }
+
   return {
     GetInventory,
     Filter,
     PostInventory,
     PutInventory,
     DeleteInventory,
-    PutUnits
+    PutUnits,
+    GetForDate,
+    GetForDay
   };
 },
   {
