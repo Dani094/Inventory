@@ -44,7 +44,7 @@
         </ul>
         <!-- div logout  -->
         <div>
-            <ul class="pl-4">
+            <ul class="pl-4 mb-10 lg:mb-0">
                 <li class="hover:bg-[#E7E8F3] hover:text-[#04162d] rounded-tl-xl rounded-bl-xl p-4 text-center transition">
                     <router-link to="/">
                         <span class="material-icons text-2xl">
