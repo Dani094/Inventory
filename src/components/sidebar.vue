@@ -36,22 +36,17 @@
                     </span>
                 </router-link>
             </li>
-            <li :class="[$route.path == '/reports' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition text-center'>
-                <router-link to="/reports">
-                        <i class="fa-solid fa-file-excel text-2xl"></i>
+            <li :class="[$route.path == '/user' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class="hover:bg-[#E7E8F3] hover:text-[#04162d] rounded-tl-xl rounded-bl-xl p-4 text-center transition">
+                <router-link to="/user">
+                    <span class="material-icons text-2xl">
+                        person
+                    </span>
                 </router-link>
             </li>
         </ul>
         <!-- div logout  -->
         <div>
             <ul class="pl-4 mb-10 lg:mb-0">
-                <li class="hover:bg-[#E7E8F3] hover:text-[#04162d] rounded-tl-xl rounded-bl-xl p-4 text-center transition">
-                    <router-link to="/">
-                        <span class="material-icons text-2xl">
-                            person
-                        </span>
-                    </router-link>
-                </li>
                 <li class="hover:bg-[#E7E8F3] hover:text-[#04162d] rounded-tl-xl rounded-bl-xl p-4 text-center transition">
                     <router-link to="/" @click="logout()">
                         <span class="material-icons text-2xl">
@@ -65,21 +60,25 @@
     <!-- menu movil  -->
     <nav class='bg-[#04162d] lg:hidden fixed w-full mb-0 bottom-[0] left-0 text-2xl text-white py-2 px-8 flex items-center
     justify-between rounded-tl-md rounded-tr-md z-50'>
-      <button class='p-2'>
-        <span class="material-icons">
-          person
-        </span>
-      </button>
-    <router-link to="/home"><button class='p-2'>
-        <span class="material-icons">
-          home
-        </span>
-      </button>
+    <router-link to="/user">
+        <button class='p-2'>
+            <span class="material-icons">
+                person
+            </span>
+        </button>
     </router-link>
-    <router-link to="/inventory"><button class='p-2'>
-        <span class="material-icons">
-            inventory
-        </span>
+    <router-link to="/home">
+        <button class='p-2'>
+            <span class="material-icons">
+                home
+            </span>
+        </button>
+    </router-link>
+    <router-link to="/inventory">
+        <button class='p-2'>
+            <span class="material-icons">
+                inventory
+            </span>
       </button>
     </router-link>
       <button @click="toggleSidebar()" class='p-2'>

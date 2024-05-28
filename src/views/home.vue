@@ -13,8 +13,10 @@
                     <q-expansion-item
                     v-model="expanded"
                     icon="person"
+                    header-class="text-[#04162d] font-bold"
                     :label="storeLogin.Name"
                     :caption="storeLogin.Email"
+                    class="rounded-xl"
                     >
                     <q-card class="fixed">
                         <q-card-section>
@@ -55,7 +57,7 @@
                 </div>
             </div>
         </div>
-
+        <FooterUs class="mt-4"/>
     </div>
 </template>
 
@@ -63,14 +65,11 @@
 import {ref} from "vue"
 import CardInfo from "@/components/card.vue";
 import ChartUse from "@/components/charts.vue"
+import FooterUs from "@/components/footer.vue";
 import { LoginStore } from "../store/login.js";
 
 const storeLogin = LoginStore();
 let expanded=ref(false)
 
-console.log(storeLogin.Email);
-console.log(storeLogin.user);
-console.log(storeLogin.Name);
 
-let name=ref(storeLogin.Name)
 </script>
