@@ -57,6 +57,7 @@
                 </div>
             </div>
         </div>
+        <!-- footer  -->
         <FooterUs class="mt-4"/>
     </div>
 </template>
