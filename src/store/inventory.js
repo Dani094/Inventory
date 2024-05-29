@@ -18,19 +18,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
       notifyError("No fue posible obtener el Inventario");
     }
   }
-  async function Filter(filter) {
-    try {
-      return await requestAxios.get(`/inventory/${filter}`, {
-        headers: {
-          token: useToken.token,
-        },
-      });
-    } catch (error) {
-      notifyError("No Se Encuentra en el Inventario");
-    }
-  }
-
-  // Function add, update and delete inventory
+  // Function post, put and delete inventory
   async function PostInventory(
     supplier,
     name,
@@ -165,7 +153,6 @@ export const inventoryStore = defineStore("inventoryStore", () => {
 
   return {
     GetInventory,
-    Filter,
     PostInventory,
     PutInventory,
     DeleteInventory,

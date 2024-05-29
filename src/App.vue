@@ -1,6 +1,5 @@
 <script setup>
 import Sidebar from "@/components/sidebar.vue"
-import Home from "@/views/home.vue"
 </script>
 
 <template>

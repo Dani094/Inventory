@@ -543,12 +543,11 @@ async function InventoryPut() {
     serial.value,
     units.value,
     price.value,
-    expirationDate.value,
+    expirationDate,
     state.value,
     user.value
   );
   showModalEdit.value = false;
-  // search();
   InventoryGet();
   loading.value = false;
 }
@@ -655,6 +654,16 @@ let columns = ref([
     field: (row) =>
       row.ExpirationDate ? row.ExpirationDate.slice(0, 10) : "NA",
     align: "center",
+    style: (row) => {
+      const expirationDate = new Date(row.ExpirationDate);
+      const currentDate = new Date();
+      if (expirationDate < currentDate) {
+        return "color: red"; // Expirado
+      }
+      if (expirationDate >= currentDate) {
+        return "color: green"; // No expirado
+      }
+    },
   },
   {
     name: "updateAt",
@@ -785,7 +794,7 @@ function goInfo(data) {
     (serial.value = data.Serial),
     (units.value = data.Units),
     (price.value = data.Price),
-    (expirationDate.value = data.ExpirationDate),
+    (expirationDate = data.ExpirationDate ? data.ExpirationDate.slice(0,10) : ""),
     (state.value = data.State);
 }
 function goInfo2(data) {

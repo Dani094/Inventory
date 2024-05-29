@@ -34,16 +34,20 @@ const getTicketColors = (title) => {
 
   switch (title) {
     case "Total Inventario":
-      ticketColors.iconColor = "text-yellow-500";
-      ticketColors.textColor = "text-yellow-500";
+      ticketColors.iconColor = "text-green-500";
+      ticketColors.textColor = "text-green-500";
       break;
     case "Total Salidas":
       ticketColors.iconColor = "text-blue-500";
       ticketColors.textColor = "text-blue-500";
       break;
-    case "Total":
+    case "Productos Agotados":
       ticketColors.iconColor = "text-pink-500";
       ticketColors.textColor = "text-pink-500";
+      break;
+    case "Productos Vencidos":
+      ticketColors.iconColor = "text-yellow-500";
+      ticketColors.textColor = "text-yellow-500";
       break;
     default:
       ticketColors.iconColor = "text-[#04162d]";

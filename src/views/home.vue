@@ -29,10 +29,10 @@
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-6">
             <!-- Card -->
-            <CardInfo :num="20000" :title="'Total Inventario'" :newRoute="'/inventory'" />
-            <CardInfo :num="80000" :title="'Total Salidas'" :newRoute="'/exits'" />
-            <CardInfo :num="1300000" :title="'Total'" :newRoute="'/home'" />
-            <CardInfo :num="300000" :title="'Total Todo'" :newRoute="'/inventory'" />
+            <CardInfo :num="TotalUnits" :title="'Total Inventario'" :newRoute="'/inventory'" />
+            <CardInfo :num="TotalUnits2" :title="'Total Salidas'" :newRoute="'/exits'" />
+            <CardInfo :num="spent" :title="'Productos Agotados'" :newRoute="'/inventory'" />
+            <CardInfo :num="expiration" :title="'Productos Vencidos'" :newRoute="'/inventory'" />
         </div>
         <!-- graficas  -->
             <div class="mb-6">
@@ -46,14 +46,14 @@
         <!-- charts -->
         <div class="flex gap-4">
             <div class="w-full lg:w-[45%] bg-white rounded-2xl">
-                <ChartUse :names="names" :valores="valores" :newType="'bar'" chartId="chart1" />
+                <ChartUse :newType="'bar'" chartId="chart1" />
             </div>
             <div class="w-full lg:w-[53.40%] bg-white rounded-2xl">
-                <ChartUse :names="names" :valores="valores" :newType="'line'" chartId="chart2" />
+                <ChartUse :newType="'line'" chartId="chart2" />
             </div>
             <div class="w-full bg-white rounded-2xl flex justify-center">
                 <div class="w-full lg:w-[30%] bg-white rounded-2xl">
-                    <ChartUse :names="names" :valores="valores" :newType="'pie'" chartId="chart3" />
+                    <ChartUse :newType="'pie'" chartId="chart3" />
                 </div>
             </div>
         </div>
@@ -63,14 +63,56 @@
 </template>
 
 <script setup>
-import {ref} from "vue"
+import {ref, onMounted} from "vue"
 import CardInfo from "@/components/card.vue";
 import ChartUse from "@/components/charts.vue"
 import FooterUs from "@/components/footer.vue";
+import { inventoryStore } from "@/store/inventory.js";
+import {exitStore} from "@/store/exits.js"
 import { LoginStore } from "../store/login.js";
 
+
+
+const storeInventory = inventoryStore();
+const storeExits = exitStore();
 const storeLogin = LoginStore();
+
 let expanded=ref(false)
+let TotalUnits=ref(0)
+let TotalUnits2=ref(0)
+let spent=ref(0)
+let expiration=ref(0)
+
+async function InventoryGet() {
+  const res = await storeInventory.GetInventory();
+  if (res && res.status < 299) {
+    for (let i in res.data) {
+        let units= res.data[i].SellingPrice
+        TotalUnits.value += units
+        if (res.data[i].State === "Agotado") {
+            spent.value += 1; 
+        }
+        let expirationDate = new Date(res.data[i].ExpirationDate);
+        let currentDate = new Date();
+        if (expirationDate < currentDate) {
+            expiration.value += 1;
+        }
+    }
+  }
+}
+async function ExitsGet() {
+  const res = await storeExits.GetExits();
+  if (res && res.status < 299) {
+    for (let i in res.data) {
+        let units= res.data[i].Total
+        TotalUnits2.value += units
+    }
+  } 
+}
 
 
+onMounted(() => {
+  InventoryGet();
+  ExitsGet()
+});
 </script>
