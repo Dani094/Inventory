@@ -657,6 +657,9 @@ let columns = ref([
     style: (row) => {
       const expirationDate = new Date(row.ExpirationDate);
       const currentDate = new Date();
+      if (!row.ExpirationDate) {
+        return "color: black"; // NA
+      }
       if (expirationDate < currentDate) {
         return "color: red"; // Expirado
       }

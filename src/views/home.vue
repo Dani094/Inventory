@@ -92,11 +92,14 @@ async function InventoryGet() {
         if (res.data[i].State === "Agotado") {
             spent.value += 1; 
         }
-        let expirationDate = new Date(res.data[i].ExpirationDate);
+        let expirationDate = res.data[i].ExpirationDate;
+        if (expirationDate && expirationDate !== "NA") {
+        expirationDate = new Date(expirationDate);
         let currentDate = new Date();
         if (expirationDate < currentDate) {
-            expiration.value += 1;
+          expiration.value += 1;
         }
+      }
     }
   }
 }
