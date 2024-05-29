@@ -18,11 +18,14 @@
                     :caption="storeLogin.Email"
                     class="rounded-xl"
                     >
-                    <q-card class="fixed">
-                        <q-card-section>
-                            hola
+                    <!-- <q-card class="fixed flex items-md-end">
+                        <q-card-section class="flex flex-col">
+                            <q-btn flat icon="settings">
+                            </q-btn>
+                            <q-btn flat icon="settings">
+                            </q-btn>
                         </q-card-section>
-                    </q-card>
+                    </q-card> -->
                     </q-expansion-item>
                 </div>
             </div>
@@ -45,16 +48,17 @@
         </div>
         <!-- charts -->
         <div class="flex gap-4">
-            <div class="w-full lg:w-[45%] bg-white rounded-2xl">
-                <ChartUse :newType="'bar'" chartId="chart1" />
+            <div class="w-full lg:w-[55%] bg-white rounded-2xl">
+                <ChartUse :chartInventory="true" :title="'Inventario'" :newType="'bar'" chartId="chart1"/>
             </div>
-            <div class="w-full lg:w-[53.40%] bg-white rounded-2xl">
-                <ChartUse :newType="'line'" chartId="chart2" />
+            <div class="w-full lg:w-[44%] bg-white rounded-2xl">
+                <ChartUse :chartInventory="true" :newType="'pie'" chartId="chart3" class="w-full h-[500px] flex justify-center items-center"/>
             </div>
-            <div class="w-full bg-white rounded-2xl flex justify-center">
-                <div class="w-full lg:w-[30%] bg-white rounded-2xl">
-                    <ChartUse :newType="'pie'" chartId="chart3" />
-                </div>
+            <div class="w-full lg:w-[55%] bg-white rounded-2xl">
+                <ChartUse :chartExits="true" :title="'Salidas'" :newType="'line'" chartId="chart2" />
+            </div>
+            <div class="w-full lg:w-[44%] bg-white rounded-2xl">
+                <ChartUse :chartExits="true" :newType="'polarArea'" chartId="chart4" class="w-full h-[500px] flex justify-center items-center"/>
             </div>
         </div>
         <!-- footer  -->
@@ -82,6 +86,9 @@ let TotalUnits=ref(0)
 let TotalUnits2=ref(0)
 let spent=ref(0)
 let expiration=ref(0)
+
+let names=ref()
+let valores=ref()
 
 async function InventoryGet() {
   const res = await storeInventory.GetInventory();

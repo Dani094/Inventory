@@ -3,7 +3,7 @@
                 <!-- icon  -->
                 <div class="flex items-center justify-between mb-4">
                     <div>
-                        <i class="fa-solid fa-ticket text-5xl text-[#04162d]" :class="ticketColors.iconColor"></i>
+                      <i :class="[ticketColors.icon, 'text-5xl', ticketColors.iconColor]"></i>
                     </div>
                 </div>
                 <!-- num  -->
@@ -28,28 +28,34 @@ const props = defineProps({
 
 const getTicketColors = (title) => {
   let ticketColors = {
+    icon: '',
     iconColor: '',
     textColor: ''
   };
 
   switch (title) {
     case "Total Inventario":
+      ticketColors.icon = "fa-solid fa-boxes";
       ticketColors.iconColor = "text-green-500";
       ticketColors.textColor = "text-green-500";
       break;
     case "Total Salidas":
+      ticketColors.icon = "fa-solid fa-truck";
       ticketColors.iconColor = "text-blue-500";
       ticketColors.textColor = "text-blue-500";
       break;
     case "Productos Agotados":
+      ticketColors.icon = "fa-solid fa-exclamation-circle";
       ticketColors.iconColor = "text-pink-500";
       ticketColors.textColor = "text-pink-500";
       break;
     case "Productos Vencidos":
+      ticketColors.icon = "fa-solid fa-calendar-times";
       ticketColors.iconColor = "text-yellow-500";
       ticketColors.textColor = "text-yellow-500";
       break;
     default:
+      ticketColors.icon = "fa-solid fa-ticket";
       ticketColors.iconColor = "text-[#04162d]";
       ticketColors.textColor = "text-[04162d]";
       break;

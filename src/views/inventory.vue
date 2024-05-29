@@ -629,6 +629,15 @@ let columns = ref([
     align: "center",
     label: "UNIDADES",
     field: (row) => parseFloat(row.Units).toLocaleString(),
+    style: (row) => {
+      if (row.Units <= 0) {
+        return "background-color: rgba(255, 79, 79 )";
+      } else if (row.Units >= 1 && row.Units < 10) {
+        return "background-color: rgba(255, 251, 14 )";
+      } else if (row.Units >= 10) {
+        return "background-color: rgba(99, 239, 34)";
+      } 
+    }
   },
   {
     name: "proveedor",

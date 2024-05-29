@@ -1,6 +1,6 @@
 <template>
     <div>
-        <canvas :id="chartId" class="flex justify-center items-center p-4 lg:p-10" :style="{ width: chartWidth, height: chartHeight }"></canvas> 
+        <canvas :id="chartId" class="p-4 lg:p-10"></canvas> 
     </div>
 </template>
 
@@ -10,13 +10,16 @@ const props= defineProps({
     valores: Array,
     newType: String,
     chartId: String,
-    chartWidth: String,
-    chartHeight: String
+    title: String,
+    chartInventory: Boolean,
+    chartExits: Boolean,
 })
 import { ref, onMounted } from "vue";
 import Chart from "chart.js/auto";
 import { inventoryStore } from "@/store/inventory.js";
+import {exitStore} from "@/store/exits.js"
 
+const storeExits = exitStore();
 const storeInventory = inventoryStore();
 
 let loading=ref(false)
@@ -27,30 +30,48 @@ let newType = ref(props.newType);
 let myChart;
 
 
-// traer los datos por proveedor
+// get inventory
 async function GetInventory() {
   const res = await storeInventory.GetInventory();
   try {
-    const unidadesPorProveedor = {};
-
+    const unitsForNames = {};
     for (let i in res.data) {
       const productos = res.data[i].Name;
       let unidades = res.data[i].Units;
-
       // Si es la primera vez que se encuentra este proveedor, inicializa el total de puntos
-      if (!unidadesPorProveedor[productos]) {
-        unidadesPorProveedor[productos] = unidades;
+      if (!unitsForNames[productos]) {
+        unitsForNames[productos] = unidades;
       } else {
         // Si ya se ha encontrado antes, suma los puntos al total
-        unidadesPorProveedor[productos] += unidades;
+        unitsForNames[productos] += unidades;
       }
     }
     names.value = [];
     valores.value = [];
-    // Recorremos el objeto 'unidadesPorProveedor' para obtener los nombres y valores
-    for (const productos in unidadesPorProveedor) {
+    for (const productos in unitsForNames) {
       names.value.push(productos);
-      valores.value.push(unidadesPorProveedor[productos]);
+      valores.value.push(unitsForNames[productos]);
+    }
+  } catch (error) {}
+}
+async function GetExits() {
+  const res = await storeExits.GetExits();
+  try {
+    const unitsForNames = {};
+    for (let i in res.data) {
+      const productos = res.data[i].Name;
+      let unidades = res.data[i].Units;
+      if (!unitsForNames[productos]) {
+        unitsForNames[productos] = unidades;
+      } else {
+        unitsForNames[productos] += unidades;
+      }
+    }
+    names.value = [];
+    valores.value = [];
+    for (const productos in unitsForNames) {
+      names.value.push(productos);
+      valores.value.push(unitsForNames[productos]);
     }
   } catch (error) {}
 }
@@ -59,7 +80,11 @@ async function GetInventory() {
 async function createChart() {
   loading.value = true;
   type.value=newType.value
-  await GetInventory()
+  if (props.chartInventory == true) {
+    await GetInventory()
+  } if (props.chartExits == true) {
+    await GetExits()
+  } 
   const ctx = document.getElementById(props.chartId);
   if (myChart) {
     myChart.destroy();
@@ -70,7 +95,7 @@ async function createChart() {
       labels: names.value,
       datasets: [
         {
-          label: "INVENTARIO",
+          label: props.title,
           data: valores.value,
           backgroundColor: [
             "rgb(255, 99, 132, 0.3)",
@@ -127,9 +152,7 @@ async function createChart() {
   loading.value = false;
 }
 
-onMounted(()=>{
-    createChart()
-    GetInventory()
-})
-
+onMounted(() => {
+  createChart();
+});
 </script>
