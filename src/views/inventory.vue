@@ -554,12 +554,15 @@ async function deleteItem(data) {
 async function ExitsPost() {
   loading.value = true;
   const res = await storeExits.PostExits(
-    nameExit.value,
-    serialExit.value,
-    unitsExit.value,
-    priceExit.value,
-    descount.value,
-    user.value,
+    {
+    Name: nameExit.value,
+    Serial: serialExit.value,
+    Units: unitsExit.value,
+    Price: priceExit.value,
+    Discount: descount.value,
+    UserEmail: user.value,
+    }
+   
   );
   showModalExits.value = false;
   InventoryGet();

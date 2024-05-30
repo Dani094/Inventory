@@ -84,9 +84,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   ) {
     try {
       return (
-        await requestAxios.put(
-          `/inventory/put/${id}`,
-          {
+        await requestAxios.put(`/inventory/put/${id}`,       {
             Supplier: supplier,
             Name: name,
             Serial: serial,

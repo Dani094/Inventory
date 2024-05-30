@@ -3,7 +3,7 @@ import { requestAxios } from "../Global/axios.js";
 import { notifyError, notifySuccess } from "../Global/notify.js";
 import { LoginStore } from "./login.js";
 
-export const bill = defineStore("bill", () => {
+export const billStore = defineStore("billStore", () => {
   const useToken = LoginStore();
 
   // Function Get inventory
@@ -51,10 +51,11 @@ export const bill = defineStore("bill", () => {
       );
     }
   }
-  async function PutBill() {
+  async function PutBill(id, data) {
+    console.log(id, data);
     try {
       return (
-        await requestAxios.put(`/factura/put/${id}`,
+        await requestAxios.put(`/factura/put/${id}`, data,
           {
             headers: {
               token: useToken.token,
@@ -114,6 +115,10 @@ export const bill = defineStore("bill", () => {
       notifyError("No se pudo Actualizar la Cantidad Correctamente");
     }
   }
+
+  
+
+
 
   return { 
     GetIBill,

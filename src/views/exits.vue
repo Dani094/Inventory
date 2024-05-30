@@ -41,6 +41,7 @@ async function ExitsGet() {
   const res = await storeExits.GetExits();
   if (res && res.status < 299) {
     rows.value = res.data;
+    console.log(rows.value);
     rows.value.forEach((row, index) => {
       row.index= index + 1;
       TotalUnits.value = 0;
@@ -70,6 +71,12 @@ async function ExitsPut() {
 let rows = ref([]);
 let columns = ref([
     { name: "index", label: "N°", field: "index", align: "center" },
+    {
+        name: "NumBill",
+        align: "center",
+        label: "Numero de Factura",
+        field: "NumBill",
+    },
     {
         name: "name",
         align: "center",
