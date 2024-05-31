@@ -3,7 +3,7 @@ import Home from "@/views/home.vue";
 import Inventory from "@/views/inventory.vue";
 import Exits from "@/views/exits.vue";
 import Bill from "@/views/Billing.vue";
-import Reports from "@/views/reports.vue";
+import User from "@/views/user.vue";
 import { LoginStore } from "../src/store/login.js";
 
 const checkAuth = () => {
@@ -84,9 +84,9 @@ export const routes = [
         beforeEnter: auth,
     },
     {
-      path:"/reports",
-      name:"Reports",
-      component: Reports,
+      path:"/user",
+      name:"User",
+      component: User,
       meta: {
         rol: ["Admin", "Cliente"],
         },

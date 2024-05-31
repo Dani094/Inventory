@@ -38,7 +38,7 @@ export const exitStore = defineStore("exitStore", () => {
   }
 
 
-  async function PutExists(id, data) {
+  async function PutExits(id, data) {
     console.log(id, data);
     try {
       return (
@@ -49,18 +49,65 @@ export const exitStore = defineStore("exitStore", () => {
             },
           }
         ),
-        notifySuccess("Inventario Actualizado Correctamente")
+        notifySuccess("Salida Actualizada Correctamente")
       );
     } catch (error) {
       console.log(error);
-      notifyError("No se pudo Actualizar el Inventario Correctamente");
+      notifyError("No se pudo Actualizar la Salida Correctamente");
+    }
+  }
+
+
+  
+  async function DeleteExits(id) {
+    try {
+      return (
+        await requestAxios.delete(`/exits/delete/${id}`),
+        notifySuccess("Salida Eliminada Correctamente")
+      );
+    } catch (error) {
+      console.error(error);
+      return error;
     }
   }
   
+
+
+  // get for date 
+  async function GetForDate(fecha) {
+    try {
+      const response = await requestAxios.get(
+        `/exits/getFechas/${fecha}`
+      );
+      if (response.data && response.data.length === 0) {
+        notifyError("No Se Encuentran datos en esa Fecha");
+      } else {
+        return response;
+      }
+    } catch (error) {
+      notifyError("No Se Encuentran Datos en esa Fecha");
+    }
+  }
+  async function GetForDay(fecha) {
+    try {
+      const response = await requestAxios.get(`/exits/getDay/${fecha}`);
+      if (response.data && response.data.length === 0) {
+        notifyError("No Se Encuentran Datos en ese Día");
+      } else {
+        return response;
+      }
+    } catch (error) {
+      notifyError("No Se Encuentra datos en esa Fecha");
+    }
+  }
+
   return {
     GetExits,
     PostExits,
-    PutExists
+    PutExits,
+    DeleteExits,
+    GetForDate,
+    GetForDay
   };
 },
   {

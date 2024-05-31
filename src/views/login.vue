@@ -1,8 +1,8 @@
 <template>
-  <div className="grid grid-cols-12 h-[100vh] justify-center items-center bg-[#E7E8F3] fullscreen">
-    <div className="col-span-1 lg:col-span-2"></div>
+  <div class="grid grid-cols-12 h-[100vh] justify-center items-center bg-[#E7E8F3] fullscreen">
+    <div class="col-span-1 lg:col-span-2"></div>
     <!-- container -->
-    <div className="col-span-10 lg:col-span-8 flex justify-center items-center">
+    <div class="col-span-10 lg:col-span-8 flex justify-center items-center">
       <!-- content login -->
       <q-form @submit.prevent.stop="validar()" class="flex w-full lg:w-[40%] justify-center items-center shadow-md">
         <!-- titulo -->
@@ -60,7 +60,7 @@
           class="w-full h-full" />
       </div>
     </div>
-    <div className="col-span-1 lg:col-span-2"></div>
+    <div class="col-span-1 lg:col-span-2"></div>
   </div>
 </template>
 

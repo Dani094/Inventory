@@ -18,20 +18,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
       notifyError("No fue posible obtener el Inventario");
     }
   }
-  async function Filter(filter) {
-    console.log(filter);
-    try {
-      return await requestAxios.get(`/inventory/${filter}`, {
-        headers: {
-          token: useToken.token,
-        },
-      });
-    } catch (error) {
-      notifyError("No Se Encuentra en el Inventario");
-    }
-  }
-
-  // Function add, update and delete inventory
+  // Function post, put and delete inventory
   async function PostInventory(
     supplier,
     name,
@@ -120,71 +107,56 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   }
 
   // Funciones para manejar las salidas de inventario
-  async function SalidaPost(
-    serialInvent,
-    idInvent2,
-    categoriaS,
-    modeloS,
-    tipoSalida,
-    nametecnico,
-    oficinaS,
-    municipioSalida,
-    cliente,
-    direccionCliente,
-    cantidadSalida
-  ) {
-    console.log(cantidadSalida);
+  async function PutUnits(id, units2, unitsExit) {
     try {
       return (
-        await requestAxios.post(
-          `/salidas/post`,
-          {
-            Serial: serialInvent,
-            IdInvent: idInvent2,
-            Categoria: categoriaS,
-            Modelo: modeloS,
-            TipoSalida: tipoSalida,
-            NameTecnico: nametecnico,
-            Oficina: oficinaS,
-            MunicipioSalida: municipioSalida,
-            Cliente: cliente,
-            Direccion: direccionCliente,
-            Unidades: cantidadSalida,
-          },
-          {
-            headers: {
-              token: useToken.token,
-            },
-          }
-        ),
-        notifySuccess("Salida Registrada Correctamente")
+        await requestAxios.put(`/inventory/putUnits/${id}`, {
+          Units: units2 - unitsExit,
+        }),
+        notifySuccess("Cantidad Actualizada")
       );
     } catch (error) {
       console.log(error);
-      notifyError("No se pudo Registrar la Salida Correctamente");
+      notifyError("No se pudo Actualizar la Cantidad");
     }
   }
 
-  async function UnidadesPut(id, unidadesTotales, cantidadSalida) {
+  // get for date 
+  async function GetForDate(fecha) {
     try {
-      return (
-        await requestAxios.put(`/inventario/putUnidades/${id}`, {
-          Unidades: unidadesTotales - cantidadSalida,
-        }),
-        notifySuccess("Cantidad Actualizada Correctamente")
+      const response = await requestAxios.get(
+        `/inventory/getFechas/${fecha}`
       );
+      if (response.data && response.data.length === 0) {
+        notifyError("No Se Encuentran datos en esa Fecha");
+      } else {
+        return response;
+      }
     } catch (error) {
-      console.log(error);
-      notifyError("No se pudo Actualizar la Cantidad Correctamente");
+      notifyError("No Se Encuentran Datos en esa Fecha");
+    }
+  }
+  async function GetForDay(fecha) {
+    try {
+      const response = await requestAxios.get(`/inventory/getDia/${fecha}`);
+      if (response.data && response.data.length === 0) {
+        notifyError("No Se Encuentran Datos en ese Día");
+      } else {
+        return response;
+      }
+    } catch (error) {
+      notifyError("No Se Encuentra datos en esa Fecha");
     }
   }
 
   return {
     GetInventory,
-    Filter,
     PostInventory,
     PutInventory,
     DeleteInventory,
+    PutUnits,
+    GetForDate,
+    GetForDay
   };
 },
   {

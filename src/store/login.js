@@ -10,6 +10,7 @@ export const LoginStore = defineStore('LoginStore', () => {
   const token = ref(null)
   const rol = ref(null)
   const user = ref(null)
+  const Name = ref(null)
   const Email = ref(null)
   const dateLogin = ref(null)
   
@@ -21,10 +22,10 @@ export const LoginStore = defineStore('LoginStore', () => {
           dateLogin.value = new Date().toISOString();
           rol.value = decoded.rol 
           user.value = decoded.user
+          Name.value = decoded.Name
           Email.value = decoded.Email
           notifySuccess('BIENVENIDO');
           return response
-
         } catch (error) {
           console.log('errrrr',error);
           notifyError(error.response.data.msg);
@@ -52,13 +53,14 @@ const logoutUser= ()=>{
   rol.value = ""
   user.value = ""
   dateLogin.value = ""
+  Name.value=""
   Email.value = ""
   notifySuccess('Se ha cerrado la sesión.');
 }
 
 
 
-  return {  newLogin, newContraseña, logoutUser ,login, token,rol, Email, user, dateLogin } },
+  return {  newLogin, newContraseña, logoutUser ,login, token,rol, Email, user, Name, dateLogin } },
   {
     persist: true,
   },);

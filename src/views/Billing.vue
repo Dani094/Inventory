@@ -9,7 +9,10 @@
       <div class="flex items-center">
         <div class="bg-[#04162d] px-4 p-2 rounded-2xl">
          <h4 class="text-xl text-white font-bold"> Cantidad de Facturas: {{ index }} </h4>
-        </div>
+                </div>
+            </div>
+            <q-btn icon="add" class="rounded-xl bg-[#04162d] text-white " @click="dialog = true"></q-btn>
+
       </div>
       <div> 
         <q-btn icon="refresh" class="rounded-xl ml-2 bg-[#04162d] text-white" @click="getBill()"></q-btn>
@@ -26,6 +29,15 @@
 
     <!-- table -->
     <div class="mr-2 w-full mt-6">
+
+            <q-dialog v-model="dialog" class="p-0 ">
+               <div class="mr-2 w-[70%] min-h-[70vh] rounded-[20px] bg-white p-6 ">
+                  <billing />
+            </div>  
+            </q-dialog>
+           
+          
+          <!-- tables -->
    
         <q-table id="table" flat bordered :visible-columns="visibleColumns" title="Facturas" :rows="rows" :columns="columns" row-key="index"
           virtual-scroll class="inventTable h-[450px] lg:h-[680px] rounded-2xl" v-model:pagination="pagination" :rows-per-page-options="[0]">
@@ -104,8 +116,7 @@
             </q-td>
           </template>
         </q-table>
-     
-    </div>
+ 
 
     <!-- tables -->
   </div>
@@ -118,6 +129,7 @@ import Tables from "@/components/table.vue";
 import Modal from "@/components/modals.vue";
 import { billStore } from "../store/billing.js";
 import {useModalStore} from "../store/storeModal.js"
+
 
 
 
@@ -167,8 +179,9 @@ const getBill = async () => {
 
     rows.value = res.data;
     rows.value.forEach((row, index) => {
-      row.index = index + 1;
-    });
+        row.index = index + 1;
+});
+     
   }
 };
 
