@@ -37,6 +37,7 @@
                     </span>
                 
             </li>
+<<<<<<< Updated upstream
 
         </router-link>
 
@@ -44,6 +45,11 @@
             <li :class="[$route.path == '/bill' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition'>
 
                     <span class="material-icons text-2xl">
+=======
+            <li :class="[$route.path == '/bill' ? 'text-[#04162d] bg-[#E7E8F3]' : 'text-default']" class='hover:bg-[#E7E8F3] hover:text-black p-4 rounded-tl-xl rounded-bl-xl transition'>
+                <router-link to="/bill">
+                    <span class="material-icons  block rounded-xl text-center text-2xl">
+>>>>>>> Stashed changes
                         attach_money
                     </span>
                 

@@ -62,6 +62,7 @@
       </div>
     </div>
 
+<<<<<<< Updated upstream
     <div class="col mr-2">
       <label for="priceProduct" class="block text-sm font-medium text-gray-700">Precio</label>
       <div class="relative mt-1">
@@ -114,11 +115,49 @@
         <span class="absolute right-0 h-full w-10 rounded-lg bg-green-500 flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300">
           <svg class="svg w-8 text-white" fill="none" height="24" stroke="currentColor" stroke-linecap="round"  stroke-linejoin="round" stroke-width="2"
             viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+=======
+          </div>
+          <div class="w-[30%] mr-4">
+            <q-input
+            type="number"
+            v-model="priceProduct"
+            label="Precio">
+           <template v-slot:prepend>
+          <q-icon name="attach_money" />
+        </template>
+        </q-input>
+          </div>  
+        </div>
+ 
+      <div @click="addProductList(r)"
+        class="rounded-md relative w-[80px] h-10 mt-2  mb-4 cursor-pointer flex items-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500"
+      >
+        <span
+          class="text-gray-200 font-semibold ml-2 transform group-hover:translate-x-20 transition-all duration-300" 
+          >Item</span
+        >
+        <span
+          class="absolute right-0 h-full w-10 rounded-lg bg-green-500 flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300"
+        >
+          <svg
+            class="svg w-8 text-white"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+>>>>>>> Stashed changes
             <line x1="12" x2="12" y1="5" y2="19"></line>
             <line x1="5" x2="19" y1="12" y2="12"></line>
           </svg>
         </span>
       </div>
+<<<<<<< Updated upstream
 
       <div class="row w-full mt-10 p-2 bg-[#04162d] text-center border-t border-black-0.4 text-white">
       <div class="col mr-1">#</div>
@@ -130,6 +169,8 @@
       <div class="col mr-1">Valor Total</div>
       <div class="col mr-1">opciones</div></div>
 
+=======
+>>>>>>> Stashed changes
 
       <div v-for="(item, index) in listProduct" :key="index">
         <div class="row w-full p-2 text-center border-b border-t border-black-0.4" > 
@@ -261,8 +302,49 @@ const postBill = async () => {
     PrecioVenta: totalPrice.value,
   });
 
+<<<<<<< Updated upstream
   getBill()
   
+=======
+function getNumBill() {
+  console.log("entro");
+  console.log();
+  numBill.value = rows.value.length + 1;
+  console.log("psao");
+var estaRegistrado = rows.value.some(function (venta) {
+  return venta.numberVenta === numBill.value;
+});
+if (estaRegistrado) {
+  var numeroMaximoRegistrado = Math.max.apply( Math,rows.value.map(function (venta) {
+      return venta.numberVenta;
+    })
+  );
+  numBill.value = numeroMaximoRegistrado + 1;
+  console.log(numBill.value);
+  postBill();
+} else {
+  console.log(numBill.value);
+  postBill();
+}
+}
+
+
+const addProductList = () => { 
+  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value)
+  listProduct.value.push(
+    {
+      name: NameProducto.value,
+      cantidad: amountProduct.value,
+      precio: priceProduct.value, 
+      valueTotal: totalPriceProduct.value 
+    }
+  )
+  totalPrice.value += parseInt(totalPriceProduct.value)
+  amountTotalProdut.value +=  parseInt(amountProduct.value)
+  console.log(amountProduct.value);
+  console.log(amountTotalProdut.value);
+  clean()
+>>>>>>> Stashed changes
 };
 
 async function putInfoBill() {
@@ -547,8 +629,59 @@ function DateNow() {
   console.log(currentDateFormatted.value);
 }
 
+<<<<<<< Updated upstream
 function clean() {
   NameProduct.value = "";
+=======
+
+
+const getBill = async () => {
+  const res = await storeBilling.GetIBill();
+  if (res.status < 299) {
+    rows.value = res.data;
+    
+  }
+};
+
+
+async function getProduct() {
+  const res = await storeInventory.GetInventory();
+  
+  resProduct.value = res;
+  if (res.status < 299) {
+    for (let i in res.data) {
+
+      let object = { label: res.data[i].Name, value: res.data[i]._id, };
+      let object1 = { label: res.data[i].Serial, value: res.data[i]._id };
+      let object2 = { label: res.data[i].Price, value: res.data[i]._id };
+      getProductName.value.push(object);
+      getProductId.value.push(object1)
+      console.log(object1);
+  
+    }
+  }
+}
+
+
+
+const postBill = async () => {
+    console.log( numBill.value);
+    console.log("Perro triple hp",numBill.value, amountTotalProdut.value, nameProduct.value, nameCustomer.value, nameSeller.value);
+    const bill = await storeBilling.NewBill({
+      UserEmail: "UserEmail",
+      numFactura: numBill.value,
+      vendedor: nameSeller.value,
+      cliente: nameCustomer.value ,
+      CantProduct: amountTotalProdut.value,
+      PrecioVenta: totalPrice.value
+    });
+
+  };
+
+
+  function clean() {
+  nameProduct.value = "";
+>>>>>>> Stashed changes
   amountProduct.value = "";
   priceProduct.value = "";
   getIdProduct.value = "";
