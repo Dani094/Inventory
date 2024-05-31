@@ -579,10 +579,14 @@ async function ExitsPost() {
   loading.value = false;
 }
 async function putUnidades() {
+  if (units2.value-unitsExit.value == 0) {
+      state.value= "Agotado"
+  }
   const res = await storeInventory.PutUnits(
     index.value,
     units2.value,
-    unitsExit.value
+    unitsExit.value,
+    state.value
   );
 }
 
@@ -661,7 +665,7 @@ let columns = ref([
     name: "date",
     label: "FECHA DE VENCIMIENTO",
     field: (row) =>
-      row.ExpirationDate ? row.ExpirationDate.slice(0, 10) : "NA",
+      row.ExpirationDate ? row.ExpirationDate.slice(0, 10) : "Sin Fecha",
     align: "center",
     style: (row) => {
       const expirationDate = new Date(row.ExpirationDate);
