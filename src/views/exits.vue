@@ -207,7 +207,7 @@ async function ExitsGet() {
 }
 async function ExitsPut() {
   loading.value = true;
-  const res = await storeExits.PutExits(
+  const res = await exitStore.PutExits(
     index.value,
     nameExit.value,
     serialExit.value,

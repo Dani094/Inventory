@@ -400,7 +400,7 @@ async function putInfoExist() {
       };
    
       console.log(bill);
-      const response = await storeExist.PutExists(idProductExist.value, bill);
+      const response = await storeExist.PutExits(idProductExist.value, bill);
     });
  
 }
