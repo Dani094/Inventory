@@ -11,7 +11,7 @@
     <q-form ref="myForm" @submit.prevent.stop="EditarCrearBill()">
       <div class="row w-full justify-center">
         <div class="col mr-4">
-          <q-input  outlined color="#04162d" class="block w-full py-2  bg-white  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          <q-input  outlined color="#04162d" class="block w-full  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             v-model="nameSeller" type="text" label="Nombre vendedor" lazy-rules :rules="[(val) =>(val && val.trim().length > 0) || 'Digite nombre del operador',]">
             <template v-slot:prepend>
               <q-icon name="person" />
@@ -20,8 +20,8 @@
         </div>
 
 
-        <div class="col mr-4">
-          <q-input  outlined color="#04162d" type="text" class="block w-full  py-2  bg-white rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="nameCustomer" label="Nombre del cliente" lazy-rules :rules="[(val) => (val && val.trim().length > 0) ||
+        <div class="col mr-4 ">
+          <q-input  outlined color="#04162d" type="text" class="block w-full  rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="nameCustomer" label="Nombre del cliente" lazy-rules :rules="[(val) => (val && val.trim().length > 0) ||
                 'Digite el npmbre del cliente', ]">
             <template v-slot:prepend>
               <q-icon name="person" />
@@ -224,6 +224,7 @@ let valueEditCrea = ref()
 let index = ref()
 let idProductExist = ref()
 let getIdExits = ref()
+let dataShowBill = ref()
 
 // bill
 
@@ -260,7 +261,6 @@ const postBill = async () => {
     CantProduct: amountTotalProdut.value,
     PrecioVenta: totalPrice.value,
   });
-
   getBill()
   
 };
@@ -405,7 +405,6 @@ async function putInfoExist() {
  
 }
 function goInfoExits(i) {
-  
     console.log(i);
     SerialProduct.value = i.serial
     getIdExits.value = i.Id;
@@ -414,9 +413,7 @@ function goInfoExits(i) {
     valueDiscount.value = i.tipoDescuento
     discount.value = i.descuento
     amountProduct.value = i.Unidades
-
     getValues()
-    
   }
 
 
@@ -491,8 +488,6 @@ function typeDiscount() {
 }
  
 const addOrUpdateProductList = () => {
-  console.log( listProduct.value);
-  console.log(NameProduct.value);
   const productIndex = listProduct.value.findIndex(product => product.serial === SerialProduct.value);
  
   if (valueEditCrea.value == 2) {
@@ -512,7 +507,6 @@ const addOrUpdateProductList = () => {
       }
     })
   } else {
-    // Si el producto no existe, agregarlo
     listProduct.value.push({
       serial: SerialProduct.value,
       name: NameProduct.value,
@@ -523,15 +517,9 @@ const addOrUpdateProductList = () => {
       valueTotal: parseFloat(totalPriceProduct.value),
     });
   }
-
-  // Actualizar el totalPrice y amountTotalProdut
   totalPrice.value += parseFloat(totalPriceProduct.value);
   amountTotalProdut.value += parseInt(amountProduct.value);
 
-  console.log(amountProduct.value);
-  console.log(amountTotalProdut.value);
-
-  // Limpiar los campos después de agregar o actualizar
   clean();
 };
 
@@ -547,8 +535,12 @@ function DateNow() {
   console.log(currentDateFormatted.value);
 }
 
-function clean() {
-  NameProduct.value = "";
+
+
+
+
+  function clean() {
+  nameProduct.value = "";
   amountProduct.value = "";
   priceProduct.value = "";
   getIdProduct.value = "";
