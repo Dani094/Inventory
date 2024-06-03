@@ -162,7 +162,7 @@
 
       <!-- div botones  -->
       <div class="flex justify-end items-center gap-4">
-        <q-btn v-if="valueEditCrea == 1" icon="save_as" label="Generar Factura"  :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" v-close-popup></q-btn>
+        <q-btn v-if="valueEditCrea == 1" icon="save_as" label="Generar Factura"  :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" ></q-btn>
         <q-btn v-else icon="edit" label="Editar Factura" :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" v-close-popup></q-btn>
 
 
@@ -224,7 +224,7 @@ let valueEditCrea = ref()
 let index = ref()
 let idProductExist = ref()
 let getIdExits = ref()
-let dataShowBill = ref()
+
 
 // bill
 
@@ -232,26 +232,28 @@ const getBill = async () => {
   const res = await storeBilling.GetIBill();
   if (res.status < 299) {
     rows.value = res.data;
- 
+    rows.value.forEach((row, index) => {
+      row.index = index + 1;
+    });
     valueEditCrea.value = props.value
     dataGoInfo.value = ""
     if (valueEditCrea.value == 1) {
       dataGoInfo.value = ""
       index.value = 0
     }
-    else{
-
+    else if(valueEditCrea.value == 2){
       index.value = props.ind
-     console.log(index.value);
       dataGoInfo.value = props.dataEdit
-      console.log(dataGoInfo.value);
       goInfoBill()
       ExitsGet()
     }
+
   }
 };
 
-const postBill = async () => {
+
+
+async function postBill() {
   const bill = await storeBilling.NewBill({
     UserEmail: "UserEmail",
     numFactura: numBill.value,
@@ -261,12 +263,10 @@ const postBill = async () => {
     CantProduct: amountTotalProdut.value,
     PrecioVenta: totalPrice.value,
   });
-  getBill()
-  
+  await getBill()
 };
 
 async function putInfoBill() {
-  console.log(index.value);
   const res = await storeBilling.PutBill(index.value, {
     UserEmail: "UserEmail",
     numFactura: numBill.value,
@@ -304,22 +304,18 @@ function getNumBill() {
       })
     );
     numBill.value = numeroMaximoRegistrado + 1;
-    console.log(numBill.value);
     postBill();
     postExist();
   } else {
-    console.log(numBill.value);
     postBill();
     postExist();
   }
 }
 
 function goInfoBill() {
-  console.log(dataGoInfo.value);
     const data = dataGoInfo.value
       // Asignar valores a las referencias reactivas
       numBill.value = data.numFactura;
-      console.log( data.numFactura);
       nameSeller.value = data.vendedor;
       nameCustomer.value = data.cliente;
       discount.value = data.Discount;
@@ -336,7 +332,6 @@ async function ExitsGet() {
  
   if (res && res.status < 299) {
     rowsExist.value = res.data;
-    console.log(rowsExist.value);
     rowsExist.value.forEach((row, index) => {
       if (row.NumBill == dataGoInfo.value.numFactura) {
       numBill.value = row.NumBill
@@ -351,8 +346,6 @@ async function ExitsGet() {
        valueTotal: row.Total,
   }); 
       }
-      console.log(rowsExist.value);
-      console.log(listProduct.value);
       }
     );
   } 
@@ -371,7 +364,6 @@ const postExist = async () => {
         typeDiscount: product.tipoDescuento,
         UserEmail: "usuario@example.com",
       };
-      console.log(bill);
       const response = await storeExist.PostExits(bill);
     });
   } catch (error) {
@@ -379,15 +371,9 @@ const postExist = async () => {
   }
 };
 
-async function putInfoExist() {
-  console.log( listProduct.value);
-  
+async function putInfoExist() { 
   listProduct.value.forEach(async (product) => {
-    console.log(product);
-    console.log(product.Id);
     idProductExist.value = product.Id
-    console.log( idProductExist.value);
-    console.log(numBill.value);
       const bill = {
         NumBill: numBill.value,
         Name: product.name,
@@ -398,14 +384,11 @@ async function putInfoExist() {
         typeDiscount: product.tipoDescuento,
         UserEmail: "usuario@example.com",
       };
-   
-      console.log(bill);
       const response = await storeExist.PutExits(idProductExist.value, bill);
     });
  
 }
 function goInfoExits(i) {
-    console.log(i);
     SerialProduct.value = i.serial
     getIdExits.value = i.Id;
     totalPriceProduct.value  = i.valueTotal;
@@ -422,14 +405,12 @@ function goInfoExits(i) {
 async function getProduct() {
   const res = await storeInventory.GetInventory();
   resProduct.value = res;
-  console.log( resProduct.value.data.length);
   if (res.status < 299) {
     for (let i in res.data) {
       let object = { label: res.data[i].Name, value: res.data[i]._id };
       let object1 = { label: res.data[i].Serial, value: res.data[i]._id };
       let object2 = { label: res.data[i].Price, value: res.data[i]._id };
       getProductName.value.push(object);
-      console.log(object);
       getProductId.value.push(object1);
       
     }
@@ -437,14 +418,12 @@ async function getProduct() {
 }
 
   function getValues() {
-  console.log("1", getIdProduct.value);
   resProduct.value.data.forEach((producto) => {
     const idProducto = producto._id;
     const serial = producto.Serial
     
     if ( valueEditCrea.value === 1) {
        if (getIdProduct.value ===  idProducto ) {
-      console.log("sias");
       SerialProduct.value = producto.Serial;
       NameProduct.value = producto.Name;
       priceProduct.value = producto.Price;
@@ -468,7 +447,6 @@ async function getProduct() {
 }
 
 function typeDiscount() {
-  console.log(valueDiscount.value);
   totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value);
 
   if (valueDiscount.value === "Porcentaje") {
@@ -479,8 +457,6 @@ function typeDiscount() {
   } else if (valueDiscount.value === "valor fijo") {
     // Descuento en valor fijo
     const fixedDiscount = discount.value;
-    console.log(discount.value);
-    console.log(totalPriceProduct.value);
     totalPriceProduct.value -= fixedDiscount; 
   } else {
     console.error("Tipo de descuento no válido");
@@ -493,7 +469,6 @@ const addOrUpdateProductList = () => {
   if (valueEditCrea.value == 2) {
       listProduct.value.forEach((producto) => {
       if (producto.serial == SerialProduct.value) {
-        console.log(producto);
       listProduct.value[productIndex] = {
             Id: producto.Id,
             serial: SerialProduct.value,
@@ -532,7 +507,6 @@ function DateNow() {
   const currentDayFormatted =
     currentDay < 10 ? `0${currentDay}` : `${currentDay}`;
   currentDateFormatted.value = `${currentDate.getFullYear()}-${currentMonthFormatted}-${currentDayFormatted}`;
-  console.log(currentDateFormatted.value);
 }
 
 
@@ -564,7 +538,6 @@ async function deleteBill(data) {
 
 
 function SumCant(dataI) {
-  console.log(dataI);
   // resProduct.value.data.forEach((producto) => {
   //   const idProducto = producto._id;
   //   if (idProducto == dataI.IdProducto) {

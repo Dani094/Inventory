@@ -8,7 +8,7 @@
     <div class="flex justify-between py-4">
       <div class="flex items-center">
         <div class="bg-[#04162d] px-4 p-2 rounded-2xl">
-         <h4 class="text-xl text-white font-bold"> Cantidad de Facturas: {{ index }} </h4>
+         <h4 class="text-xl text-white font-bold"> Cantidad de Facturas: {{ rows.length }} </h4>
                 </div>
             </div>
          <div> 
@@ -17,26 +17,24 @@
       </div>
       </div>
      
-    
-    <q-dialog v-model="dialog" class="p-0">
-      <div v-if="showBill == 3" class="mr-2 w-[70%] xs:w-[90%] min-h-[70vh] rounded-[20px] bg-white ">
+    <q-dialog v-model="dialog">
+      <div v-if="showBill == 3" class="mr-2 w-[70%] xs:w-[90%] min-h-[70vh] bg-white p-10 font-serif">
         <div class=" w-[100%] xs:w-[100%] min-h-[80vh] rounded-[20px] bg-white p-6">
           <p class="text-[20px] w-[80%] font-bold text-start absolute"> {{nameEmpresa}} </p>
-       <div class="bg-[#04162d] float-end p-10 rounded-full">  </div>
        <div class="row mt-24">
          <div class="col">
            <ul>
-             <li class="mt-2">Fecha: </li>
-             <li class="mt-2">N° factura:</li>
-             <li class="mt-2">Nombre vendedor: </li>
+             <li class="mt-2 ">Fecha: {{date}}</li>
+             <li class="mt-2">N° factura: 0{{numBill}}</li>
+             <li class="mt-2">Nombre vendedor: {{nameSeller}}</li>
            </ul> 
          </div>
          <div class="col">
            <ul>
-             <li class="mt-2">Ciudad: </li>
-             <li class="mt-2">Dirrecion:</li>
-             <li class="mt-2">Telefono: </li> 
-             <li class="mt-2">Correo electronico: </li> 
+             <li class="mt-2">Ciudad: San Gil</li>
+             <li class="mt-2">Dirrecion: Carrera 10 #3 - 1</li>
+             <li class="mt-2">Telefono: 3156273485</li> 
+             <li class="mt-2">Correo electronico: novaSystems@gmail.com</li> 
            </ul>
             
 
@@ -46,26 +44,43 @@
        <div class="row mt-10">
          <div class="col">
            <ul>
-             <li class="mt-2">Facturar a:</li>
-             <li class="mt-2">Direccion: </li>
-             <li class="mt-2">Telefono: </li>
-             <li class="mt-2">Correo Electronico:</li>
+             <li class="mt-2">Facturar a: {{nameCustomer}}</li>
+             <li class="mt-2">Telefono: {{}}</li>
+             <li class="mt-2">Correo Electronico: {{}}</li>
            </ul>
 
           </div> 
          </div>
 
-         <div class="row mt-8 bg-[#04162d] text-white p-2 w-[100%]">
+         <div class="row mt-8 text-center bg-[#04162d] text-white p-2 w-[100%]">
              <div class="col">Descripcion:</div>
              <div class="col">Cantidad:</div>
-             <div class="col">Precio Unitario:</div>
+             <div class="col mr-1 "> descuento </div>
+             <div class="col mr-1 "> Tipo Descuento </div>
+             <div class="col">Precio Unitario: </div>
              <div class="col">Total: </div>
            </div>
-       </div>
+
+           <div v-for="(item, index) in listProduct" :key="index">
+            <div class="row w-full p-2 text-center border-b border-t border-black-0.4" > 
+              <div class="col-2 mr-1 "> {{ item.name }}</div>
+               <div class="col mr-1 ">#{{ item.Unidades }}</div>
+               <div class="col mr-1 "> {{ item.descuento }}  </div>
+               <div class="col mr-1 "> {{ item.tipoDescuento }}</div>
+               <div class="col mr-1 ">${{ item.precio }}</div>
+               <div class="col mr-1 ">${{ item.valueTotal }}</div>
+            </div>
+          </div>
+
+          <button class="button bg-[#04162d] mt-20 right-2 float-end" @click="generateInvoice()">
+           <!-- Icono de Descarga -->
+          <i class="fas fa-download"></i>
+          </button>
+        </div>
       </div>
  
       <div v-else class="mr-2 xs:w-[100%] min-h-[80vh] rounded-[20px] bg-white p-6 " >
-      <bill :title="modalTitle" :ind="index" :value="valEditCrea" :dataEdit="arrayEdit" :dataShow="arrayShow"  />
+      <bill :title="modalTitle" :ind="index" :value="valEditCrea" :dataEdit="arrayEdit"   />
        
       </div>
     </q-dialog>
@@ -148,7 +163,7 @@
                 
                 
                 <!-- visualizar -->
-                <button class="button bg-[#04162d]" @click="modalCreaEdit(3), showBillFunc(props.row)">
+                <button class="button bg-[#04162d]" @click="modalCreaEdit(3), showBillFunc(props.row), cleanVarShow()">
                   <i class="fas fa-eye"></i>
 
                 </button>
@@ -172,10 +187,11 @@ import Tables from "@/components/table.vue";
 import Modal from "@/components/modals.vue";
 import { billStore } from "../store/billing.js";
 import {useModalStore} from "../store/storeModal.js"
+import { exitStore } from "@/store/exits.js";
+import { jsPDF } from "jspdf";
+import autoTable from 'jspdf-autotable';
 
-
-
-
+const storeExist = exitStore();
 const storeM =  useModalStore()
 const storeBilling = billStore();
 let arrayEdit = ref()
@@ -195,10 +211,13 @@ let amountTotalProdut = ref()
 let totalPrice = ref()
 let nameModel = ref()
 let crearEditar = ref()
+let date = ref()
 let filter = ref("");
 let nameEmpresa = ref("Naturistas")
 let showBill = ref(false)
-let arrayShow = ref()
+let arrayShow = ref([])
+let rowsExist = ref()
+let listProduct = ref([])
 let pagination = ref({
     rowsPerPage: 0,
   });
@@ -218,35 +237,178 @@ let columns = ref([
 
 let rows = ref([]);
 
+
+// Default export is a4 paper, portrait, using millimeters for units
+
+
+
+const invoiceData = ref({
+  customerName: "Juan Pérez",
+  customerAddress:"calle 4 #43-56",
+  customerPhone:"+57 311 8048146",
+  date: "01/06/2024",
+  invoiceNumber: "001",
+  products: [
+    { name: "Producto A", quantity: 2, unitPrice: 50.00 },
+    { name: "Producto B", quantity: 1, unitPrice: 30.00 },
+    { name: "Producto C", quantity: 3, unitPrice: 20.00 },
+  ]
+});
+function generateInvoice() {
+  const doc = new jsPDF();
+
+  // Añadir el logotipo
+  const img = new Image();
+  img.src = 'logo.png';  // Reemplaza con la ruta de tu logotipo
+  doc.addImage(img, 'PNG', 150, 10, 50, 30);  // Ajusta la posición y el tamaño según sea necesario
+
+  // Añadir el encabezado
+  doc.setFontSize(24);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont("helvetica", "bold");
+  doc.text("FACTURA", 10, 30);
+
+  // Añadir el número de factura y la fecha
+  doc.setFontSize(12);
+  doc.text(`Factura n.º: ${invoiceData.value.invoiceNumber}`, 10, 40);
+  doc.text(`Fecha: ${invoiceData.value.date}`, 10, 45);
+
+  // Añadir la información del cliente
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text(`${invoiceData.value.customerName}`, 10, 60);
+  doc.setFont("helvetica", "normal");
+  doc.text(`${invoiceData.value.customerPhone}`, 10, 65);
+  doc.text(`${invoiceData.value.customerAddress}`, 10, 70);
+
+  // Separador
+  doc.setLineWidth(0.5);
+  doc.line(10, 75, 200, 75);
+
+  // Añadir la tabla de productos
+  autoTable(doc, {
+    startY: 80,
+    head: [['Artículo', 'Cantidad', 'Precio', 'Total']],
+    body: invoiceData.value.products.map(product => [
+      product.name,
+      product.quantity,
+      `$${product.unitPrice.toFixed(2)}`,
+      `$${(product.quantity * product.unitPrice).toFixed(2)}`
+    ]),
+    styles: { 
+      halign: 'center', 
+      fontSize: 10,
+      textColor: [0, 0, 0],
+    },
+    headStyles: {
+      fillColor: [0, 0, 0],
+      textColor: [255, 255, 255],
+    },
+    alternateRowStyles: {
+      fillColor: [230, 230, 230]
+    }
+  });
+
+  // Calcular el total
+  const subtotal = invoiceData.value.products.reduce((sum, product) => sum + (product.quantity * product.unitPrice), 0).toFixed(2);
+  const taxes = (subtotal * 0).toFixed(2); // Ajusta la tasa de impuestos según sea necesario
+  const total = (parseFloat(subtotal) + parseFloat(taxes)).toFixed(2);
+
+  // Añadir el subtotal, impuestos y total
+  const finalY = doc.lastAutoTable.finalY + 10;
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text(`Subtotal: $${subtotal}`, 150, finalY);
+  doc.text(`Impuestos (0%): $${taxes}`, 150, finalY + 5);
+  doc.setFontSize(14);
+  doc.text(`Total: $${total}`, 150, finalY + 15);
+
+  // Separador
+  doc.setLineWidth(0.5);
+  doc.line(10, finalY + 25, 200, finalY + 25);
+
+  // Añadir información adicional
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+  doc.text("¡Gracias por su compra!", 10, finalY + 35);
+  doc.text("Información de pago:", 10, finalY + 45);
+  doc.text("Isabel Mercado", 10, finalY + 50);
+  doc.text("El Banquito", 10, finalY + 55);
+  doc.text("Cuenta: 0123 4567 89012345", 10, finalY + 60);
+  doc.text("Fecha de pago: 2 de junio 2025", 10, finalY + 65);
+
+  doc.text("Contacto:", 150, finalY + 45);
+  doc.text("(55)1234-5678", 150, finalY + 50);
+  doc.text("hola@sitioincreible.com", 150, finalY + 55);
+  doc.text("Calle Cualquiera 123, Cualquier Lugar, CP: 12345", 150, finalY + 60);
+  doc.text("www.sitioincreible.com", 150, finalY + 65);
+
+  // Guardar el documento
+  doc.save(`Factura_${invoiceData.value.invoiceNumber}.pdf`);
+}
+
+
+
 const getBill = async () => {
   const res = await storeBilling.GetIBill();
   if (res.status < 299) {
-
     rows.value = res.data;
     rows.value.forEach((row, index) => {
         row.index = index + 1;
+        
 });
      
   }
 };
 
 
+
+async function ExitsGet() {
+  
+  const res = await storeExist.GetExits();
+ 
+  if (res && res.status < 299) {
+    rowsExist.value = res.data;
+    rowsExist.value.forEach((row, index) => {
+      if (row.NumBill == numBill.value) {
+      numBill.value = row.NumBill
+      listProduct.value.push({
+       Id: row._id,
+       serial: row.Serial,
+       name: row.Name,
+       Unidades: row.Units,
+       tipoDescuento: row.typeDiscount,
+       descuento: row.Discount ,
+       precio: row.Price,
+       valueTotal: row.Total,
+  }); 
+      }
+      }
+    );
+  } 
+}
+
+
 function goInfo(data) {
-  console.log(index.value);
-  console.log(data);
   arrayEdit.value = data
+ 
+}
+
+function showBillFunc(data) {
+  listProduct.value = []
+  arrayShow.value = data
   numBill.value = data.numFactura;
   nameSeller.value = data.vendedor;
   nameCustomer.value = data.cliente;
   discount.value = data.Discount;
   amountTotalProdut.value = data.CantProduct;
   totalPrice.value = data.PrecioVenta;
+  date.value = data.date.slice(0,10)
+  ExitsGet()
 }
 
-function showBillFunc(i) {
-  console.log(i);
-  arrayShow.value = i
-}
+
+
 
 
 async function Delete(p) {

@@ -530,7 +530,6 @@ async function InventoryPost() {
     }
   }
   showModal.value = false;
-  // search();
   InventoryGet();
   loading.value = false;
 }

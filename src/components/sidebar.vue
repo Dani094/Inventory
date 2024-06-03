@@ -63,10 +63,10 @@
         </li>
       </router-link>
 
-      <router-link to="/reports">
+      <router-link to="/user">
         <li
           :class="[
-            $route.path == '/reports'
+            $route.path == '/user'
               ? 'text-[#04162d] bg-[#E7E8F3]'
               : 'text-default',
           ]"

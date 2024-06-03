@@ -1,5 +1,5 @@
 import { Notify } from "quasar";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 export const notifyError = (msg, position = "top") => {
   Notify.create({
     color: "negative",
