@@ -334,7 +334,7 @@ function generateInvoice() {
         doc.autoTable({
           startY: 80,
           head: [['Descripcion', 'Cantidad', 'descuento', 'tipo de Descuento', 'Precio unitario', 'Total']],
-          body:  arrayShow.value.forEach(product => [
+          body:  arrayShow.value.map(product => [
             product.name,
             product.Units,
             `$${product.descuento}`,
