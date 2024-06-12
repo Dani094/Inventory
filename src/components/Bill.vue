@@ -136,7 +136,7 @@
     </div>
 
     <div class="col mr-4">
-      <label for="Impuesto" class="block text-sm font-medium text-gray-700">Impuesto </label>
+      <label for="Impuesto" class="block text-sm font-medium text-gray-700">Iva </label>
       <div class="relative mt-1">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
           <i class="material-icons text-gray-500">account_balance</i>
@@ -201,7 +201,7 @@
 
       <div class="flex items-start justify-between mt-12">
         <div>
-          <h6 class="text-start text-black font-bold p-2 text-[15px]">Impuesto: {{ sumImpuesto }} </h6>
+          <h6 class="text-start text-black font-bold p-2 text-[15px]">Iva: {{ sumImpuesto }} </h6>
           <h6 class="text-start text-black font-bold p-2 text-[15px]">Cantidad Total productos: {{ amountTotalProdut }} </h6>
           <h6 class="text-start text-black font-bold p-2 text-[15px]">Total: {{ totalPrice }}</h6>
         </div>
