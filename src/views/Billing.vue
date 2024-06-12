@@ -20,10 +20,11 @@
     <q-dialog v-model="dialog">
       <div v-if="showBill == 3" class="mr-2 w-[70%] xs:w-[90%] min-h-[70vh] bg-white p-10 font-serif">
         <div class=" w-[100%] xs:w-[100%] min-h-[80vh] rounded-[20px] bg-white p-6">
-          <p class="text-[20px] w-[80%] font-bold text-start absolute"> {{nameEmpresa}} </p>
+          <h3 class="text-[35px] w-[80%] font-bold text-start absolute"> {{nameEmpresa}} </h3>
        <div class="row mt-24">
          <div class="col">
            <ul>
+             <li class="mt-2">{{nameSeller}}</li>
              <li class="mt-2 ">Fecha: {{date}}</li>
              <li class="mt-2">N° factura: 0{{numBill}}</li>
              <li class="mt-2">Nombre vendedor: {{nameSeller}}</li>
@@ -35,9 +36,11 @@
              <li class="mt-2">Dirrecion: Carrera 10 #3 - 1</li>
              <li class="mt-2">Telefono: 3156273485</li> 
              <li class="mt-2">Correo electronico: novaSystems@gmail.com</li> 
-           </ul>
-            
-
+            </ul>
+         </div>
+             <li class="mt-2">Nombre vendedor: {{nameSeller}}</li>
+         <div class="col flex justify-center items-center">
+            <img src="/logo.png" alt="logo de la Empresa" class="w-[40%]">
          </div>
        </div>
 
