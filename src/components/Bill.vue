@@ -11,23 +11,60 @@
     <q-form ref="myForm" @submit.prevent.stop="EditarCrearBill()">
       <div class="row w-full justify-center">
         <div class="col mr-4">
-          <q-input  outlined color="#04162d" class="block w-full  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            v-model="nameSeller" type="text" label="Nombre vendedor" lazy-rules :rules="[(val) =>(val && val.trim().length > 0) || 'Digite nombre del operador',]">
-            <template v-slot:prepend>
-              <q-icon name="person" />
-            </template>
-          </q-input>
+          <label for="nameSeller" class="block text-sm font-medium text-gray-700">Nombre vendedor</label>
+          <div class="relative mt-1">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+              <i class="material-icons text-gray-500">supervisor_account</i>
+            </span>
+            <input id="nameSeller" type="text" v-model="nameSeller"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" lazy-rules :rules="[(val) => (val && val.trim().length > 0) ||
+            'Digite el nombre del vendedor', ]"/>
+          </div>
+          
+          <label for="date" class="block text-sm font-medium text-gray-700 mt-4">Fecha de pago</label>
+          <div class="relative mt-1">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+              <i class="material-icons text-gray-500">date</i>
+            </span>
+            <input id="date" type="date" v-model="datePayBill"  class="block w-[60%] pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" lazy-rules :rules="[(val) => (val && val.trim().length > 0) ||
+            'Digite la fecha de pago', ]"/>
+          </div>
         </div>
 
 
         <div class="col mr-4 ">
-          <q-input  outlined color="#04162d" type="text" class="block w-full  rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" v-model="nameCustomer" label="Nombre del cliente" lazy-rules :rules="[(val) => (val && val.trim().length > 0) ||
-                'Digite el npmbre del cliente', ]">
-            <template v-slot:prepend>
-              <q-icon name="person" />
-            </template>
-          </q-input>
+          <label for="nameCustomer" class="block text-sm font-medium text-gray-700">Nombre del cliente</label>
+          <div class="relative mt-1">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+              <i class="material-icons text-gray-500">badge</i>
+            </span>
+            <input id="nameCustomer" type="text" v-model="nameCustomer"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" lazy-rules :rules="[(val) => (val && val.trim().length > 0) ||
+            'Digite el nombre del cliente', ]"/>
+          </div>
+
+          <div class="row w-[100%] mt-4">      
+            <div class="col mr-2">
+              <label for="emailCustomer" class="block text-sm font-medium text-gray-700">Correo Electronico</label>
+              <div class="relative mt-1">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <i class="material-icons text-gray-500">email</i>
+                </span>
+                <input id="emailCustomer" type="text" v-model="emailCustomer"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+              </div>
+            </div>
+        
+            <div class="col mr-0">
+              <label for="numCustomer" class="block text-sm font-medium text-gray-700">Numero </label>
+              <div class="relative mt-1">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                  <i class="material-icons text-gray-500">phone</i>
+                </span>
+                <input id="numCustomer" type="number" v-model="numCustomer"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+              </div>
+            </div>
+          </div>
         </div>
+
+     
       </div>
 
       <div class="flex items-start justify-between mb-4 mt-10">
@@ -84,12 +121,12 @@
   </div>
 
 
-  <div class="row w-[50%]">
+  <div class="row w-[76%]">
     <div class="col mr-2">
       <label for="discountType" class="block text-sm font-medium text-gray-700">Tipo de descuento</label>
       <div class="relative mt-1">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">local_offer</i>
+          <i class="material-icons text-gray-500">percent</i>
         </span>
         <select id="discountType" v-model="valueDiscount" @change="typeDiscount" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
           <option disabled value="">Seleccione una opción</option>
@@ -99,10 +136,21 @@
     </div>
 
     <div class="col mr-4">
+      <label for="Impuesto" class="block text-sm font-medium text-gray-700">Impuesto </label>
+      <div class="relative mt-1">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <i class="material-icons text-gray-500">account_balance</i>
+        </span>
+        <input id="Impuesto" type="number" v-model="impuesto" @change="typeDiscount" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+      </div>
+    </div>
+
+    
+    <div class="col mr-4">
       <label for="precioTotal" class="block text-sm font-medium text-gray-700">Valor Total</label>
       <div class="relative mt-1">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">local_offer</i>
+          <i class="material-icons text-gray-500">receipt_long</i>
         </span>
         <input id="precioTotal" type="number" v-model="totalPriceProduct"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
       </div>
@@ -120,7 +168,7 @@
         </span>
       </div>
 
-      <div class="row w-full mt-10 p-2 bg-[#04162d] text-center border-t border-black-0.4 text-white">
+      <div class="row w-full mt-8 p-2 bg-black text-center border-t border-black-0.4 text-white">
       <div class="col mr-1">#</div>
       <div class="col-2 mr-1">Nombre</div>
       <div class="col mr-1">Unidades</div>
@@ -128,7 +176,7 @@
       <div class="col mr-1">Tipo de descuento</div>
       <div class="col mr-1">Valor unidad</div>
       <div class="col mr-1">Valor Total</div>
-      <div class="col mr-1">opciones</div></div>
+      <div v-show="valueEditCrea === 2" class="col mr-1">opciones</div></div>
 
 
       <div v-for="(item, index) in listProduct" :key="index">
@@ -140,8 +188,8 @@
            <div class="col mr-1 "> {{ item.tipoDescuento }}</div>
            <div class="col mr-1 ">${{ item.precio }}</div>
            <div class="col mr-1 ">${{ item.valueTotal }}</div>
-           <div class="col mr-1"> 
-            <div class="button cursor-pointer bg-white"  @click="goInfoExits(item)">
+           <div v-show="valueEditCrea === 2" class="col mr-1"> 
+            <div  class="button w-8 h-8 cursor-pointer bg-white"  @click="goInfoExits(item)">
               <svg height="1em" viewBox="0 0 512 512">
                 <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"
                 ></path>
@@ -151,8 +199,9 @@
         </div>
       </div>
 
-      <div class="flex items-start justify-between mt-16">
+      <div class="flex items-start justify-between mt-12">
         <div>
+          <h6 class="text-start text-black font-bold p-2 text-[15px]">Impuesto: {{ sumImpuesto }} </h6>
           <h6 class="text-start text-black font-bold p-2 text-[15px]">Cantidad Total productos: {{ amountTotalProdut }} </h6>
           <h6 class="text-start text-black font-bold p-2 text-[15px]">Total: {{ totalPrice }}</h6>
         </div>
@@ -224,8 +273,11 @@ let valueEditCrea = ref()
 let index = ref()
 let idProductExist = ref()
 let getIdExits = ref()
-
-
+let impuesto = ref(0)
+let emailCustomer = ref()
+let numCustomer = ref()
+let sumImpuesto = ref(0)
+let datePayBill = ref()
 // bill
 
 const getBill = async () => {
@@ -254,6 +306,7 @@ const getBill = async () => {
 
 
 async function postBill() {
+  console.log("sapo", sumImpuesto.value, discount.value);
   const bill = await storeBilling.NewBill({
     UserEmail: "UserEmail",
     numFactura: numBill.value,
@@ -262,6 +315,10 @@ async function postBill() {
     Discount: discount.value,
     CantProduct: amountTotalProdut.value,
     PrecioVenta: totalPrice.value,
+    impuesto: sumImpuesto.value,
+    email: emailCustomer.value,
+    number: numCustomer.value,
+    datePay: datePayBill.value
   });
   await getBill()
 };
@@ -275,6 +332,10 @@ async function putInfoBill() {
     Discount: discount.value,
     CantProduct: amountTotalProdut.value,
     PrecioVenta: totalPrice.value,
+    impuesto: impuesto.value,
+    email: emailCustomer.value,
+    number: numCustomer.value,
+    datePay: datePayBill.value
   });
   getBill();
   
@@ -314,7 +375,7 @@ function getNumBill() {
 
 function goInfoBill() {
     const data = dataGoInfo.value
-      // Asignar valores a las referencias reactivas
+     console.log(data);
       numBill.value = data.numFactura;
       nameSeller.value = data.vendedor;
       nameCustomer.value = data.cliente;
@@ -322,6 +383,11 @@ function goInfoBill() {
       valueDiscount.value , data.typeDiscount
       amountTotalProdut.value = data.CantProduct;
       totalPrice.value = data.PrecioVenta;
+      sumImpuesto.value = data.impuesto;
+      emailCustomer.value = data.email;
+      numCustomer.value = data.number;
+      datePayBill.value = data.datePay.slice(0,10)
+ 
 }
 
 
@@ -389,11 +455,14 @@ async function putInfoExist() {
  
 }
 function goInfoExits(i) {
+console.log(i);
+
     SerialProduct.value = i.serial
     getIdExits.value = i.Id;
     totalPriceProduct.value  = i.valueTotal;
     priceProduct.value = i.precio
     valueDiscount.value = i.tipoDescuento
+    impuesto.value = sumImpuesto.value
     discount.value = i.descuento
     amountProduct.value = i.Unidades
     getValues()
@@ -447,8 +516,8 @@ async function getProduct() {
 }
 
 function typeDiscount() {
-  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value);
-
+  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) + parseFloat(impuesto.value)
+    console.log(valueDiscount.value );
   if (valueDiscount.value === "Porcentaje") {
     // Descuento en porcentaje
     const percentage = discount.value; 
@@ -458,8 +527,6 @@ function typeDiscount() {
     // Descuento en valor fijo
     const fixedDiscount = discount.value;
     totalPriceProduct.value -= fixedDiscount; 
-  } else {
-    console.error("Tipo de descuento no válido");
   }
 }
  
@@ -476,11 +543,13 @@ const addOrUpdateProductList = () => {
             Unidades: parseInt(amountProduct.value),
             tipoDescuento: valueDiscount.value,
             descuento: parseFloat(discount.value),
+            impuesto: parseFloat(impuesto.value),
             precio: parseFloat(priceProduct.value),
             valueTotal: parseFloat(totalPriceProduct.value),
           };
       }
     })
+    
   } else {
     listProduct.value.push({
       serial: SerialProduct.value,
@@ -488,14 +557,19 @@ const addOrUpdateProductList = () => {
       Unidades: parseInt(amountProduct.value),
       tipoDescuento: valueDiscount.value,
       descuento: parseFloat(discount.value),
+      impuesto: parseFloat(impuesto.value),
       precio: parseFloat(priceProduct.value),
       valueTotal: parseFloat(totalPriceProduct.value),
     });
+   
   }
-  totalPrice.value += parseFloat(totalPriceProduct.value);
+  console.log("impeusto", impuesto.value);
+  totalPrice.value += parseFloat(totalPriceProduct.value) 
+  sumImpuesto.value += parseFloat(impuesto.value)
+  console.log("fas",sumImpuesto.value)
   amountTotalProdut.value += parseInt(amountProduct.value);
-
-  clean();
+  cleanProduct()
+  
 };
 
 function DateNow() {
@@ -513,28 +587,19 @@ function DateNow() {
 
 
 
-  function clean() {
-  nameProduct.value = "";
+  function cleanProduct() {
+  NameProduct.value = "";
   amountProduct.value = "";
   priceProduct.value = "";
-  getIdProduct.value = "";
-  discount.value = "";
+  getIdProduct.value = "";          
   totalPriceProduct.value = "";
-  valueDiscount.value = ""
-
+  valueDiscount.value = "";
+  discount.value = "";
+  impuesto.value = "";
 }
 
 
-async function deleteBill(data) {
-  try {
-    const res = await store.deleteVentas(data._id);
-    totalVenta.value -= data.precio;
 
-    getVentas(); // Vuelve a cargar los productos después de eliminar uno
-  } catch (error) {
-    console.error("Error al eliminar el producto:", error); // Maneja cualquier error que ocurra
-  }
-}
 
 
 function SumCant(dataI) {
@@ -556,6 +621,7 @@ async function putInfoProduct() {
     cantidad: modifiCant.value,
   });
 }
+
 
 
 onBeforeMount(() => {

@@ -107,7 +107,8 @@ export const exitStore = defineStore("exitStore", () => {
     PutExits,
     DeleteExits,
     GetForDate,
-    GetForDay
+    GetForDay,
+
   };
 },
   {

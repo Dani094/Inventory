@@ -20,9 +20,9 @@ export const notifySuccess = (msg, position = "top") => {
   });
 };
 
-export const sweetDelete = (data, onDelete) => {
+export const sweetDelete = (textDele, numBill, onDelete) => {
   Swal.fire({
-    title: `¿Seguro que quieres eliminar ${data.Name}?`,
+    title: `¿Seguro que quieres eliminar ${textDele} ${numBill}?`,
     text: "¡No podrás revertir esto!",
     icon: "warning",
     showCancelButton: true,

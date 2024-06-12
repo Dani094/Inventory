@@ -24,7 +24,7 @@
                             </q-btn>
                             <q-btn flat icon="settings">
                             </q-btn>
-                        </q-card-section>
+                        </q-card-section> 
                     </q-card> -->
                     </q-expansion-item>
                 </div>

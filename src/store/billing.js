@@ -33,6 +33,7 @@ export const billStore = defineStore("billStore", () => {
 
   // Function add, update and delete inventory
   async function NewBill(data) {
+    console.log(data);
     try {
       return (
         await requestAxios.post( "/factura/post", data,
