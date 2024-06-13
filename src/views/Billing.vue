@@ -19,7 +19,7 @@
       </div>
      
     <q-dialog v-model="dialog" class="p-0">
-      <div v-if="showBill == 3" class=" sm:w-[80%] min-h-[70vh] font-sans bg-white p-6 pt-8 font-bold">
+      <div v-if="showBill == 3" class=" sm:w-[85%] min-h-[70vh] font-sans bg-white p-6 pt-8 font-bold">
         <div class=" w-[100%] xs:w-[100%] min-h-[80vh]  bg-white ">
           <div class="row">
             <div class="col">
@@ -110,7 +110,7 @@
 
             
         </div>
-          <button class="text-white bg-black mt-14 w-32 h-10 right-2 float-end rounded-xs" @click="generateInvoice()">
+          <button class="text-white bg-black mt-14 w-32 h-10 right-2 float-end rounded-xs" @click=" printPage()">
            <!-- Icono de Descarga -->
           <i class="fas fa-download"></i>
           </button>
@@ -293,7 +293,9 @@ let columns = ref([
 
 let rows = ref([]);
 
-
+function printPage() {
+      window.print();
+    }
 
 function generateInvoice() {
       const img = new Image();
