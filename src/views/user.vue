@@ -11,10 +11,10 @@
                     <p>Nombres<span class="text-red-500">*</span></p>
                 </div>
                 <div class="flex-1">
-                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg bg-[#04162d] text-white" placeholder="Nombre(s)" v-model="name">
+                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Nombre(s)" v-model="name">
                 </div>
                 <div class="flex-1">
-                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg bg-[#04162d] text-white" placeholder="Apellido(s)" v-model="lastname">
+                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Apellido(s)" v-model="lastname">
                 </div>
             </div>
             <!-- info Document -->
@@ -23,7 +23,7 @@
                     <p>Documento<span class="text-red-500">*</span></p>
                 </div>
                 <div class="flex-1">
-                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg bg-[#04162d] text-white" placeholder="Documento" v-model="document">
+                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Documento" v-model="document">
                 </div>
             </div>
             <!-- info Cel -->
@@ -32,7 +32,7 @@
                     <p>Teléfono<span class="text-red-500">*</span></p>
                 </div>
                 <div class="flex-1">
-                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg bg-[#04162d] text-white" placeholder="Teléfono" v-model="cel">
+                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Teléfono" v-model="cel">
                 </div>
             </div>
             <!-- info Municipality -->
@@ -41,7 +41,7 @@
                     <p>Ciudad<span class="text-red-500">*</span></p>
                 </div>
                 <div class="flex-1">
-                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg bg-[#04162d] text-white" placeholder="Ciudad" v-model="municipality">
+                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Ciudad" v-model="municipality">
                 </div>
             </div>
             <!-- info Address -->
@@ -50,7 +50,7 @@
                     <p>Dirección<span class="text-red-500">*</span></p>
                 </div>
                 <div class="flex-1">
-                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg bg-[#04162d] text-white" placeholder="Dirección" v-model="address">
+                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Dirección" v-model="address">
                 </div>
             </div>
             <hr class="my-4">
@@ -70,7 +70,7 @@
                     <p>Correo<span class="text-red-500">*</span></p>
                 </div>
                 <div class="flex-1">
-                    <input type="email" class="w-full py-2 px-4 outline-none rounded-lg bg-[#04162d] text-white" placeholder="Correo" v-model="email">
+                    <input type="email" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Correo" v-model="email">
                 </div>
             </div>
             <!-- info Password -->
@@ -79,7 +79,7 @@
                     <p>Contraseña<span class="text-red-500">*</span></p>
                 </div>
                 <div class="flex-1">
-                    <input type="password" class="w-full py-2 px-4 outline-none rounded-lg bg-[#04162d] text-white" placeholder="Contraseña" v-model="password">
+                    <input type="password" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Contraseña" v-model="password">
                 </div>
             </div>
             <hr class="my-4">

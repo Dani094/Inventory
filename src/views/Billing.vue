@@ -466,28 +466,21 @@ function getListProduct() {
     );
 }
 
-async function deleteBill(data) {
-  console.log(data);
-  const numBill = data.numFactura
-  const textDele = "la Factura"
-  
-  sweetDelete(textDele, numBill, async () => { 
+async function deleteBill(data) {  
+  sweetDelete(data, async () => { 
     try {
     const res = await storeBilling.DeleteBill(data._id);
-    deleteExist(numBill)
-    // totalVenta.value -= data.precio;
+    deleteExist(data)
     getBill(); 
   } catch (error) {
     console.error("Error al eliminar el producto:", error); 
   }})
- 
 }
 
-
-async function deleteExist(numBill) {
+async function deleteExist(data) {
   try {
     for (const element of rowsExist.value) {
-      if (element.NumBill == numBill) {
+      if (element.NumBill == data.numFactura) {
         const res = await storeExist.DeleteExits(element._id);
       }
     }
@@ -526,12 +519,12 @@ async function modalCreaEdit(p) {
 
   if (p === 1) {
     dialog.value = true
-    modalTitle.value = "Crear Factura"
+    modalTitle.value = "CREAR FACTURA"
     valEditCrea.value = p
   } 
   else if(p === 2){
    dialog.value = true
-    modalTitle.value =  "Editar Factura"
+    modalTitle.value =  "EDITAR FACTURA"
     valEditCrea.value = p
   }
   else {

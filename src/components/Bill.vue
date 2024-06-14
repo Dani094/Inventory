@@ -4,9 +4,6 @@
     <div class="flex items-start justify-between mb-4">
       <div>
         <h5 class="text-center text-black font-bold text-[20px]"> {{title}} </h5></div>
-      <div>
-        <h5 class="text-center text-black font-bold p-2 text-xl"> {{ currentDateFormatted }} </h5>
-      </div>
     </div>
     <q-form ref="myForm" @submit.prevent.stop="EditarCrearBill()">
       <div class="row w-full justify-center">
@@ -109,20 +106,6 @@
       </div>
     </div>
     <div class="col mr-2">
-      <label for="discount" class="block text-sm font-medium text-gray-700">Descuento</label>
-      <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">local_offer</i>
-        </span>
-        <input id="discount" type="number" v-model="discount" @change="typeDiscount"
-          class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="row w-[76%]">
-    <div class="col mr-2">
       <label for="discountType" class="block text-sm font-medium text-gray-700">Tipo de descuento</label>
       <div class="relative mt-1">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -132,6 +115,20 @@
           <option disabled value="">Seleccione una opción</option>
           <option v-for="option in optionsType" :key="option" :value="option">{{ option }}</option>
         </select>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row w-[76%]">
+    <div class="col mr-2">
+      <label for="discount" class="block text-sm font-medium text-gray-700">Descuento</label>
+      <div class="relative mt-1">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <i class="material-icons text-gray-500">local_offer</i>
+        </span>
+        <input id="discount" type="number" v-model="discount" @change="typeDiscount"
+          class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
       </div>
     </div>
 
@@ -157,8 +154,8 @@
     </div>
   </div>
 
-      <div  @click="addOrUpdateProductList()"  class="rounded-md relative w-[80px] h-10 mt-2 mb-4 cursor-pointer flex items-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500">
-        <span class="text-gray-200 font-semibold ml-2 transform group-hover:translate-x-20 transition-all duration-300">Item</span>
+      <div  @click="addOrUpdateProductList()"  class="rounded-md relative w-[115px] h-10 mt-2 mb-4 cursor-pointer flex items-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500">
+        <span class="text-white font-semibold ml-2 transform group-hover:translate-x-20 transition-all duration-300">Agregar</span>
         <span class="absolute right-0 h-full w-10 rounded-lg bg-green-500 flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300">
           <svg class="svg w-8 text-white" fill="none" height="24" stroke="currentColor" stroke-linecap="round"  stroke-linejoin="round" stroke-width="2"
             viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -215,7 +212,7 @@
         <q-btn v-else icon="edit" label="Editar Factura" :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" v-close-popup></q-btn>
 
 
-        <q-btn icon="cancel"  type="button" class="text-white bg-[#541b1b] rounded-1xl " v-close-popup >CERRAR </q-btn>
+        <q-btn icon="cancel"  type="button" class="text-white bg-red-700 rounded-1xl " v-close-popup >CERRAR </q-btn>
       </div>
       <!-- btn -->
     </q-form>

@@ -47,17 +47,17 @@
         <div class="bg-white rounded-2xl">
         </div>
         <!-- charts -->
-        <div class="flex gap-4">
-            <div class="w-full lg:w-[55%] bg-white rounded-2xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4">
+            <div class="w-full bg-white rounded-2xl">
                 <ChartUse :chartInventory="true" :title="'Inventario'" :newType="'bar'" chartId="chart1"/>
             </div>
-            <div class="w-full lg:w-[44%] bg-white rounded-2xl">
+            <div class="w-full bg-white rounded-2xl">
                 <ChartUse :chartInventory="true" :newType="'pie'" chartId="chart3" class="w-full h-[500px] flex justify-center items-center"/>
             </div>
-            <div class="w-full lg:w-[55%] bg-white rounded-2xl">
+            <div class="w-full bg-white rounded-2xl">
                 <ChartUse :chartExits="true" :title="'Salidas'" :newType="'line'" chartId="chart2" />
             </div>
-            <div class="w-full lg:w-[44%] bg-white rounded-2xl">
+            <div class="w-full bg-white rounded-2xl">
                 <ChartUse :chartExits="true" :newType="'polarArea'" chartId="chart4" class="w-full h-[500px] flex justify-center items-center"/>
             </div>
         </div>

@@ -2,19 +2,20 @@
   <div class="grid grid-cols-12 h-[100vh] justify-center items-center bg-[#E7E8F3] fullscreen">
     <div class="col-span-1 lg:col-span-2"></div>
     <!-- container -->
-    <div class="col-span-10 lg:col-span-8 flex justify-center items-center">
+    <div class="col-span-10 lg:col-span-8 flex shadow-2xl rounded-2xl">
       <!-- content login -->
-      <q-form @submit.prevent.stop="validar()" class="flex w-full lg:w-[40%] justify-center items-center shadow-md">
+       <div class="w-full lg:w-[40%]">
+        <q-form @submit.prevent.stop="validar()" class="flex w-full">
         <!-- titulo -->
-        <div class="bg-white rounded-xl w-full">
+        <div class="bg-white w-full">
           <div
-            class="mx-4 -mt-10 mb-4 flex h-28 items-center justify-center rounded-xl bg-[#04162d] shadow-lg shadow-[#04162d]">
-            <h3 class="font-sans text-3xl font-semibold text-white">
+            class="mx-4 -mt-10 flex h-28 items-center justify-center rounded-xl bg-[#04162d] shadow-lg shadow-[#04162d]">
+            <h3 class="font-serif text-3xl font-semibold text-white">
               BIENVENIDO
             </h3>
           </div>
           <!-- inputs -->
-          <div class="p-10">
+          <div class="p-[4rem]">
             <div class="w-full mt-6">
               <h5 class="text-xl font-serif"><strong>Usuario</strong></h5>
               <q-input autocomplete="current-text" v-model="user" label="DIGITE SU CORREO" stack-label>
@@ -54,10 +55,10 @@
 
         </div>
       </q-form>
+       </div>
       <!-- img login -->
-      <div class="w-[60%] hidden lg:block  border-t border-r border-b rounded-tr-lg rounded-br-lg">
-        <img src="https://img.freepik.com/free-photo/computer-security-with-login-password-padlock_107791-16191.jpg"
-          class="w-full h-full" />
+      <div class="w-[0%] lg:w-[60%]" >
+          <img src="https://e0.pxfuel.com/wallpapers/531/773/desktop-wallpaper-space-planet-abstract-and-mobile-background-2560x1440-space.jpg" alt="imagen login" class="w-full h-full">
       </div>
     </div>
     <div class="col-span-1 lg:col-span-2"></div>
