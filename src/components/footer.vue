@@ -4,7 +4,7 @@
             <div class="grid grid-rows-1 gap-8 md:grid-cols-12 xl:gap-8">
                 <!-- Message -->
                 <div class="md:col-span-12 xl:col-span-6 flex flex-col gap-4">
-                    <h1 class="text-3xl font-bold text-gray-900">DAN</h1>
+                    <h1 class="text-3xl font-bold text-gray-900">NEWXO</h1>
                     <p class="text-gray-600 text-justify">
                         "Gracias por elegirnos. Nos comprometemos a ofrecerte el mejor servicio y soporte. Si tienes alguna pregunta, necesitas asistencia, o deseas proporcionarnos retroalimentación, no dudes en contactarnos. Valoramos tu confianza y trabajamos continuamente para mejorar tu experiencia. ¡Tu satisfacción es nuestra prioridad!"
                     </p>
@@ -47,7 +47,7 @@
                             <span class="material-icons text-lg text-[#04162d]">
                                 email
                             </span>
-                            murillofelipe094@gmail.com
+                            newxoDev@gmail.com
                         </p>
                         <p class="flex items-center gap-2">
                             <i class="fa-solid fa-mobile text-lg"></i>
@@ -61,7 +61,7 @@
             <div class="flex flex-col xl:flex-row gap-4 items-center justify-between">
                 <p class="text-gray-800 text-center md:text-left">
                     &copy; 2024
-                    <span class="text-gray-900 font-bold">DAN</span> 
+                    <span class="text-gray-900 font-bold">NEWXO</span> 
                     Todos los derechos reservados.
                 </p>
                 <div class="flex flex-col md:flex-row items-center gap-2">

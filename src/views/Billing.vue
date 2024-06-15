@@ -225,18 +225,21 @@ import Tables from "@/components/table.vue";
 import Modal from "@/components/modals.vue";
 import { billStore } from "../store/billing.js";
 import {useModalStore} from "../store/storeModal.js"
-import { exitStore } from "@/store/exits.js";
 import { jsPDF } from "jspdf";
 import autoTable from 'jspdf-autotable';
 import logoSrc from '@/assets/logoNova.jpeg'
 import {sweetDelete} from "@/Global/notify"
 import { usersStore } from "../store/users.js";
+import { exitStore } from "@/store/exits.js";
+import { LoginStore } from "../store/login.js";
 
 
 const user = usersStore();
 const storeExist = exitStore();
 const storeM =  useModalStore()
 const storeBilling = billStore();
+const storeLogin = LoginStore();
+
 let arrayEdit = ref()
 let valEditCrea = ref()
 let  modalTitle = ref()
@@ -411,7 +414,7 @@ const getBill = async () => {
 
 
 async function ExitsGet() {
-  const res = await storeExist.GetExits();
+  const res = await storeExist.GetExits(storeLogin.Email);
   if (res && res.status < 299) {
     rowsExist.value = res.data;
   } 

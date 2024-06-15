@@ -47,17 +47,18 @@
         <div class="bg-white rounded-2xl">
         </div>
         <!-- charts -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4">
-            <div class="w-full bg-white rounded-2xl">
+         <!-- grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <div class="w-full bg-white rounded-2xl col-span-7">
                 <ChartUse :chartInventory="true" :title="'Inventario'" :newType="'bar'" chartId="chart1"/>
             </div>
-            <div class="w-full bg-white rounded-2xl">
+            <div class="w-full bg-white rounded-2xl col-span-5">
                 <ChartUse :chartInventory="true" :newType="'pie'" chartId="chart3" class="w-full h-[500px] flex justify-center items-center"/>
             </div>
-            <div class="w-full bg-white rounded-2xl">
+            <div class="w-full bg-white rounded-2xl col-span-7">
                 <ChartUse :chartExits="true" :title="'Salidas'" :newType="'line'" chartId="chart2" />
             </div>
-            <div class="w-full bg-white rounded-2xl">
+            <div class="w-full bg-white rounded-2xl col-span-5">
                 <ChartUse :chartExits="true" :newType="'polarArea'" chartId="chart4" class="w-full h-[500px] flex justify-center items-center"/>
             </div>
         </div>
@@ -91,7 +92,7 @@ let names=ref()
 let valores=ref()
 
 async function InventoryGet() {
-  const res = await storeInventory.GetInventory();
+  const res = await storeInventory.GetInventory(storeLogin.Email);
   if (res && res.status < 299) {
     for (let i in res.data) {
         let units= res.data[i].SellingPrice
@@ -111,7 +112,7 @@ async function InventoryGet() {
   }
 }
 async function ExitsGet() {
-  const res = await storeExits.GetExits();
+  const res = await storeExits.GetExits(storeLogin.Email);
   if (res && res.status < 299) {
     for (let i in res.data) {
         let units= res.data[i].Total

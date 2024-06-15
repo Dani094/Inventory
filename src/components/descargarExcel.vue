@@ -45,10 +45,12 @@ const props= defineProps({
 import { ref } from "vue";
 import { inventoryStore } from "@/store/inventory.js";
 import { exitStore } from "@/store/exits.js"
+import { LoginStore } from "../store/login.js";
 import ExcelJS from "exceljs";
 
 const storeInventory = inventoryStore();
 const storeExits = exitStore();
+const storeLogin = LoginStore();
 
 let showModal = ref(false);
 let loading = ref(false)
@@ -67,9 +69,9 @@ function clean() {
 async function GetPorFecha() {
   let res;
   if (fechaExcel.value !== "") {
-    res = await storeInventory.GetForDate(fechaExcel.value);
+    res = await storeInventory.GetForDate(fechaExcel.value, storeLogin.Email);
   } else {
-    res = await storeInventory.GetForDay(fechaDia.value);
+    res = await storeInventory.GetForDay(fechaDia.value, storeLogin.Email);
   }
   if (res.status < 299) {
     rows.value = res.data;
@@ -84,9 +86,9 @@ async function GetPorFecha() {
 async function GetPorFechaSalidas() {
   let res;
   if (fechaExcel.value !== "") {
-    res = await storeExits.GetForDate(fechaExcel.value);
+    res = await storeExits.GetForDate(fechaExcel.value, storeLogin.Email);
   } else {
-    res = await storeExits.GetForDay(fechaDia.value);
+    res = await storeExits.GetForDay(fechaDia.value, storeLogin.Email);
   }
   if (res.status < 299) {
     rows.value = res.data;

@@ -6,7 +6,7 @@
     <ul class="pl-1">
       <!-- logo  -->
       <li>
-        <h1 class="text-2xl uppercase font-bold text-center my-5">DAN</h1>
+        <h1 class="text-2xl uppercase font-bold text-center my-5">NEWSO</h1>
       </li>
       <!-- options  -->
       <router-link to="/home">

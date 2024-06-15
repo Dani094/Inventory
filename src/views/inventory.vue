@@ -435,7 +435,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import Report from "@/views/reports.vue"
+import Report from "@/components/descargarExcel.vue"
 // import Tables from "@/components/table.vue";
 // import Modal from "@/components/modals.vue";
 import { inventoryStore } from "@/store/inventory.js";
@@ -479,7 +479,7 @@ let rows = ref([]);
 
 // peticiones
 async function InventoryGet() {
-  const res = await storeInventory.GetInventory();
+  const res = await storeInventory.GetInventory(storeLogin.Email);
   if (res && res.status < 299) {
     rows.value = res.data;
     rows.value.forEach((row, index) => {
@@ -565,12 +565,15 @@ async function deleteItem(data) {
 async function ExitsPost() {
   loading.value = true;
   const res = await storeExits.PostExits(
-    nameExit.value,
-    serialExit.value,
-    unitsExit.value,
-    priceExit.value,
-    discount.value,
-    user.value
+    { 
+        NumBill: null,
+        Name: nameExit.value,
+        Serial: serialExit.value,
+        Units:  unitsExit.value,
+        Price:  priceExit.value,
+        Discount: discount.value,
+        UserEmail: user.value,
+    }
   );
   showModalExits.value = false;
   await putUnidades();

@@ -18,9 +18,11 @@ import { ref, onMounted } from "vue";
 import Chart from "chart.js/auto";
 import { inventoryStore } from "@/store/inventory.js";
 import {exitStore} from "@/store/exits.js"
+import { LoginStore } from "../store/login.js";
 
 const storeExits = exitStore();
 const storeInventory = inventoryStore();
+const storeLogin = LoginStore();
 
 let loading=ref(false)
 let names = ref([]);
@@ -32,7 +34,7 @@ let myChart;
 
 // get inventory
 async function GetInventory() {
-  const res = await storeInventory.GetInventory();
+  const res = await storeInventory.GetInventory(storeLogin.Email);
   try {
     const unitsForNames = {};
     for (let i in res.data) {
@@ -55,7 +57,7 @@ async function GetInventory() {
   } catch (error) {}
 }
 async function GetExits() {
-  const res = await storeExits.GetExits();
+  const res = await storeExits.GetExits(storeLogin.Email);
   try {
     const unitsForNames = {};
     for (let i in res.data) {

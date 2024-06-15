@@ -7,9 +7,9 @@ export const exitStore = defineStore("exitStore", () => {
   const useToken = LoginStore();
 
   // Function Get inventory
-  async function GetExits() {
+  async function GetExits(User) {
     try {
-      return await requestAxios.get("/exits/all", {
+      return await requestAxios.get(`/exits/get/${User}`, {
         headers: {
           token: useToken.token,
         },
@@ -74,10 +74,10 @@ export const exitStore = defineStore("exitStore", () => {
 
 
   // get for date 
-  async function GetForDate(fecha) {
+  async function GetForDate(fecha,User) {
     try {
       const response = await requestAxios.get(
-        `/exits/getFechas/${fecha}`
+        `/exits/getFechas/${fecha}/${User}`
       );
       if (response.data && response.data.length === 0) {
         notifyError("No Se Encuentran datos en esa Fecha");
@@ -88,9 +88,9 @@ export const exitStore = defineStore("exitStore", () => {
       notifyError("No Se Encuentran Datos en esa Fecha");
     }
   }
-  async function GetForDay(fecha) {
+  async function GetForDay(fecha,User) {
     try {
-      const response = await requestAxios.get(`/exits/getDay/${fecha}`);
+      const response = await requestAxios.get(`/exits/getDay/${fecha}/${User}`);
       if (response.data && response.data.length === 0) {
         notifyError("No Se Encuentran Datos en ese Día");
       } else {

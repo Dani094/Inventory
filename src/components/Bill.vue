@@ -225,6 +225,7 @@ import { billStore } from "../store/billing.js";
 import { inventoryStore } from "@/store/inventory.js";
 import billing from "@/views/Billing.vue";
 import { exitStore } from "@/store/exits.js";
+import { LoginStore } from "../store/login.js";
 
 const props = defineProps({
   title: String,
@@ -238,6 +239,7 @@ const props = defineProps({
 const storeBilling = billStore();
 const storeInventory = inventoryStore();
 const storeExist = exitStore();
+const storeLogin = LoginStore();
 
 let numBill = ref();
 let nameSeller = ref("");
@@ -391,7 +393,7 @@ function goInfoBill() {
 // Exist
 
 async function ExitsGet() {
-  const res = await storeExist.GetExits();
+  const res = await storeExist.GetExits(storeLogin.Email);
  
   if (res && res.status < 299) {
     rowsExist.value = res.data;

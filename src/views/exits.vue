@@ -169,7 +169,7 @@
 
 <script setup>
 import {ref, onMounted} from "vue"
-import Report from "@/views/reports.vue"
+import Report from "@/components/descargarExcel.vue"
 import {exitStore} from "@/store/exits.js"
 import { LoginStore } from "../store/login.js";
 import {sweetDelete} from "@/Global/notify"
@@ -192,12 +192,12 @@ let discount = ref("");
 let user=ref(storeLogin.Email)
 let TotalUnits=ref(0)
 
+
 // peticiones get,put,delete
 async function ExitsGet() {
-  const res = await storeExits.GetExits();
+  const res = await storeExits.GetExits(storeLogin.Email);
   if (res && res.status < 299) {
     rows.value = res.data;
-    console.log(rows.value);
     rows.value.forEach((row, index) => {
       row.index= index + 1;
       TotalUnits.value = 0;
