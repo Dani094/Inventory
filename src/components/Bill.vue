@@ -471,7 +471,7 @@ console.log(i);
 // Product
 
 async function getProduct() {
-  const res = await storeInventory.GetInventory();
+  const res = await storeInventory.GetInventory(storeLogin.Email);
   resProduct.value = res;
   if (res.status < 299) {
     for (let i in res.data) {
