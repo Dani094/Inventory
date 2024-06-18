@@ -30,11 +30,14 @@ let valores = ref([]);
 let type = ref("bar");
 let newType = ref(props.newType);
 let myChart;
-
+let fecha = new Date();
+let año = fecha.getFullYear();
+let mes = String(fecha.getMonth() + 1).padStart(2, '0');
+let fechaFormateada = `${año}-${mes}`;
 
 // get inventory
 async function GetInventory() {
-  const res = await storeInventory.GetInventory(storeLogin.Email);
+  const res = await storeInventory.GetForDate(fechaFormateada, storeLogin.Email);
   try {
     const unitsForNames = {};
     for (let i in res.data) {
@@ -57,7 +60,7 @@ async function GetInventory() {
   } catch (error) {}
 }
 async function GetExits() {
-  const res = await storeExits.GetExits(storeLogin.Email);
+  const res = await storeExits.GetForDate(fechaFormateada, storeLogin.Email);
   try {
     const unitsForNames = {};
     for (let i in res.data) {

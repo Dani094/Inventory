@@ -50,12 +50,14 @@
          <!-- grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
             <div class="w-full bg-white rounded-2xl lg:col-span-7">
+                <h1 class="text-[#04162d] w-full text-center text-2xl font-bold p-4">INVENTARIO MENSUAL</h1>
                 <ChartUse :chartInventory="true" :title="'Inventario'" :newType="'bar'" chartId="chart1"/>
             </div>
             <div class="w-full bg-white rounded-2xl lg:col-span-5">
                 <ChartUse :chartInventory="true" :newType="'pie'" chartId="chart3" class="w-full h-[500px] flex justify-center items-center"/>
             </div>
             <div class="w-full bg-white rounded-2xl lg:col-span-7">
+                <h1 class="text-[#04162d] w-full text-center text-2xl font-bold p-4">SALIDAS MENSUAL</h1>
                 <ChartUse :chartExits="true" :title="'Salidas'" :newType="'line'" chartId="chart2" />
             </div>
             <div class="w-full bg-white rounded-2xl lg:col-span-5">

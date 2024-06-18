@@ -126,7 +126,13 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   async function GetForDate(fecha,User) {
     try {
       const response = await requestAxios.get(
-        `/inventory/getFechas/${fecha}/${User}`);
+        `/inventory/getFechas/${fecha}/${User}`,
+        {
+          headers: {
+            token: useToken.token,
+          },
+        }
+      );
       if (response.data && response.data.length === 0) {
         notifyError("No Se Encuentran datos en esa Fecha");
       } else {
@@ -138,7 +144,13 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   }
   async function GetForDay(fecha,User) {
     try {
-      const response = await requestAxios.get(`/inventory/getDia/${fecha}/${User}`);
+      const response = await requestAxios.get(`/inventory/getDia/${fecha}/${User}`,
+        {
+          headers: {
+            token: useToken.token,
+          },
+        }
+      );
       if (response.data && response.data.length === 0) {
         notifyError("No Se Encuentran Datos en ese Día");
       } else {

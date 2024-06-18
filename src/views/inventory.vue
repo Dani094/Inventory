@@ -521,6 +521,7 @@ async function InventoryPost() {
       await storeInventory.PostInventory(
         duplicatedItem.Supplier,
         duplicatedItem.Name,
+        duplicatedItem.Serial,
         duplicatedItem.Units,
         duplicatedItem.Price,
         duplicatedItem.ExpirationDate,

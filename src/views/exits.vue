@@ -207,15 +207,16 @@ async function ExitsGet() {
 }
 async function ExitsPut() {
   loading.value = true;
-  const res = await exitStore.PutExits(
-    index.value,
-    nameExit.value,
-    serialExit.value,
-    parseFloat(units2.value),
-    parseFloat(priceExit.value),
-    parseFloat(discount.value),
-    user.value
-  );
+  const res = await storeExits.PutExits(index.value,
+  {
+    Name:nameExit.value,
+    Serial:serialExit.value,
+    Units:parseFloat(units2.value),
+    Price:parseFloat(priceExit.value),
+    Discount:parseFloat(discount.value),
+    UserUpdate:user.value
+  }
+);
   showModalEdit.value = false;
   ExitsGet();
   loading.value = false;
