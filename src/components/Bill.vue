@@ -6,36 +6,50 @@
         <h5 class="text-center text-black font-bold text-[20px]"> {{title}} </h5></div>
     </div>
     <q-form ref="myForm" @submit.prevent.stop="EditarCrearBill()">
-      <div class="row w-full justify-center">
-        <div class="col mr-4">
-          <label for="nameSeller" class="block text-sm font-medium text-gray-700">Nombre vendedor</label>
+        <!-- Vendedor -->
+        <div class="mr-4 w-full justify-center" v-show="selectForm == 1">
+          
+          <div class="mb-4">
+            <label for="nameSeller" class="block text-sm font-medium text-gray-700">Nombre vendedor</label>
           <div class="relative mt-1">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
               <i class="material-icons text-gray-500">supervisor_account</i>
             </span>
-            <input id="nameSeller" type="text" v-model="nameSeller"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" lazy-rules :rules="[(val) => (val && val.trim().length > 0) ||
-            'Digite el nombre del vendedor', ]"/>
+            <input id="nameSeller" type="text" v-model="nameSeller"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          </div>
           </div>
           
-          <label for="date" class="block text-sm font-medium text-gray-700 mt-4">Fecha de pago</label>
-          <div class="relative mt-1">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-              <i class="material-icons text-gray-500">date</i>
-            </span>
-            <input id="date" type="date" v-model="datePayBill"  class="block w-[60%] pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" lazy-rules :rules="[(val) => (val && val.trim().length > 0) ||
-            'Digite la fecha de pago', ]"/>
-          </div>
+
+        
+            <div class="mb-4">
+            <label for="date" class="block text-sm font-medium text-gray-700 ">Fecha de pago</label>
+                      <div class="relative mt-1">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                          <i class="material-icons text-gray-500">date</i>
+                        </span>
+                        <input id="date" type="date" v-model="datePayBill"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                      </div>
+            </div>
+            
+            <div class="mb-4">
+              <label for="Impuesto" class="block text-sm font-medium text-gray-700">Iva </label>
+            <div class="relative mt-1">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <i class="material-icons text-gray-500">account_balance</i>
+        </span>
+        <input id="Impuesto" type="number" v-model="impuesto" @change="typeDiscount" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+      </div>
+            </div>
         </div>
-
-
-        <div class="col mr-4 ">
+        
+        <!-- Cliente -->
+        <div class="col mr-4 " v-show="selectForm == 2">
           <label for="nameCustomer" class="block text-sm font-medium text-gray-700">Nombre del cliente</label>
           <div class="relative mt-1">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
               <i class="material-icons text-gray-500">badge</i>
             </span>
-            <input id="nameCustomer" type="text" v-model="nameCustomer"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" lazy-rules :rules="[(val) => (val && val.trim().length > 0) ||
-            'Digite el nombre del cliente', ]"/>
+            <input id="nameCustomer" type="text" v-model="nameCustomer"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
           </div>
 
           <div class="row w-[100%] mt-4">      
@@ -62,8 +76,9 @@
         </div>
 
      
-      </div>
-
+    
+      <!-- productos -->
+      <div  v-show="selectForm == 3">
       <div class="flex items-start justify-between mb-4 mt-10">
         <div>
           <p class="text-center text-black font-bold text-[18px]">Productos</p>
@@ -120,7 +135,7 @@
   </div>
 
 
-  <div class="row w-[76%]">
+  <div class="row w-[50%]">
     <div class="col mr-2">
       <label for="discount" class="block text-sm font-medium text-gray-700">Descuento</label>
       <div class="relative mt-1">
@@ -132,18 +147,8 @@
       </div>
     </div>
 
-    <div class="col mr-4">
-      <label for="Impuesto" class="block text-sm font-medium text-gray-700">Iva </label>
-      <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">account_balance</i>
-        </span>
-        <input id="Impuesto" type="number" v-model="impuesto" @change="typeDiscount" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-      </div>
-    </div>
 
-    
-    <div class="col mr-4">
+    <div class="col mr-2">
       <label for="precioTotal" class="block text-sm font-medium text-gray-700">Valor Total</label>
       <div class="relative mt-1">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -165,7 +170,7 @@
         </span>
       </div>
 
-      <div class="row w-full mt-8 p-2 bg-black text-center border-t border-black-0.4 text-white">
+      <div class="row w-full mt-8 p-2 bg-black text-center border-t border-black-0.4 text-white" v-show="showTableProduct">
       <div class="col mr-1">#</div>
       <div class="col-2 mr-1">Nombre</div>
       <div class="col mr-1">Unidades</div>
@@ -198,7 +203,7 @@
 
       <div class="flex items-start justify-between mt-12">
         <div>
-          <h6 class="text-start text-black font-bold p-2 text-[15px]">Iva: {{ sumImpuesto }} </h6>
+          <h6 class="text-start text-black font-bold p-2 text-[15px]">Iva: {{ impuesto }} </h6>
           <h6 class="text-start text-black font-bold p-2 text-[15px]">Cantidad Total productos: {{ amountTotalProdut }} </h6>
           <h6 class="text-start text-black font-bold p-2 text-[15px]">Total: {{ totalPrice }}</h6>
         </div>
@@ -210,10 +215,11 @@
       <div class="flex justify-end items-center gap-4">
         <q-btn v-if="valueEditCrea == 1" icon="save_as" label="Generar Factura"  :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" ></q-btn>
         <q-btn v-else icon="edit" label="Editar Factura" :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" v-close-popup></q-btn>
-
-
-        <q-btn icon="cancel"  type="button" class="text-white bg-red-700 rounded-1xl " v-close-popup >CERRAR </q-btn>
+        <q-btn icon="cancel"  type="button" class="text-white bg-red-700 rounded-1xl float-end bottom-0 " v-close-popup >CERRAR </q-btn>
       </div>
+      </div>
+      <q-btn icon="arrow_forward"  type="submit" class="text-white bg-green-700 rounded-1xl m-2  float-end" > </q-btn>
+     
       <!-- btn -->
     </q-form>
   </div>
@@ -260,9 +266,8 @@ let SerialProduct = ref();
 let NameProduct = ref();
 let totalPriceProduct = ref(0);
 let amountTotalProdut = ref(0);
-let dateExpiration = ref();
-let UserUpdate = ref();
-let UserEmail = ref();
+let user = ref(storeLogin.Email);
+let UserUpdate = ref()
 let discount = ref();
 let valueDiscount = ref();
 let optionsType = ref(["Porcentaje", "valor fijo"]);
@@ -275,8 +280,9 @@ let getIdExits = ref()
 let impuesto = ref(0)
 let emailCustomer = ref()
 let numCustomer = ref()
-let sumImpuesto = ref(0)
 let datePayBill = ref()
+let showTableProduct = ref(false)
+let selectForm = ref(1)
 // bill
 
 const getBill = async () => {
@@ -305,16 +311,15 @@ const getBill = async () => {
 
 
 async function postBill() {
-  console.log("sapo", sumImpuesto.value, discount.value);
   const bill = await storeBilling.NewBill({
-    UserEmail: "UserEmail",
+    UserEmail: user.value,
     numFactura: numBill.value,
     vendedor: nameSeller.value,
     cliente: nameCustomer.value,
     Discount: discount.value,
     CantProduct: amountTotalProdut.value,
     PrecioVenta: totalPrice.value,
-    impuesto: sumImpuesto.value,
+    impuesto: impuesto.value,
     email: emailCustomer.value,
     number: numCustomer.value,
     datePay: datePayBill.value
@@ -324,7 +329,7 @@ async function postBill() {
 
 async function putInfoBill() {
   const res = await storeBilling.PutBill(index.value, {
-    UserEmail: "UserEmail",
+    UserEmail: user.value,
     numFactura: numBill.value,
     vendedor: nameSeller.value,
     cliente: nameCustomer.value,
@@ -339,6 +344,12 @@ async function putInfoBill() {
   getBill();
   
 }
+
+  function formValidate() {
+    if (selectForm.value === 1) {
+      
+    }
+  }
 
  function EditarCrearBill() {
    if (valueEditCrea.value == 1) {
@@ -382,7 +393,7 @@ function goInfoBill() {
       valueDiscount.value , data.typeDiscount
       amountTotalProdut.value = data.CantProduct;
       totalPrice.value = data.PrecioVenta;
-      sumImpuesto.value = data.impuesto;
+      impuesto.value = data.impuesto;
       emailCustomer.value = data.email;
       numCustomer.value = data.number;
       datePayBill.value = data.datePay.slice(0,10)
@@ -427,7 +438,7 @@ const postExist = async () => {
         Price: product.precio,
         Discount: product.descuento,
         typeDiscount: product.tipoDescuento,
-        UserEmail: "usuario@example.com",
+        UserEmail: user.value,
       };
       const response = await storeExist.PostExits(bill);
     });
@@ -447,7 +458,7 @@ async function putInfoExist() {
         Price: product.precio,
         Discount: product.descuento,
         typeDiscount: product.tipoDescuento,
-        UserEmail: "usuario@example.com",
+        UserEmail: user.value,
       };
       const response = await storeExist.PutExits(idProductExist.value, bill);
     });
@@ -461,7 +472,7 @@ console.log(i);
     totalPriceProduct.value  = i.valueTotal;
     priceProduct.value = i.precio
     valueDiscount.value = i.tipoDescuento
-    impuesto.value = sumImpuesto.value
+    impuesto.value = impuesto.value
     discount.value = i.descuento
     amountProduct.value = i.Unidades
     getValues()
@@ -515,7 +526,7 @@ async function getProduct() {
 }
 
 function typeDiscount() {
-  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) + parseFloat(impuesto.value)
+  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) 
     console.log(valueDiscount.value );
   if (valueDiscount.value === "Porcentaje") {
     // Descuento en porcentaje
@@ -542,7 +553,6 @@ const addOrUpdateProductList = () => {
             Unidades: parseInt(amountProduct.value),
             tipoDescuento: valueDiscount.value,
             descuento: parseFloat(discount.value),
-            impuesto: parseFloat(impuesto.value),
             precio: parseFloat(priceProduct.value),
             valueTotal: parseFloat(totalPriceProduct.value),
           };
@@ -556,17 +566,16 @@ const addOrUpdateProductList = () => {
       Unidades: parseInt(amountProduct.value),
       tipoDescuento: valueDiscount.value,
       descuento: parseFloat(discount.value),
-      impuesto: parseFloat(impuesto.value),
       precio: parseFloat(priceProduct.value),
       valueTotal: parseFloat(totalPriceProduct.value),
     });
    
   }
+  showTableProduct.value = true 
   console.log("impeusto", impuesto.value);
-  totalPrice.value += parseFloat(totalPriceProduct.value) 
-  sumImpuesto.value += parseFloat(impuesto.value)
-  console.log("fas",sumImpuesto.value)
+  totalPrice.value += parseFloat(totalPriceProduct.value) +  parseFloat(impuesto.value)
   amountTotalProdut.value += parseInt(amountProduct.value);
+
   cleanProduct()
   
 };
@@ -594,7 +603,6 @@ function DateNow() {
   totalPriceProduct.value = "";
   valueDiscount.value = "";
   discount.value = "";
-  impuesto.value = "";
 }
 
 

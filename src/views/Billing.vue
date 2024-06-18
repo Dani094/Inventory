@@ -117,7 +117,7 @@
         </div>
       </div>
  
-      <div v-else class="mr-2 xs:w-[100%] min-h-[80vh] rounded-[20px] bg-white p-6 " >
+      <div v-else class="mr-2 xs:w-[100%] h-auto rounded-[20px] bg-white p-6 " >
       <bill :title="modalTitle" :ind="index" :value="valEditCrea"  :dataEdit="arrayEdit"   />
        
       </div>

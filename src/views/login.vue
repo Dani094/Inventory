@@ -9,13 +9,13 @@
         <!-- titulo -->
         <div class="bg-white w-full">
           <div
-            class="mx-4 -mt-10 flex h-28 items-center justify-center rounded-xl bg-[#04162d] shadow-lg shadow-[#04162d]">
+            class="mx-4 -mt-10 flex h-28 items-center justify-center rounded-xl bg-[#000000] shadow-lg shadow-[#04162d]">
             <h3 class="font-serif text-3xl font-semibold text-white">
               BIENVENIDO
             </h3>
           </div>
           <!-- inputs -->
-          <div class="p-[4rem]">
+          <div class="p-[5rem]">
             <div class="w-full mt-6">
               <h5 class="text-xl font-serif"><strong>Usuario</strong></h5>
               <q-input autocomplete="current-text" v-model="user" label="DIGITE SU CORREO" stack-label>
@@ -40,7 +40,7 @@
             <!-- btn ingresar  -->
             <div class="p-6 pt-10">
               <q-btn type="submit" :loading="loading"
-                class="w-full rounded-lg bg-[#04162d] py-3 px-6 text-center font-sans text-xs font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-[#04162d] ">
+                class="w-full rounded-lg bg-[#000000] py-3 px-6 text-center font-sans text-xs font-bold uppercase text-white shadow-md transition-all hover:shadow-lg hover:shadow-[#04162d] ">
                 Ingresar
               </q-btn>
               <p class="mt-6 flex justify-center font-sans text-sm font-light leading-normal text-inherit antialiased">
@@ -57,8 +57,8 @@
       </q-form>
        </div>
       <!-- img login -->
-      <div class="w-[0%] lg:w-[60%]" >
-          <img src="https://e0.pxfuel.com/wallpapers/531/773/desktop-wallpaper-space-planet-abstract-and-mobile-background-2560x1440-space.jpg" alt="imagen login" class="w-full h-full">
+      <div class="w-[0%] lg:w-[60%] lg:h-[598px] h-full" >
+          <img src="../assets/_1ba30943-a6a2-451d-90c5-c5345685292e.jpeg" alt="imagen login" class="w-full h-full">
       </div>
     </div>
     <div class="col-span-1 lg:col-span-2"></div>

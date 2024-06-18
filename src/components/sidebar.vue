@@ -1,12 +1,12 @@
 <template>
   <div
-    class="bg-[#04162d] fixed lg:left-0 top-0 w-28 h-full flex flex-col justify-between py-6 rounded-tr-xl rounded-br-xl text-white z-10 transition-all"
+    class="bg-[#04162d] fixed lg:left-0 top-0 w-28 h-full flex flex-col justify-between py-3 rounded-tr-xl rounded-br-xl text-white z-10 transition-all"
     :class="{ 'left-0': showSidebar, '-left-full': !showSidebar }"
   >
     <ul class="pl-1">
       <!-- logo  -->
       <li>
-        <h1 class="text-2xl uppercase font-bold text-center my-5">NEWSO</h1>
+        <img class="w-[40%] m-8" src="../assets/logoNewxo.png" alt="">
       </li>
       <!-- options  -->
       <router-link to="/home">
