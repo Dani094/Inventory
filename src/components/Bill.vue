@@ -347,7 +347,9 @@ async function putInfoBill() {
 
   function formValidate() {
     if (selectForm.value === 1) {
-      
+      if (nameSeller.value === "" &&  impuesto.value === "" && datePayBill.value === "" ) {
+        
+      }
     }
   }
 
