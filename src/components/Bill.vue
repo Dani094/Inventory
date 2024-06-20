@@ -91,7 +91,7 @@
 
           <div class="mt-2 bg-black w-full ">
             <ul class="float-end ">
-              <li>Impuesto: <strong class="font-normal ml-1"> $ {{impuesto}}</strong></li>
+              <li>Iva: <strong class="font-normal ml-1"> $ {{impuesto}}</strong></li>
               <li>Subtotal: <strong class="font-normal ml-1"> $ {{SubTotalBill}}</strong>  </li>
               <li>Total: <strong class="font-normal ml-1">$ {{totalPrice}}</strong> </li>
             </ul>
