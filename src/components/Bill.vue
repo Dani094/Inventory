@@ -1,418 +1,304 @@
 <template>
-  <div class="rounded-xl w-full">
-    <!-- icon  -->
-    <div class="flex items-start justify-between mb-4">
-      <div>
-        <h5 class="text-center text-black font-bold text-[20px]"> {{title}} </h5></div>
-    </div>
-    <q-form ref="myForm" @submit.prevent.stop="EditarCrearBill()">
-        <!-- Vendedor -->
-        <div class="mr-4 w-full justify-center" v-show="selectForm == 1">
-          
-          <div class="mb-4">
-            <label for="nameSeller" class="block text-sm font-medium text-gray-700">Nombre vendedor</label>
-          <div class="relative mt-1">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-              <i class="material-icons text-gray-500">supervisor_account</i>
-            </span>
-            <input id="nameSeller" type="text" v-model="nameSeller"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
-          </div>
-          
+  <div>
+    <div v-show="typeBill == 0"> 
+      <div class="text-[25px] text-center"><p>Escoge la factura</p></div> 
+     <div class="flex w-[60%] mt-36 m-auto">
+       <q-card class="my-card w-[35%]  m-auto rounded-xl"  bordered>
+       <img   src="../assets/factura.PNG">
+       <q-list>
+         <q-item clickable>
+           <q-item-section avatar class="text-[20px] text-blue-500">
+             <i class="fas fa-file-invoice"></i>
+           </q-item-section>
 
-        
-            <div class="mb-4">
-            <label for="date" class="block text-sm font-medium text-gray-700 ">Fecha de pago</label>
-                      <div class="relative mt-1">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                          <i class="material-icons text-gray-500">date</i>
-                        </span>
-                        <input id="date" type="date" v-model="datePayBill"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-                      </div>
-            </div>
-            
-            <div class="mb-4">
-              <label for="Impuesto" class="block text-sm font-medium text-gray-700">Iva </label>
-            <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">account_balance</i>
-        </span>
-        <input id="Impuesto" type="number" v-model="impuesto" @change="typeDiscount" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-      </div>
-            </div>
-        </div>
-        
-        <!-- Cliente -->
-        <div class="col mr-4 " v-show="selectForm == 2">
-          <label for="nameCustomer" class="block text-sm font-medium text-gray-700">Nombre del cliente</label>
-          <div class="relative mt-1">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-              <i class="material-icons text-gray-500">badge</i>
-            </span>
-            <input id="nameCustomer" type="text" v-model="nameCustomer"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          </div>
+           <q-item-section @click="typeBill = 1" >
+             <q-item-label>Factura</q-item-label>
+             <q-item-label caption>Formato Grande</q-item-label>
+           </q-item-section>
+         </q-item>
+       </q-list>
+     </q-card>
 
-          <div class="row w-[100%] mt-4">      
-            <div class="col mr-2">
-              <label for="emailCustomer" class="block text-sm font-medium text-gray-700">Correo Electronico</label>
-              <div class="relative mt-1">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <i class="material-icons text-gray-500">email</i>
-                </span>
-                <input id="emailCustomer" type="text" v-model="emailCustomer"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-              </div>
+     <q-card class="my-card w-[35%]  m-auto rounded-xl"  bordered>
+       <img  src="../assets/recibo.PNG">
+
+       <q-list>
+         <q-item clickable>
+           <q-item-section avatar class="text-[20px] text-blue-500">
+             <i class="fas fa-file-invoice"></i>
+           </q-item-section>
+
+           <q-item-section @click="typeBill = 2">
+             <q-item-label>Recibo</q-item-label>
+             <q-item-label caption>Formato pequeño</q-item-label>
+           </q-item-section>
+         </q-item>
+       </q-list>
+     </q-card>
+     </div>
+   </div>
+
+<div  >
+    <div v-show="typeBill == 1" class=" w-[100%] xs:w-[100%] min-h-[80vh]  bg-white ">
+          <div class="row">
+            <div class="col">
+                <p class="text-[40px] mt-4 w-[80%]  text-start "> FACTURA </p>
+           <ul class="mt-5  text-[16px]">
+             <li >Factura n°: 00{{numBill}}</li>
+             <li >Fecha: {{date}}</li>
+           </ul> 
             </div>
-        
-            <div class="col mr-0">
-              <label for="numCustomer" class="block text-sm font-medium text-gray-700">Numero </label>
-              <div class="relative mt-1">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <i class="material-icons text-gray-500">phone</i>
-                </span>
-                <input id="numCustomer" type="number" v-model="numCustomer"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+            <div class="col">
+              <div class=" w-22 h-28 pr-8 float-end">
+                <img class="w-full h-full " src="../assets/logoNewxo.png" alt="">
               </div>
             </div>
           </div>
-        </div>
+        
 
-     
-    
-      <!-- productos -->
-      <div  v-show="selectForm == 3">
-      <div class="flex items-start justify-between mb-4 mt-10">
-        <div>
-          <p class="text-center text-black font-bold text-[18px]">Productos</p>
-        </div>
-      </div>
+         <div class="mt-8 ">
+           <ul>
+             <li>{{nameCustomer}}</li>
+             <li>Telefono: {{numberCustormer}}  </li>
+             <li>Correo Electronico: {{emailCustomer}}</li>
+           </ul>
 
-      <div class="row mb-4">
-    <div class="col mr-2">
-      <label for="productName" class="block text-sm font-medium text-gray-700">Producto</label>
-      <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">shopping_cart_checkout</i>
-        </span>
-        <select id="productName" v-model="getIdProduct"  @change="getValues()" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-          <option disabled value="">Seleccione una opción</option>
-          <option v-for="option in getProductName" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </option>
-        </select>
-      </div>
-    </div>
+         </div>
+         <div>
 
-    <div class="col mr-2">
-      <label for="amountProduct" class="block text-sm font-medium text-gray-700">Cantidad</label>
-      <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">production_quantity_limits</i>
-        </span>
-        <input id="amountProduct" type="number" v-model="amountProduct" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-      </div>
-    </div>
-
-    <div class="col mr-2">
-      <label for="priceProduct" class="block text-sm font-medium text-gray-700">Precio</label>
-      <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3 ">
-          <i class="material-icons text-gray-500">attach_money</i>
-        </span>
-        <input id="priceProduct" type="number" v-model="priceProduct"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-      </div>
-    </div>
-    <div class="col mr-2">
-      <label for="discountType" class="block text-sm font-medium text-gray-700">Tipo de descuento</label>
-      <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">percent</i>
-        </span>
-        <select id="discountType" v-model="valueDiscount" @change="typeDiscount" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-          <option disabled value="">Seleccione una opción</option>
-          <option v-for="option in optionsType" :key="option" :value="option">{{ option }}</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="row w-[50%]">
-    <div class="col mr-2">
-      <label for="discount" class="block text-sm font-medium text-gray-700">Descuento</label>
-      <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">local_offer</i>
-        </span>
-        <input id="discount" type="number" v-model="discount" @change="typeDiscount"
-          class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-      </div>
-    </div>
-
-
-    <div class="col mr-2">
-      <label for="precioTotal" class="block text-sm font-medium text-gray-700">Valor Total</label>
-      <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">receipt_long</i>
-        </span>
-        <input id="precioTotal" type="number" v-model="totalPriceProduct"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-      </div>
-    </div>
-  </div>
-
-      <div  @click="addOrUpdateProductList()"  class="rounded-md relative w-[115px] h-10 mt-2 mb-4 cursor-pointer flex items-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500">
-        <span class="text-white font-semibold ml-2 transform group-hover:translate-x-20 transition-all duration-300">Agregar</span>
-        <span class="absolute right-0 h-full w-10 rounded-lg bg-green-500 flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300">
-          <svg class="svg w-8 text-white" fill="none" height="24" stroke="currentColor" stroke-linecap="round"  stroke-linejoin="round" stroke-width="2"
-            viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-            <line x1="12" x2="12" y1="5" y2="19"></line>
-            <line x1="5" x2="19" y1="12" y2="12"></line>
-          </svg>
-        </span>
-      </div>
-
-      <div class="row w-full mt-8 p-2 bg-black text-center border-t border-black-0.4 text-white" v-show="showTableProduct">
-      <div class="col mr-1">#</div>
-      <div class="col-2 mr-1">Nombre</div>
-      <div class="col mr-1">Unidades</div>
-      <div class="col mr-1">Valor descuento</div>
-      <div class="col mr-1">Tipo de descuento</div>
-      <div class="col mr-1">Valor unidad</div>
-      <div class="col mr-1">Valor Total</div>
-      <div v-show="valueEditCrea === 2" class="col mr-1">opciones</div></div>
-
-
-      <div v-for="(item, index) in listProduct" :key="index">
-        <div class="row w-full p-2 text-center border-b border-t border-black-0.4" > 
-          <div class="col mr-1 ">#{{ index + 1 }}</div> 
-          <div class="col-2 mr-1 "> {{ item.name }}</div>
-           <div class="col mr-1 ">#{{ item.Unidades }}</div>
-           <div class="col mr-1 "> #{{ item.descuento }}  </div>
-           <div class="col mr-1 "> {{ item.tipoDescuento }}</div>
-           <div class="col mr-1 ">${{ item.precio }}</div>
-           <div class="col mr-1 ">${{ item.valueTotal }}</div>
-           <div v-show="valueEditCrea === 2" class="col mr-1"> 
-            <div  class="button w-8 h-8 cursor-pointer bg-white"  @click="goInfoExits(item)">
-              <svg height="1em" viewBox="0 0 512 512">
-                <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"
-                ></path>
-              </svg>
-            </div>
+         <div class="border-t-2 font-sans border-black mt-4">
+             <div class="row mt-8 text-center bg-[#000000] text-white p-2 w-[100%]  ">
+             <div class="col">Descripcion:</div>
+             <div class="col">Cantidad:</div>
+             <div class="col mr-1 "> descuento </div>
+             <div class="col mr-1 "> Tipo Descuento </div>
+             <div class="col">Precio Unitario: </div>
+             <div class="col">Total: </div>
            </div>
+
+           <div v-for="(item, index) in listProduct" :key="index">
+            <div class="row w-full p-2 text-center border-b border-t border-black-0.4" > 
+              <div class="col-2 mr-1 "> {{ item.name }}</div>
+               <div class="col mr-1 ">  {{ item.Unidades }} </div>
+               <div class="col mr-1 ">  {{ item.descuento }}   </div>
+               <div class="col mr-1 ">  {{ item.tipoDescuento }} </div>
+               <div class="col mr-1 ">$ {{ item.precio }} </div>
+               <div class="col mr-1 ">$ {{ item.valueTotal }} </div>
+            </div>
+          </div>
+       
+      
+
+          <div class="mt-2 bg-black w-full ">
+            <ul class="float-end ">
+              <li>Impuesto: <strong class="font-normal ml-1"> $ {{impuesto}}</strong></li>
+              <li>Subtotal: <strong class="font-normal ml-1"> $ {{SubTotalBill}}</strong>  </li>
+              <li>Total: <strong class="font-normal ml-1">$ {{totalPrice}}</strong> </li>
+            </ul>
+        </div>
+        
+          </div>
+</div>
+        
+
+          <div class="mt-28 font-normal text-[15px] border-t-2 font-sans border-black  p-4 ">
+            <div class="row">
+              <div class="col">
+                <ul>
+              <li class="mb-4">¡Gracias por su compra!</li>
+              <li>Informacion de pago: </li>
+              <li>{{nameSeller}} </li>
+              <li>Naturista</li>
+              <li>Fecha de pago: {{}}</li>
+            </ul>
+          </div>
+              <div class="col">
+                <ul class="float-right mt-8" >
+              <li>Contacto </li>
+              <li>{{userCel}} </li>
+              <li>{{userName}}</li>
+              <li>{{userAddres}}</li>
+              <li>{{userEmail}}</li>
+              <li>{{userTown}}</li>
+              <li>www.naturistas.com</li>
+
+            </ul>
+              </div>
+            </div>
+           
+
+            
+        </div>
+          <button v-show="typeBill !== 3"  class="text-black bg-white mt-10 w-32 h-10 right-2 float-end rounded-xs" @click=" printPage()">
+           <!-- Icono de Descarga -->
+          <i class="fas fa-download"></i>
+          </button>
         </div>
       </div>
 
-      <div class="flex items-start justify-between mt-12">
-        <div>
-          <h6 class="text-start text-black font-bold p-2 text-[15px]">Iva: {{ impuesto }} </h6>
-          <h6 class="text-start text-black font-bold p-2 text-[15px]">Cantidad Total productos: {{ amountTotalProdut }} </h6>
-          <h6 class="text-start text-black font-bold p-2 text-[15px]">Total: {{ totalPrice }}</h6>
-        </div>
+    <div v-show="typeBill == 2">
+        <div  class="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden p-6">
+    <div class="font-mono text-sm text-gray-800">
+      <div class="text-center">
+        <div class="font-bold text-lg">NEWXO</div>
+        <div class="mt-2">DIC 09 2020 17:20:17 RMBDES 8.51</div>
       </div>
-
-      <hr class="border border-dashed border-gray-500/50 my-2" />
-
-      <!-- div botones  -->
-      <div class="flex justify-end items-center gap-4">
-        <q-btn v-if="valueEditCrea == 1" icon="save_as" label="Generar Factura"  :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" ></q-btn>
-        <q-btn v-else icon="edit" label="Editar Factura" :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" v-close-popup></q-btn>
-        <q-btn icon="cancel"  type="button" class="text-white bg-red-700 rounded-1xl float-end bottom-0 " v-close-popup >CERRAR </q-btn>
+      <div class="mt-4">
+        <div>CORRESPONSAL BANCOLOMBIA</div>
+        <div>PARQUE PRINCIPAL SAN R</div>
+        <div>CLL 29 30-10 PARQUE PR</div>
+        <div class="mt-2">C. UNICO: 3007016810</div>
+        <div>MAESTRO **6614 RECIBO: 019680</div>
+        <div>TER: 1232373</div>
+        <div>RRN: 021173</div>
       </div>
+      <div class="mt-4">
+        <div>CTA ORIGEN: **************3434</div>
+        <div>CTA DESTINO: **************3434</div>
+        <div class="mt-2">ARQC: 2B6D2155C6196BC</div>
+        <div>AID: A0000000043060</div>
+        <div>AP LABEL: MAESTRO</div>
       </div>
-      <q-btn icon="arrow_forward"  type="submit" class="text-white bg-green-700 rounded-1xl m-2  float-end" > </q-btn>
-     
-      <!-- btn -->
-    </q-form>
+      <div class="mt-4 font-bold">TRANSFERENCIA</div>
+      <div class="mt-2">
+        <div>APRO: 823199</div>
+        <div class="font-bold">VALOR $ 2.000.000</div>
+      </div>
+      <div class="mt-4 text-justify text-xs">
+        Bancolombia es responsable por los servicios prestados por el CB. El CB no puede prestar servicios financieros por su cuenta. Verifique que la información en este documento sea correcta. Para reclamos comuníquese al 018000972345. Conserve esta tirilla como soporte.
+      </div>
+      <div class="mt-4 text-center font-bold">*** CLIENTE ***</div>
+    </div>
   </div>
+
+  <button v-show="typeBill !== 3"  class="text-black bg-white mt-10 w-32 h-10 right-2 float-end rounded-xs" @click=" printPage()">
+    <i class="fas fa-download"></i>
+  </button>
+  </div>
+</div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
+import { ref, onMounted,  } from "vue";
 import { billStore } from "../store/billing.js";
-import { inventoryStore } from "@/store/inventory.js";
-import billing from "@/views/Billing.vue";
+import {useModalStore} from "../store/storeModal.js"
+import {sweetDelete} from "@/Global/notify"
+import { usersStore } from "../store/users.js";
 import { exitStore } from "@/store/exits.js";
 import { LoginStore } from "../store/login.js";
 
 const props = defineProps({
   title: String,
-  value: Number,
-  dataEdit: Object,
-  dataDelete: Object,
-  ind: String
-});
+  dataBill: Object,
+}) 
 
 
-const storeBilling = billStore();
-const storeInventory = inventoryStore();
+
+const user = usersStore();
 const storeExist = exitStore();
+const storeM =  useModalStore()
+const storeBilling = billStore();
 const storeLogin = LoginStore();
 
-let numBill = ref();
-let nameSeller = ref("");
-let nameCustomer = ref("");
-let currentDateFormatted = ref("");
-let amountProduct = ref();
-let getIdProduct = ref([]); 
-let priceProduct = ref();
-let totalPrice = ref(0);
-let listProduct = ref([]);
-let addProduct = ref(0);
-let rows = ref();
+let arrayEdit = ref()
+let valEditCrea = ref()
+let  modalTitle = ref()
+let state = ref(false)
+let TotalUnits = ref();
 let loading = ref(false);
-let getProductName = ref([]);
-let getProductId = ref([]);
-let resProduct = ref();
-let SerialProduct = ref();
-let NameProduct = ref();
-let totalPriceProduct = ref(0);
-let amountTotalProdut = ref(0);
-let user = ref(storeLogin.Email);
-let UserUpdate = ref()
-let discount = ref();
-let valueDiscount = ref();
-let optionsType = ref(["Porcentaje", "valor fijo"]);
-let dataGoInfo = ref()
-let rowsExist = ref()
-let valueEditCrea = ref()
-let index = ref()
-let idProductExist = ref()
-let getIdExits = ref()
-let impuesto = ref(0)
+let dialog = ref(false);
+let index = ref();
+let filtroDay = ref();
+let numBill = ref()
+let nameSeller = ref()
+let nameCustomer = ref()
 let emailCustomer = ref()
-let numCustomer = ref()
-let datePayBill = ref()
-let showTableProduct = ref(false)
-let selectForm = ref(1)
-// bill
+let numberCustormer = ref()
+let impuesto = ref()
+let discount = ref()
+let amountTotalProdut = ref()
+let totalPrice = ref()
+let nameModel = ref()
+let crearEditar = ref()
+let date = ref()
+let filter = ref("");
+let showBill = ref(false)
+let arrayShow = ref([])
+let rowsExist = ref()
+let listProduct = ref([])
+let arrayDel = ref()
+let SubTotalBill = ref(0)
+let userName = ref()
+let userDocument = ref()
+let userCel = ref()
+let userAddres = ref()
+let userEmail = ref()
+let userTown = ref()
+let data = ref(props.dataBill)
+let typeBill = ref(0)
+
+let rows = ref([]);
+
+function printPage() {
+      window.print();
+    }
+
+  
 
 const getBill = async () => {
-  const res = await storeBilling.GetIBill();
+  const res = await storeBilling.GetIBill(storeLogin.Email);
+    console.log(typeBill.value);
   if (res.status < 299) {
     rows.value = res.data;
     rows.value.forEach((row, index) => {
-      row.index = index + 1;
-    });
-    valueEditCrea.value = props.value
-    dataGoInfo.value = ""
-    if (valueEditCrea.value == 1) {
-      dataGoInfo.value = ""
-      index.value = 0
-    }
-    else if(valueEditCrea.value == 2){
-      index.value = props.ind
-      dataGoInfo.value = props.dataEdit
-      goInfoBill()
-      ExitsGet()
-    }
-
-  }
+        row.index = index + 1;     
+})}
 };
 
 
-
-async function postBill() {
-  const bill = await storeBilling.NewBill({
-    UserEmail: user.value,
-    numFactura: numBill.value,
-    vendedor: nameSeller.value,
-    cliente: nameCustomer.value,
-    Discount: discount.value,
-    CantProduct: amountTotalProdut.value,
-    PrecioVenta: totalPrice.value,
-    impuesto: impuesto.value,
-    email: emailCustomer.value,
-    number: numCustomer.value,
-    datePay: datePayBill.value
-  });
-  await getBill()
-};
-
-async function putInfoBill() {
-  const res = await storeBilling.PutBill(index.value, {
-    UserEmail: user.value,
-    numFactura: numBill.value,
-    vendedor: nameSeller.value,
-    cliente: nameCustomer.value,
-    Discount: discount.value,
-    CantProduct: amountTotalProdut.value,
-    PrecioVenta: totalPrice.value,
-    impuesto: impuesto.value,
-    email: emailCustomer.value,
-    number: numCustomer.value,
-    datePay: datePayBill.value
-  });
-  getBill();
-  
-}
-
-  function formValidate() {
-    if (selectForm.value === 1) {
-      if (nameSeller.value === "" &&  impuesto.value === "" && datePayBill.value === "" ) {
-        
-      }
-    }
-  }
-
- function EditarCrearBill() {
-   if (valueEditCrea.value == 1) {
-      getNumBill()
-   }
-    else{ 
-      putInfoBill()
-      putInfoExist()
-    }
- }
-
-function getNumBill() {
-  numBill.value = rows.value.length + 1;
-
-  var estaRegistrado = rows.value.some(function (venta) {
-    return venta.numberVenta === numBill.value;
-  });
-  if (estaRegistrado) {
-    var numeroMaximoRegistrado = Math.max.apply(
-      Math,
-      rows.value.map(function (venta) {
-        return venta.numberVenta;
-      })
-    );
-    numBill.value = numeroMaximoRegistrado + 1;
-    postBill();
-    postExist();
-  } else {
-    postBill();
-    postExist();
-  }
-}
-
-function goInfoBill() {
-    const data = dataGoInfo.value
-     console.log(data);
-      numBill.value = data.numFactura;
-      nameSeller.value = data.vendedor;
-      nameCustomer.value = data.cliente;
-      discount.value = data.Discount;
-      valueDiscount.value , data.typeDiscount
-      amountTotalProdut.value = data.CantProduct;
-      totalPrice.value = data.PrecioVenta;
-      impuesto.value = data.impuesto;
-      emailCustomer.value = data.email;
-      numCustomer.value = data.number;
-      datePayBill.value = data.datePay.slice(0,10)
- 
-}
-
-
-// Exist
 
 async function ExitsGet() {
   const res = await storeExist.GetExits(storeLogin.Email);
- 
   if (res && res.status < 299) {
     rowsExist.value = res.data;
-    rowsExist.value.forEach((row, index) => {
-      if (row.NumBill == dataGoInfo.value.numFactura) {
+  } 
+  showBillFunc()
+}
+
+
+function goInfo(data) {
+  arrayEdit.value = data
+ 
+}
+
+function showBillFunc() {
+  console.log(data.value);
+
+  listProduct.value = []
+  arrayShow.value = data.value
+  numBill.value = data.value.numFactura;
+  nameSeller.value = data.value.vendedor;
+  nameCustomer.value = data.value.cliente;
+  emailCustomer.value = data.value.email
+  numberCustormer.value = data.value.number
+  impuesto.value = data.value.impuesto
+  amountTotalProdut.value = data.value.CantProduct;
+  totalPrice.value = data.value.PrecioVenta;
+  date.value = data.value.date.slice(0,10)
+  getListProduct()
+  console.log(totalPrice.value, discount.value);
+
+  SubTotalBill.value =  parseFloat(totalPrice.value -  discount.value)
+  console.log(SubTotalBill.value);
+}
+
+
+function getListProduct() {
+  console.log( rowsExist.value);
+  rowsExist.value.forEach((row, index) => {
+      if (row.NumBill == numBill.value) {
       numBill.value = row.NumBill
+      discount.value = row.Discount
       listProduct.value.push({
        Id: row._id,
        serial: row.Serial,
@@ -426,220 +312,80 @@ async function ExitsGet() {
       }
       }
     );
-  } 
 }
 
-const postExist = async () => {
-  try {
-    listProduct.value.forEach(async (product) => {
-      const bill = {
-        NumBill: numBill.value,
-        Name: product.name,
-        Serial: product.serial,
-        Units: product.Unidades,
-        Price: product.precio,
-        Discount: product.descuento,
-        typeDiscount: product.tipoDescuento,
-        UserEmail: user.value,
-      };
-      const response = await storeExist.PostExits(bill);
-    });
+async function deleteBill(data) {  
+  sweetDelete(data, async () => { 
+    try {
+    const res = await storeBilling.DeleteBill(data._id);
+    deleteExist(data)
+    getBill(); 
   } catch (error) {
-    console.error("Error al enviar los datos de la factura:", error);
-  }
-};
-
-async function putInfoExist() { 
-  listProduct.value.forEach(async (product) => {
-    idProductExist.value = product.Id
-      const bill = {
-        NumBill: numBill.value,
-        Name: product.name,
-        Serial: product.serial,
-        Units: product.Unidades,
-        Price: product.precio,
-        Discount: product.descuento,
-        typeDiscount: product.tipoDescuento,
-        UserEmail: user.value,
-      };
-      const response = await storeExist.PutExits(idProductExist.value, bill);
-    });
- 
-}
-function goInfoExits(i) {
-console.log(i);
-
-    SerialProduct.value = i.serial
-    getIdExits.value = i.Id;
-    totalPriceProduct.value  = i.valueTotal;
-    priceProduct.value = i.precio
-    valueDiscount.value = i.tipoDescuento
-    impuesto.value = impuesto.value
-    discount.value = i.descuento
-    amountProduct.value = i.Unidades
-    getValues()
-  }
-
-
-// Product
-
-async function getProduct() {
-  const res = await storeInventory.GetInventory(storeLogin.Email);
-  resProduct.value = res;
-  if (res.status < 299) {
-    for (let i in res.data) {
-      let object = { label: res.data[i].Name, value: res.data[i]._id };
-      let object1 = { label: res.data[i].Serial, value: res.data[i]._id };
-      let object2 = { label: res.data[i].Price, value: res.data[i]._id };
-      getProductName.value.push(object);
-      getProductId.value.push(object1);
-      
-    }
-  }
+    console.error("Error al eliminar el producto:", error); 
+  }})
 }
 
-  function getValues() {
-  resProduct.value.data.forEach((producto) => {
-    const idProducto = producto._id;
-    const serial = producto.Serial
-    
-    if ( valueEditCrea.value === 1) {
-       if (getIdProduct.value ===  idProducto ) {
-      SerialProduct.value = producto.Serial;
-      NameProduct.value = producto.Name;
-      priceProduct.value = producto.Price;
-      UserUpdate.value = producto.UserUpdate;
-      UserEmail.value = producto.UserEmail;
-    }
-    else {
-      console.log("El ID no ", getIdProduct.value);
-    }
-    }
-    else if( valueEditCrea.value === 2){
-      if(serial ==  SerialProduct.value ){
-      getIdProduct.value = producto._id
-      NameProduct.value = producto.Name;
-    }
-    else{
-      console.log("El serial no ", SerialProduct.value);
-    }
-    }    
-  });
-}
-
-function typeDiscount() {
-  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) 
-    console.log(valueDiscount.value );
-  if (valueDiscount.value === "Porcentaje") {
-    // Descuento en porcentaje
-    const percentage = discount.value; 
-    const discountAmount = (totalPriceProduct.value * percentage) / 100; 
-    totalPriceProduct.value -= discountAmount; // Aplicar el descuento al valor total
-  } else if (valueDiscount.value === "valor fijo") {
-    // Descuento en valor fijo
-    const fixedDiscount = discount.value;
-    totalPriceProduct.value -= fixedDiscount; 
-  }
-}
- 
-const addOrUpdateProductList = () => {
-  const productIndex = listProduct.value.findIndex(product => product.serial === SerialProduct.value);
- 
-  if (valueEditCrea.value == 2) {
-      listProduct.value.forEach((producto) => {
-      if (producto.serial == SerialProduct.value) {
-      listProduct.value[productIndex] = {
-            Id: producto.Id,
-            serial: SerialProduct.value,
-            name: NameProduct.value,
-            Unidades: parseInt(amountProduct.value),
-            tipoDescuento: valueDiscount.value,
-            descuento: parseFloat(discount.value),
-            precio: parseFloat(priceProduct.value),
-            valueTotal: parseFloat(totalPriceProduct.value),
-          };
+async function deleteExist(data) {
+  try {
+    for (const element of rowsExist.value) {
+      if (element.NumBill == data.numFactura) {
+        const res = await storeExist.DeleteExits(element._id);
       }
-    })
-    
-  } else {
-    listProduct.value.push({
-      serial: SerialProduct.value,
-      name: NameProduct.value,
-      Unidades: parseInt(amountProduct.value),
-      tipoDescuento: valueDiscount.value,
-      descuento: parseFloat(discount.value),
-      precio: parseFloat(priceProduct.value),
-      valueTotal: parseFloat(totalPriceProduct.value),
-    });
-   
+    }
+    getBill();
+  } catch (error) {
+    console.error("Error al eliminar el producto:", error);
   }
-  showTableProduct.value = true 
-  console.log("impeusto", impuesto.value);
-  totalPrice.value += parseFloat(totalPriceProduct.value) +  parseFloat(impuesto.value)
-  amountTotalProdut.value += parseInt(amountProduct.value);
+}
 
-  cleanProduct()
-  
+
+const getUser = async () => {
+  const res = await user.GetUsers();
+  if (res.status < 299) {
+    const data = res.data;
+    console.log(data);
+    data.forEach((row, index) => {
+      userName.value = row.Names
+      userDocument.value = row.Document
+      userCel.value = row.Cel 
+      userAddres.value = row.userAddress
+      userEmail.value = row.Email
+      userTown.value = row.Municipio
+
+
+        row.index = index + 1;     
+})}
 };
 
-function DateNow() {
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth() + 1;
-  const currentDay = currentDate.getDate();
-  const currentMonthFormatted =
-    currentMonth < 10 ? `0${currentMonth}` : `${currentMonth}`;
-  const currentDayFormatted =
-    currentDay < 10 ? `0${currentDay}` : `${currentDay}`;
-  currentDateFormatted.value = `${currentDate.getFullYear()}-${currentMonthFormatted}-${currentDayFormatted}`;
+
+
+
+
+
+async function modalCreaEdit(p) {
+  showBill.value = p
+
+  if (p === 1) {
+    dialog.value = true
+    modalTitle.value = "CREAR FACTURA"
+    valEditCrea.value = p
+  } 
+  else if(p === 2){
+   dialog.value = true
+    modalTitle.value =  "EDITAR FACTURA"
+    valEditCrea.value = p
+  }
+  else {
+    dialog.value = true
+  }
 }
 
 
 
-
-
-  function cleanProduct() {
-  NameProduct.value = "";
-  amountProduct.value = "";
-  priceProduct.value = "";
-  getIdProduct.value = "";          
-  totalPriceProduct.value = "";
-  valueDiscount.value = "";
-  discount.value = "";
-}
-
-
-
-
-
-function SumCant(dataI) {
-  // resProduct.value.data.forEach((producto) => {
-  //   const idProducto = producto._id;
-  //   if (idProducto == dataI.IdProducto) {
-  //     modifiCant.value = producto.cantidad += dataI.cantidad;
-  //     id.value = dataI.IdProducto;
-  //     putInfoProduct();
-  //     deleteBill(dataI);
-  //   } else {
-  //     console.log("no se pudo sumar la cantidad del producto");
-  //   }
-  // });
-}
-
-async function putInfoProduct() {
-  const res = await store.putProductCant(id.value, {
-    cantidad: modifiCant.value,
-  });
-}
-
-
-
-onBeforeMount(() => {
+onMounted(() => {
   getBill();
-  getProduct();
+  ExitsGet()
+  getUser()
 
 });
-
-onMounted(
-  DateNow
-  );
 </script>

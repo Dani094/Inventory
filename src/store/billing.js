@@ -7,9 +7,9 @@ export const billStore = defineStore("billStore", () => {
   const useToken = LoginStore();
 
   // Function Get inventory
-  async function GetIBill() {
+  async function GetIBill(User) {
     try {
-      return await requestAxios.get("/factura/all", {
+      return await requestAxios.get(`/factura/all/${User}`, {
         headers: {
           token: useToken.token,
         },
