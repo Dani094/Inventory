@@ -107,15 +107,33 @@ export const usersStore = defineStore("usersStore", () => {
       notifyError("No se pudo Actualizar el Usuario Correctamente");
     }
   }
-  async function DeleteInventory(id) {
+  async function DeleteUser(id) {
     try {
       return (
-        await requestAxios.delete(`/inventory/delete/${id}`),
-        notifySuccess("Articulo Eliminado Correctamente")
+        await requestAxios.delete(`/users/delete/${id}`),
+        notifySuccess("Usuario Eliminado Correctamente")
       );
     } catch (error) {
       console.error(error);
       return error;
+    }
+  }
+  // update state
+  async function UpdateState(id, estado){
+    try {
+     await requestAxios.put(`/users/state/${id}`,
+      {state:estado},
+      {
+      headers: 
+      {
+        token: useToken.token,
+      }
+      }
+    );
+      notifySuccess('Estado cambiado correctamente');
+    } catch (error) {
+      console.log(error);
+      return error
     }
   }
 
@@ -124,7 +142,8 @@ export const usersStore = defineStore("usersStore", () => {
     GetUsersEmail,
     PostInventory,
     PutUser,
-    DeleteInventory,
+    DeleteUser,
+    UpdateState,
   };
 },
   {
