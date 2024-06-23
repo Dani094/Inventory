@@ -440,14 +440,5 @@ function goInfo(data) {
 </script>
 
 <style>
-.inventTable tr th {
-  position: sticky;
-  background: #04162d;
-  color: white;
-}
 
-.inventTable thead tr:first-child th {
-  top: 0;
-  z-index: 1;
-}
 </style>
