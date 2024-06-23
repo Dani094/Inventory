@@ -2,7 +2,8 @@ import axios from "axios";
 
 const requestAxios = axios.create({
 
-    baseURL: "http://localhost:8500/api"    
+    baseURL: "https://backend-inventory-wl06.onrender.com"    
     // http://localhost:7500/api
+    // https://backend-inventory-wl06.onrender.com
 })
 export {requestAxios}
