@@ -126,7 +126,7 @@ async function UsersGet() {
   if (res && res.status < 299) {
     for (let i in res.data) {
       id.value = res.data[i]._id;
-      name.value = res.data[i].Names;
+      name.value = res.data[i].Name;
       lastname.value = res.data[i].LastName;
       document.value = res.data[i].Document;
       email.value = res.data[i].Email;

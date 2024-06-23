@@ -24,7 +24,6 @@
             @click="(showModal = true), cleanForm()">
           </q-btn>
       </div>
-      
     </div>
     <!-- table  -->
     <!-- <Tables :rows="rows" :columns="columns" :showModal="showModal" :Post="InventoryPut"/> -->

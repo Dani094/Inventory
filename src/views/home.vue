@@ -11,7 +11,6 @@
             <div>
                 <div class="q-pa-md">
                     <q-expansion-item
-                    v-model="expanded"
                     icon="person"
                     header-class="text-[#04162d] font-bold"
                     :label="storeLogin.Name"
@@ -20,8 +19,6 @@
                     >
                     <!-- <q-card class="fixed flex items-md-end">
                         <q-card-section class="flex flex-col">
-                            <q-btn flat icon="settings">
-                            </q-btn>
                             <q-btn flat icon="settings">
                             </q-btn>
                         </q-card-section> 

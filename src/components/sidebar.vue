@@ -75,6 +75,19 @@
           <span class="material-icons text-2xl"> person </span>
         </li>
       </router-link>
+
+      <router-link to="/users" v-if="storelogin.rol== 'Admin'">
+        <li
+          :class="[
+            $route.path == '/users'
+              ? 'text-[#04162d] bg-[#E7E8F3]'
+              : 'text-default',
+          ]"
+          class="hover:bg-[#E7E8F3] hover:text-black text-center p-4 rounded-tl-xl rounded-bl-xl transition"
+        >
+          <span class="material-icons text-2xl"> group_add </span>
+        </li>
+      </router-link>
     </ul>
     <!-- div logout  -->
     <div>

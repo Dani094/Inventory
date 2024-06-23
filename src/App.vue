@@ -15,12 +15,10 @@ import Sidebar from "@/components/sidebar.vue"
 body{
   background-color: #E7E8F3;
 }
-
 .inventTable tr th {
   position: sticky;
   background: #04162d;
   color: white;
-  
 }
 
 .inventTable thead tr:first-child th {

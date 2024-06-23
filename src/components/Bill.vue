@@ -45,7 +45,7 @@
               <div class="col mr-1 "> Descuento {{ descuento }} </div>
               <li>Iva: <strong class="font-normal ml-1"> $ {{impuesto}}</strong></li>
               <li>Subtotal: <strong class="font-normal ml-1"> $ {{SubTotalBill}}</strong> </li>
-              <li>Total: <strong class="font-normal ml-1">$ {{totalPrice}}</strong> </li>
+
             </ul>
           </div>
         </div>

@@ -267,4 +267,10 @@ onMounted(() => {
   transition-duration: 0.5s;
   transform: rotate(160deg);
 }
+
+
+
+
+
+
 </style>
