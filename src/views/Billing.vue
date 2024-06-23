@@ -2,39 +2,31 @@
   <div class="lg:pl-40 lg:pr-20 p-4 ">
     <!-- title -->
     <div class="mb-4">
-      <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl"> Facturación</h1>
+      <h1 class="text-[#04162d] text-3xl font-bold pt-4 "> Facturación</h1>
     </div>
     <!-- btns y search-->
     <div class="flex justify-between py-4">
       <div class="flex items-center">
         <div class="bg-[#04162d] px-4 p-2 rounded-2xl flex">
           <span class="material-symbols-outlined text-white text-2xl mr-2">format_list_numbered</span>
-         <h4 class="text-white font-bold text-[18px]"> Cantidad de Facturas: {{ rows.length }} </h4>
-                </div>
-            </div>
-         <div> 
-        <q-btn icon="refresh" class="rounded-xl ml-2 bg-[#04162d] text-white" @click="getBill()"></q-btn>
-      <q-btn icon="add" class="rounded-xl ml-2 bg-[#04162d] text-white" @click="modalCreaEdit(1)"></q-btn>
-      </div>
-      </div>
-    <q-dialog v-model="dialog" class="py-5">
-      <div v-if="showBill == 3" class=" sm:w-[85%] min-h-[70vh] font-sans bg-white p-2 py-8 font-bold ">
+         <h4 class="text-white font-bold text-[18px]"> N° de Facturas: {{ rows.length }} </h4>
+        </div>
+        </div>
+       <div> 
+         <q-btn icon="refresh" class="rounded-xl ml-2 bg-[#04162d] text-white" @click="getBill()"></q-btn>
+         <q-btn icon="add" class="rounded-xl ml-2 bg-[#04162d] text-white" @click="modalCreaEdit(1)"></q-btn>
+       </div>
+    </div>
+    <q-dialog v-model="dialog" class="py-5 px-0 mx-0 ">
+      <div v-if="showBill == 3" class=" sm:w-[100%]  min-h-[70vh] font-sans font-bold ">
         <bill  :dataBill="arrayBill"/>
       </div>
       <div v-else class="mr-2 xs:w-[100%] w-auto  rounded-[20px] bg-white  " >
       <createbill :title="modalTitle" :ind="index" :value="valEditCrea"  :dataEdit="arrayEdit"   />
-       
-  
       </div>
     </q-dialog>
-
- 
-
     <!-- table -->
     <div class="w-[100%] mt-6">           
-          
-          <!-- tables -->
-   
         <q-table flat bordered :visible-columns="visibleColumns" title="Facturas" :rows="rows" :columns="columns" row-key="index"
           virtual-scroll class="inventTable h-[450px] lg:h-[680px] rounded-2xl" v-model:pagination="pagination" :rows-per-page-options="[0]">
           <template v-slot:header="props">
@@ -45,43 +37,37 @@
               </q-th>
             </q-tr>
           </template>
-
-          <template v-slot:top>
-            <div class="w-[70%]">
-               <q-input borderless dense debounce="300" v-model="filter" placeholder="Buscar"class="bg-[#E7E8F3] w-[270px] pl-4 pr-4 rounded-lg outline-none">
-              <template v-slot:prepend>
-                <q-icon name="search" class="text-[#04162d]" />
-              </template>
-            </q-input> 
-            
-            <div class="flex m-4 ">
-              <p class="mt-2">Dia</p>
-              <q-checkbox v-model="filtroDay" color="blue" @click="getVentas()"/>
+         <template v-slot:top>
+            <div  class="row w-full">
+              <div class="col">
+                <q-input borderless dense debounce="300" v-model="filter" placeholder="Buscar"class="bg-[#E7E8F3] w-[270px] pl-4 pr-4 rounded-lg outline-none">
+                  <template v-slot:prepend>
+                    <q-icon name="search" class="text-[#04162d]" />
+                  </template>
+                </q-input> 
+                <div class="flex m-4 ">
+                  <p class="mt-2">Dia</p>
+                  <q-checkbox v-model="filtroDay" color="blue" @click="getVentas()"/>
+                </div>
+              </div>
+              <div class="col">
+                <div class="absolute right-14">
+                  <q-select class="w-0 text-white text-[0px] " v-model="visibleColumns"  multiple dense label="Campos" options-dense :display-value="$q.lang.table.columns" emit-value map-options
+                  :options="columns" option-value="name" options-cover />
+                </div>
+                </div>
             </div>
-            </div>
-           
-
-           
-
-            <div class="w-[10%]  absolute right-0 top-4">
-              <q-select class="w-0 text-white text-[0px] " v-model="visibleColumns"  multiple dense label="Campos" options-dense :display-value="$q.lang.table.columns" emit-value map-options
-                :options="columns" option-value="name" options-cover />
-            </div>
-          </template>
-
-
+           </template> 
           <template v-slot:body-cell-options="props">
             <q-td :props="props">
               <div class="flex flex-row justify-center "> 
                 <!-- edit -->
-                <button class="button w-[40px] h-[37px] editBtn bg-white" @click="(index = props.row._id), goInfo(props.row), modalCreaEdit(2)">
+                <button class="button w-[40px] h-[37px] editBtn bg-white" @click="(index = props.row._id), arrayEdit = props.row, modalCreaEdit(2)">
                   <svg height="1em" viewBox="0 0 512 512">
                     <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"
                     ></path>
                   </svg>
                 </button>
-           
-
                 <!-- delet -->
                 <button class="button w-[40px] h-[37px] bg-black" id="delet" @click="deleteBill(props.row) " >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 14" class="svgIcon bin-top">
@@ -90,7 +76,6 @@
                       ></path>
                     </g>
                   </svg>
-
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 69 57" class="svgIcon bin-bottom">
                     <g clip-path="url(#clip0_35_22)">
                       <path fill="black" d="M20.8232 -16.3727L19.9948 -14.787C19.8224 -14.4569 19.4808 -14.25 19.1085 -14.25H4.92857C2.20246 -14.25 0 -12.1273 0 -9.5C0 -6.8727 2.20246 -4.75 4.92857 -4.75H64.0714C66.7975 -4.75 69 -6.8727 69 -9.5C69 -12.1273 66.7975 -14.25 64.0714 -14.25H49.8915C49.5192 -14.25 49.1776 -14.4569 49.0052 -14.787L48.1768 -16.3727C47.3451 -17.9906 45.6355 -19 43.7719 -19H25.2281C23.3645 -19 21.6549 -17.9906 20.8232 -16.3727ZM64.0023 1.0648C64.0397 0.4882 63.5822 0 63.0044 0H5.99556C5.4178 0 4.96025 0.4882 4.99766 1.0648L8.19375 50.3203C8.44018 54.0758 11.6746 57 15.5712 57H53.4288C57.3254 57 60.5598 54.0758 60.8062 50.3203L64.0023 1.0648Z"
@@ -103,21 +88,14 @@
                     </defs>
                   </svg>
                 </button>      
-                
-                
                 <!-- visualizar -->
                 <button class="button w-[40px] h-[37px] bg-[#04162d]" @click="modalCreaEdit(3), arrayBill = props.row">
                   <i class="fas fa-file-invoice"></i>
-
                 </button>
-                
-
-              </div>
+               </div>
             </q-td>
           </template>
         </q-table>
- 
-
     <!-- tables -->
   </div>
 </div>
@@ -174,11 +152,7 @@ let userAddres = ref()
 let userEmail = ref()
 let userTown = ref()
 let arrayBill = ref()
-let pagination = ref({
-
-  rowsPerPage: 0,
-  });
-
+let pagination = ref({ rowsPerPage: 0 });
 const visibleColumns = ref(["numero","vendedor", "Cliente", "Cantidad de productos", "Total", "Fecha", "options"]);
 let columns = ref([
   { name: "index", label: "N°", field: "index", align: "center",  sortable: true,  icon: "format_list_numbered", },
@@ -191,17 +165,10 @@ let columns = ref([
   { name: "options", align: "center", label: "Opciones", sortable: true,icon: "settings",
   },
 ]);
-
 let rows = ref([]);
-
-
-
-  
 
 const getBill = async () => {
   const res = await storeBilling.GetIBill(storeLogin.Email);
-  console.log(res.data);
-
   if (res.status < 299) {
     rows.value = res.data;
     rows.value.forEach((row, index) => {
@@ -209,26 +176,12 @@ const getBill = async () => {
 })}
 };
 
-
-
 async function ExitsGet() {
   const res = await storeExist.GetExits(storeLogin.Email);
   if (res && res.status < 299) {
     rowsExist.value = res.data;
   } 
 }
-
-
-function goInfo(data) {
-  arrayEdit.value = data
- 
-}
-
-function showBillFunc(data) {
-  console.log(data);
-
-}
-
 
 
 async function deleteBill(data) {  
@@ -255,30 +208,6 @@ async function deleteExist(data) {
   }
 }
 
-
-const getUser = async () => {
-  const res = await user.GetUsers();
-  if (res.status < 299) {
-    const data = res.data;
-    console.log(data);
-    data.forEach((row, index) => {
-      userName.value = row.Names
-      userDocument.value = row.Document
-      userCel.value = row.Cel 
-      userAddres.value = row.userAddress
-      userEmail.value = row.Email
-      userTown.value = row.Municipio
-
-
-        row.index = index + 1;     
-})}
-};
-
-
-
-
-
-
 async function modalCreaEdit(p) {
   showBill.value = p
 
@@ -296,29 +225,13 @@ async function modalCreaEdit(p) {
     dialog.value = true
   }
 }
-
-
-
 onMounted(() => {
   getBill();
   ExitsGet()
-  getUser()
-
 });
 </script>
-
-
-
-
-
-
 <style>
-@media (min-width: 600px) {
-  .q-dialog__inner--minimized > div {
-    max-width: none;
-  }
 
-}
 
 /* button delete */
 
@@ -334,23 +247,19 @@ onMounted(() => {
   gap: 2px;
   color: white;
 }
-
 .svgIcon {
   width: 12px;
   transition-duration: 0.3s;
 }
-
 .svgIcon path {
   fill: white;
 }
-
 #delet:hover {
   transition-duration: 0.3s;
   background-color: rgb(193, 9, 9);
   align-items: center;
   gap: 0;
 }
-
 .bin-top {
   transform-origin: bottom right;
 }

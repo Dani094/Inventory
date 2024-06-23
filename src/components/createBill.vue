@@ -1,26 +1,24 @@
 <template>
-  <div class="rounded-xl w-full " >
-    <!-- icon  -->
+  <div class="rounded-xl w-full">
     <div class="flex items-start justify-between w-full bg-[#04162d]"> 
         <h5 class="text-center text-white font-bold text-[20px] p-4 w-full" > {{title}} </h5> 
     </div>
     <q-form ref="myForm" @submit.prevent.stop="formValidate()" class="pt-4 pb-16 px-6 " >
+
         <!-- Vendedor -->
         <div class="mr-4 w-full justify-center" v-show="selectForm == 1">
-          
+         <!-- Input vendedor -->
           <div class="mb-1">
             <label for="nameSeller" class="block text-sm font-medium text-gray-700">Nombre vendedor</label>
           <div class="relative ">
             <span class="absolute inset-y-0 left-0 flex items-center pl-3">
               <i class="material-icons text-gray-500">supervisor_account</i>
             </span>
-            <input id="nameSeller" type="text" v-model="nameSeller"   class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+            <input id="nameSeller" type="text" v-model="nameSeller" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
           </div>
           </div>
-          
-
-        
             <div class="mb-1">
+              <!-- Input Fecha de pago -->
             <label for="date" class="block text-sm font-medium text-gray-700 ">Fecha de pago</label>
                       <div class="relative ">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -29,20 +27,44 @@
                         <input id="date" type="date" v-model="datePayBill"   class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
                       </div>
             </div>
-            
             <div class="mb-2">
+              <!-- Input impuesto -->
               <label for="Impuesto" class="block text-sm font-medium text-gray-700">Iva </label>
             <div class="relative ">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
           <i class="material-icons text-gray-500">account_balance</i>
         </span>
-        <input id="Impuesto" type="number" v-model="impuesto"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+        <input id="Impuesto" type="number" v-model="impuesto" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
       </div>
             </div>
-          
-        </div>
-        
-        <!-- Cliente -->
+              <div class="mb-2">
+                <!-- Input tipo de descuento -->
+                <label for="discountType" class="block text-sm font-medium text-gray-700">Tipo de descuento</label>
+                <div class="relative mt-1">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="material-icons text-gray-500">percent</i>
+                  </span>
+                  <select id="discountType" v-model="valueDiscount"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option disabled value="">Seleccione una opción</option>
+                    <option v-for="option in optionsType" :key="option" :value="option">{{ option }}</option>
+                  </select>
+                </div>
+              </div>
+              <!-- Input descuento -->
+              <div class="mb-2">
+                <label for="discount" class="block text-sm font-medium text-gray-700">Descuento</label>
+                <div class="relative mt-1">
+                  <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <i class="material-icons text-gray-500">local_offer</i>
+                  </span>
+                  <input id="discount" type="number" v-model="discount" 
+                    class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                </div>
+              </div>  
+        </div>     
+
+       <!-- Cliente -->
+        <!-- Input nombre del cliente -->
         <div class="col mr-2 " v-show="selectForm == 2">
           <label for="nameCustomer" class="block text-sm font-medium text-gray-700">Nombre del cliente</label>
           <div class="relative mt-1">
@@ -51,7 +73,7 @@
             </span>
             <input id="nameCustomer" type="text" v-model="nameCustomer" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
           </div>
-
+          <!-- Input email cliente -->
             <div class="col mr-2">
               <label for="emailCustomer" class="block text-sm font-medium text-gray-700">Correo Electronico</label>
               <div class="relative mt-1">
@@ -61,7 +83,7 @@
                 <input id="emailCustomer" type="text" v-model="emailCustomer"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
               </div>
             </div>
-        
+            <!-- Input numero de cliente -->
             <div class="col mr-0">
               <label for="numCustomer" class="block text-sm font-medium text-gray-700">Numero </label>
               <div class="relative mt-1">
@@ -71,20 +93,17 @@
                 <input id="numCustomer" type="number" v-model="numCustomer"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
               </div>
             </div>
-       
         </div>
 
-     
-    
       <!-- productos -->
       <div  v-show="selectForm == 3">
-      <div class="flex items-start justify-between mb-4 mt-10">
+      <div class="flex items-start justify-between mb-4 mt-2">
         <div>
           <p class="text-center text-black font-bold text-[18px]">Productos</p>
         </div>
       </div>
-
       <div class="row mb-4">
+        <!-- select producto -->
     <div class="col mr-2">
       <label for="productName" class="block text-sm font-medium text-gray-700">Producto</label>
       <div class="relative mt-1">
@@ -99,57 +118,30 @@
         </select>
       </div>
     </div>
-
+    <!-- Input cantidad producto -->
     <div class="col mr-2">
       <label for="amountProduct" class="block text-sm font-medium text-gray-700">Cantidad</label>
       <div class="relative mt-1">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
           <i class="material-icons text-gray-500">production_quantity_limits</i>
         </span>
-        <input id="amountProduct" type="number" v-model="amountProduct"  @change="typeDiscount"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+        <input id="amountProduct" type="number" v-model="amountProduct"  @change=" valueTotal"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
       </div>
     </div>
   </div>
     <div class="row mb-4">
+      <!-- Input precio del producto -->
     <div class="col mr-2">
       <label for="priceProduct" class="block text-sm font-medium text-gray-700">Precio</label>
       <div class="relative mt-1">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3 ">
           <i class="material-icons text-gray-500">attach_money</i>
         </span>
-        <input id="priceProduct" type="number" v-model="priceProduct" @change="typeDiscount" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+        <input id="priceProduct" type="number" v-model="priceProduct" @change=" valueTotal" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
       </div>
     </div>
-    <div class="col mr-2">
-      <label for="discountType" class="block text-sm font-medium text-gray-700">Tipo de descuento</label>
-      <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">percent</i>
-        </span>
-        <select id="discountType" v-model="valueDiscount" @change="typeDiscount" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-          <option disabled value="">Seleccione una opción</option>
-          <option v-for="option in optionsType" :key="option" :value="option">{{ option }}</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  
-
-
-  <div class="row w-full">
-    <div class="col mr-2">
-      <label for="discount" class="block text-sm font-medium text-gray-700">Descuento</label>
-      <div class="relative mt-1">
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <i class="material-icons text-gray-500">local_offer</i>
-        </span>
-        <input id="discount" type="number" v-model="discount" @change="typeDiscount"
-          class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-      </div>
-    </div>
-
-
-    <div class="col mr-2">
+    <!-- Input valor total productos -->
+ <div class="col mr-2">
       <label for="precioTotal" class="block text-sm font-medium text-gray-700">Valor Total</label>
       <div class="relative mt-1">
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -159,7 +151,7 @@
       </div>
     </div>
   </div>
-
+  <!-- boton agg productos -->
       <div  @click="addOrUpdateProductList()"  class="rounded-md relative w-[115px] h-10 mt-2 mb-4 cursor-pointer flex items-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500">
         <span class="text-white font-semibold ml-2 transform group-hover:translate-x-20 transition-all duration-300">Agregar</span>
         <span class="absolute right-0 h-full w-10 rounded-lg bg-green-500 flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300">
@@ -170,25 +162,19 @@
           </svg>
         </span>
       </div>
-
+      <!-- tabla productos -->
       <div class="row w-full mt-8 p-2 bg-[#04162d] text-center border-t border-black-0.4 text-white" v-show="showTableProduct">
       <div class="col mr-1">#</div>
       <div class="col-2 mr-1">Nombre</div>
       <div class="col mr-1">Unidades</div>
-      <div class="col mr-1">Valor descuento</div>
-      <div class="col mr-1">Tipo de descuento</div>
       <div class="col mr-1">Valor unidad</div>
       <div class="col mr-1">Valor Total</div>
       <div v-show="valueEditCrea === 2" class="col mr-1">opciones</div></div>
-
-
       <div v-for="(item, index) in listProduct" :key="index">
         <div class="row w-full p-2 text-center border-b border-t border-black-0.4" > 
           <div class="col mr-1 ">#{{ index + 1 }}</div> 
           <div class="col-2 mr-1 "> {{ item.name }}</div>
            <div class="col mr-1 ">#{{ item.Unidades }}</div>
-           <div class="col mr-1 "> #{{ item.descuento }}  </div>
-           <div class="col mr-1 "> {{ item.tipoDescuento }}</div>
            <div class="col mr-1 ">${{ item.precio }}</div>
            <div class="col mr-1 ">${{ item.valueTotal }}</div>
            <div v-show="valueEditCrea === 2" class="col mr-1"> 
@@ -201,43 +187,41 @@
            </div>
         </div>
       </div>
-
-      <div class="flex items-start justify-between mt-12">
+      <!-- valores factura -->
+      <div class="flex items-start justify-between mt-8">
         <div>
-          <h6 class="text-start text-black font-bold p-2 text-[15px]">Iva: {{ impuesto }} </h6>
-          <h6 class="text-start text-black font-bold p-2 text-[15px]">Cantidad Total productos: {{ amountTotalProdut }} </h6>
-          <h6 class="text-start text-black font-bold p-2 text-[15px]">Total: {{ totalPrice }}</h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Tipo de descuento: {{ valueDiscount }} </h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Descuento: {{ discount }} </h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Iva: {{ impuesto }} </h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Cantidad Total productos: {{ amountTotalProdut }} </h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Total: {{ totalPrice }}</h6>
         </div>
       </div>
-
       <hr class="border border-dashed border-gray-500/50 my-2" />
 
-      <!-- div botones  -->
+      <!-- div botones crear y editar -->
       <div class="flex justify-end items-center gap-4">
-        <q-btn v-if="valueEditCrea == 1" icon="save_as" label="Generar Factura"   :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" ></q-btn>
+        <q-btn v-if="valueEditCrea == 1" :disabled="!isModified" icon="save_as" label="Generar Factura"   :loading="loading" type="submit" v-close-popup class="text-white bg-[#04162d] rounded-1xl" ></q-btn>
         <q-btn v-else icon="edit" label="Editar Factura" :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" v-close-popup></q-btn>
       </div>
       </div>
-      
+      <!-- botones siguiente form -->
       <div id="textFormInvalidate" class="message text-red-800 mb-4" ></div>
         <q-btn v-show="selectForm == 1" icon="arrow_forward"  @click="selectNum = 2" type="submit" class="text-white bg-green-700 rounded-1xl m-2  float-end" >siguiente </q-btn>
-
         <q-btn v-show="selectForm == 2" icon="arrow_forward"  @click="selectNum = 3" type="submit" class="text-white bg-green-700 rounded-1xl m-2  float-end" >siguiente </q-btn>
-
+        <!-- boton salir -->
         <q-btn icon="cancel"  type="button" class="text-white bg-red-700 rounded-1xl float-end  m-2" v-close-popup > cerrar</q-btn>
-        
-      <!-- btn -->
     </q-form>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeMount } from "vue";
+import { ref, onMounted, onBeforeMount, computed } from "vue";
 import { billStore } from "../store/billing.js";
 import { inventoryStore } from "@/store/inventory.js";
-import billing from "@/views/Billing.vue";
 import { exitStore } from "@/store/exits.js";
 import { LoginStore } from "../store/login.js";
+import billing from "@/views/Billing.vue";
 
 const props = defineProps({
   title: String,
@@ -246,7 +230,6 @@ const props = defineProps({
   dataDelete: Object,
   ind: String
 });
-
 
 const storeBilling = billStore();
 const storeInventory = inventoryStore();
@@ -283,7 +266,7 @@ let valueEditCrea = ref()
 let index = ref()
 let idProductExist = ref()
 let getIdExits = ref()
-let impuesto = ref(0)
+let impuesto = ref()
 let emailCustomer = ref()
 let numCustomer = ref()
 let datePayBill = ref()
@@ -291,18 +274,19 @@ let showTableProduct = ref(false)
 let selectForm = ref(1)
 let selectNum = ref(0)
 let  message = ref()
-// bill
+let modifiCant = ref()
 
+// bill
 const getBill = async () => {
   const res = await storeBilling.GetIBill(storeLogin.Email);
   if (res.status < 299) {
-    
+    rows.value = res.data
     rows.value.forEach((row, index) => {
       row.index = index + 1;
     });
     valueEditCrea.value = props.value
-    console.log(valueEditCrea.value);
     dataGoInfo.value = ""
+
     if (valueEditCrea.value == 1) {
       dataGoInfo.value = ""
       index.value = 0
@@ -314,18 +298,17 @@ const getBill = async () => {
       goInfoBill()
       ExitsGet()
     }
-
   }
 };
 
 async function postBill() {
-  console.log(user.value);
   const bill = await storeBilling.NewBill({
     UserEmail: user.value,
     numFactura: numBill.value,
     vendedor: nameSeller.value,
     cliente: nameCustomer.value,
-    Discount: discount.value,
+    tipoDescuento: valueDiscount.value,
+    descuento: discount.value,
     CantProduct: amountTotalProdut.value,
     PrecioVenta: totalPrice.value,
     impuesto: impuesto.value,
@@ -342,7 +325,8 @@ async function putInfoBill() {
     numFactura: numBill.value,
     vendedor: nameSeller.value,
     cliente: nameCustomer.value,
-    Discount: discount.value,
+    tipoDescuento: valueDiscount.value,
+    descuento: discount.value,
     CantProduct: amountTotalProdut.value,
     PrecioVenta: totalPrice.value,
     impuesto: impuesto.value,
@@ -351,28 +335,25 @@ async function putInfoBill() {
     datePay: datePayBill.value
   });
   getBill();
-  
 }
 
-
-
-
   function formValidate() {
-console.log(selectForm.value);
     if (selectForm.value == 1) {  
-      if (!nameSeller.value) {
-        message.value = "Debe llenar el campo de vendedor";
-        
-      } else if (!datePayBill.value) {
-        
-        message.value = "Debe llenar el campo de fecha de pago";
-      } else if (!impuesto.value) {
-        message.value = "Debe llenar el campo de iva";
-      }
-      else{
-        selectForm.value = selectNum.value;
-      }
-      
+
+    if (!nameSeller.value) {
+      message.value = "Debe llenar el campo de vendedor";
+    } else if (!datePayBill.value) {
+      message.value = "Debe llenar el campo de fecha de pago";
+    } else if (impuesto.value == null || impuesto.value === "") {
+      message.value = "Debe llenar el campo de iva";
+    } else if (valueDiscount.value == null || valueDiscount.value === "") {
+      message.value = "Debe llenar el campo de valor del descuento";
+    } else if (discount.value == null || discount.value === "") {
+      message.value = "Debe llenar el campo del descuento";
+    } else {
+      message.value = "";
+      selectForm.value = selectNum.value;
+    }
     }
      else if (selectForm.value == 2) {  
       if (!nameCustomer.value) {
@@ -384,21 +365,20 @@ console.log(selectForm.value);
         message.value = "Debe llenar el campo numero del cliente";
       }
       else{
+        message.value = ""
         selectForm.value = selectNum.value;
       }
     }
-
     else if (selectForm.value == 3) {  
-      if (!listProduct.value ) {
+      
+      if (listProduct.value.length === 0) {
         message.value = "Debes agregar productos";
       }
       else{
         EditarCrearBill()
       }
     }
-
     if (message.value) {
-        console.log("sapo");
         textFormInvalidate.textContent = message.value;
         textFormInvalidate.style.display = 'block';
         setTimeout(() => {
@@ -407,12 +387,14 @@ console.log(selectForm.value);
         return false; 
       }
     }
-  
+    const isModified = computed(() => {
+  return (
+    listProduct.value.length !== 0
     
-  
-
+  );
+});
+    
  function EditarCrearBill() {
-  console.log("marika");
    if (valueEditCrea.value == 1) {
       getNumBill()
    }
@@ -421,8 +403,6 @@ console.log(selectForm.value);
       putInfoExist()
     }
  }
-
-
 
 function getNumBill() {
   numBill.value = rows.value.length + 1;
@@ -448,30 +428,24 @@ function getNumBill() {
 
 function goInfoBill() {
     const data = dataGoInfo.value
-     console.log(data);
       numBill.value = data.numFactura;
       nameSeller.value = data.vendedor;
       nameCustomer.value = data.cliente;
-      discount.value = data.Discount;
-      valueDiscount.value , data.typeDiscount
+      discount.value = data.descuento;
+      valueDiscount.value = data.tipoDescuento;
       amountTotalProdut.value = data.CantProduct;
       totalPrice.value = data.PrecioVenta;
       impuesto.value = data.impuesto;
       emailCustomer.value = data.email;
       numCustomer.value = data.number;
       datePayBill.value = data.datePay.slice(0,10)
- 
 }
 
-
 // Exist
-
 async function ExitsGet() {
   const res = await storeExist.GetExits(storeLogin.Email);
- 
   if (res && res.status < 299) {
     rowsExist.value = res.data;
-    console.log(rowsExist.value);
     rowsExist.value.forEach((row, index) => {
       if (row.NumBill == dataGoInfo.value.numFactura) {
       numBill.value = row.NumBill
@@ -494,14 +468,14 @@ async function ExitsGet() {
 const postExist = async () => {
   try {
     listProduct.value.forEach(async (product) => {
+      restCant(product)
       const bill = {
         NumBill: numBill.value,
         Name: product.name,
         Serial: product.serial,
         Units: product.Unidades,
         Price: product.precio,
-        Discount: product.descuento,
-        typeDiscount: product.tipoDescuento,
+        Discount: discount.value,      
         UserEmail: user.value,
       };
       const response = await storeExist.PostExits(bill);
@@ -526,11 +500,9 @@ async function putInfoExist() {
       };
       const response = await storeExist.PutExits(idProductExist.value, bill);
     });
- 
 }
-function goInfoExits(i) {
-console.log(i);
-    
+
+function goInfoExits(i) {    
     SerialProduct.value = i.serial
     getIdExits.value = i.Id;
     totalPriceProduct.value  = i.valueTotal;
@@ -542,9 +514,7 @@ console.log(i);
     getValues()
   }
 
-
 // Product
-
 async function getProduct() {
   const res = await storeInventory.GetInventory(storeLogin.Email);
   resProduct.value = res;
@@ -555,17 +525,16 @@ async function getProduct() {
       let object2 = { label: res.data[i].Price, value: res.data[i]._id };
       getProductName.value.push(object);
       getProductId.value.push(object1);
-      
+     
     }
   }
 }
 
+// obtiene los valores del producto con el serial o el id 
   function getValues() {
   resProduct.value.data.forEach((producto) => {
     const idProducto = producto._id;
     const serial = producto.Serial
-    console.log(idProducto);
-    console.log(valueEditCrea.value);
     if ( valueEditCrea.value === 1) {
        if (getIdProduct.value ===  idProducto ) {
       SerialProduct.value = producto.Serial;
@@ -588,27 +557,29 @@ async function getProduct() {
   });
 }
 
+// El tipo de descuento ya se valor fijo o por porcentaje
 function typeDiscount() {
-  console.log("sapo");
-  console.log(amountProduct.value);
-  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) 
-    console.log(valueDiscount.value );
   if (valueDiscount.value === "Porcentaje") {
-    // Descuento en porcentaje
     const percentage = discount.value; 
     const discountAmount = (totalPriceProduct.value * percentage) / 100; 
-    totalPriceProduct.value -= discountAmount; // Aplicar el descuento al valor total
+    totalPrice.value -= discountAmount; 
   } else if (valueDiscount.value === "valor fijo") {
-    // Descuento en valor fijo
     const fixedDiscount = discount.value;
-    totalPriceProduct.value -= fixedDiscount; 
+    totalPrice.value -= fixedDiscount; 
   }
 }
- 
+
+// Valor total a partir de los productos
+function valueTotal() {
+  const percentage = impuesto.value; 
+    const discountAmount = (totalPriceProduct.value * percentage) / 100; 
+    totalPrice.value -= discountAmount; 
+  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) 
+}
+
+// funcion para array de productos ya sea para crear o editar
 const addOrUpdateProductList = () => {
   const productIndex = listProduct.value.findIndex(product => product.Id === getIdExits.value);
- 
- 
   if (valueEditCrea.value == 2) {
       listProduct.value.forEach((producto) => {
       if (producto.Id == getIdExits.value) {
@@ -617,38 +588,28 @@ const addOrUpdateProductList = () => {
             serial: SerialProduct.value,
             name: NameProduct.value,
             Unidades: parseInt(amountProduct.value),
-            tipoDescuento: valueDiscount.value,
-            descuento: parseFloat(discount.value),
             precio: parseFloat(priceProduct.value),
             valueTotal: parseFloat(totalPriceProduct.value),
           };
       }
-    })
-    
+    }) 
   } else {
     listProduct.value.push({
       serial: SerialProduct.value,
       name: NameProduct.value,
       Unidades: parseInt(amountProduct.value),
-      tipoDescuento: valueDiscount.value,
-      descuento: parseFloat(discount.value),
       precio: parseFloat(priceProduct.value),
       valueTotal: parseFloat(totalPriceProduct.value),
     });
-   
   }
   amountTotalProdut.value = 0
-totalPrice.value = 0
-
-  listProduct.value.forEach((producto) => {
+  totalPrice.value = 0
+    listProduct.value.forEach((producto) => {
     amountTotalProdut.value += parseInt(producto.Unidades);
     totalPrice.value += parseFloat(producto.valueTotal)
   })
-
   showTableProduct.value = true 
-
   cleanProduct()
-  
 };
 
 function DateNow() {
@@ -662,23 +623,13 @@ function DateNow() {
   currentDateFormatted.value = `${currentDate.getFullYear()}-${currentMonthFormatted}-${currentDayFormatted}`;
 }
 
-
-
-
-
   function cleanProduct() {
   NameProduct.value = "";
   amountProduct.value = "";
   priceProduct.value = "";
   getIdProduct.value = "";          
   totalPriceProduct.value = "";
-  valueDiscount.value = "";
-  discount.value = "";
 }
-
-
-
-
 
 function SumCant(dataI) {
   // resProduct.value.data.forEach((producto) => {
@@ -694,25 +645,34 @@ function SumCant(dataI) {
   // });
 }
 
-async function putInfoProduct() {
-  const res = await store.putProductCant(id.value, {
-    cantidad: modifiCant.value,
+function restCant(data) {
+   resProduct.value.data.forEach((producto) => {
+    const serial = producto.Serial;
+    if (serial == data.serial) { 
+      const unitsExit  = data.Unidades;
+      const units2 = producto.Units
+      if (units2 - unitsExit  == 0) {
+      const id = producto._id;
+      putInfoProduct(id, units2, unitsExit, state);
+    }
+    else{
+      const state = "Disponible"
+      const id = producto._id;
+      putInfoProduct(id, units2, unitsExit, state);
+    }
+    } else {
+      console.log("no se pudo sumar la cantidad del producto");
+    }
   });
 }
-
-
-
+async function putInfoProduct(id, units2, unitsExit, state) {
+  const res = await storeInventory.PutUnits(id, units2, unitsExit, state);
+}
 onBeforeMount(() => {
   getBill();
   getProduct();
-
 });
-
 onMounted(
   DateNow
   );
 </script>
-
-<style>
-
-</style>
