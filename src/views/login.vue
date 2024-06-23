@@ -45,8 +45,7 @@
               </q-btn>
               <p class="mt-6 flex justify-center font-sans text-sm font-light leading-normal text-inherit antialiased">
                 No tienes una cuenta?
-                <a class="ml-1 block font-sans text-sm font-bold leading-normal text-[#04162d] antialiased"
-                  href="#signup">
+                <a class="ml-1 block font-sans text-sm font-bold leading-normal text-[#04162d]" href="https://api.whatsapp.com/send?phone=573118048146&text=Hola,%20equipo%20de%20Newxo%20Dev.%20Me%20gustaría%20registrarme%20en%20su%20plataforma.%20%C2%A1Gracias%20por%20su%20asistencia!" target="_blank">
                   Registrarse
                 </a>
               </p>
