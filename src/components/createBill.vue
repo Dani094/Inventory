@@ -274,17 +274,20 @@ let showTableProduct = ref(false)
 let selectForm = ref(1)
 let selectNum = ref(0)
 let  message = ref()
-let modifiCant = ref()
+
 
 // bill
 const getBill = async () => {
   const res = await storeBilling.GetIBill(storeLogin.Email);
+  console.log(res.data);
   if (res.status < 299) {
     rows.value = res.data
     rows.value.forEach((row, index) => {
       row.index = index + 1;
     });
+    console.log("triplehp");
     valueEditCrea.value = props.value
+    console.log(valueEditCrea.value);
     dataGoInfo.value = ""
 
     if (valueEditCrea.value == 1) {

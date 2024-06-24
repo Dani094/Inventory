@@ -210,11 +210,11 @@ async function deleteExist(data) {
 
 async function modalCreaEdit(p) {
   showBill.value = p
-
   if (p === 1) {
     dialog.value = true
     modalTitle.value = "CREAR FACTURA"
     valEditCrea.value = p
+
   } 
   else if(p === 2){
    dialog.value = true

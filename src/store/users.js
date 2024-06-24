@@ -85,7 +85,7 @@ export const usersStore = defineStore("usersStore", () => {
         await requestAxios.put(
           `/users/put/${id}`,
           {
-            Names: name,
+            Name: name,
             LastName:lastname,
             Document: document,
             Email: email,
