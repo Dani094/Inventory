@@ -315,7 +315,9 @@ let showModal = ref(false);
 
 
 let showModalEdit=ref(false)
-let pagination = { rowsPerPage: 50 };
+let pagination = ref({
+  rowsPerPage: 50,
+});
 let loading=ref()
 
 let index= ref()

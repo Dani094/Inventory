@@ -15,7 +15,6 @@
           </div>
         </div>
       <div class="flex gap-2">
-        <Report :inventory="true"/>
           <q-btn
             icon="add"
             class="rounded-xl bg-[#04162d] text-white"
@@ -102,58 +101,343 @@
         </q-td>
       </template>
     </q-table>
+
+ <!-- modals -->
+  <!-- modal crear -->
+ <q-dialog v-model="showModal">
+      <q-card class="w-[400px]">
+        <q-card-section class="bg-[#04162d]">
+          <h5 class="text-center text-white font-bold p-2 text-xl">
+            INGRESA LOS DATOS
+          </h5>
+        </q-card-section>
+        <div class="p-4">
+          <q-form ref="myForm" @submit.prevent.stop="UsersPost()">
+            <div class="flex w-full justify-center">
+              <div class="w-[45%]">
+                <q-input
+                  type="text"
+                  v-model="document"
+                  label="Documento"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite el Documento',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  v-model="name"
+                  label="Nombre"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite el Nombre',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  v-model="lastName"
+                  label="Apellidos"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite los Apellidos',
+                  ]"
+                />
+                <q-input
+                  type="number"
+                  v-model="cel"
+                  label="Telefono"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Dijite su Telefono',
+                    (val) =>
+                      (val && val.trim().length === 10) ||
+                      'El número de teléfono debe tener 10 dígitos',
+                  ]"
+                />
+              </div>
+              <div class="w-[45%] ml-4">
+                <q-input
+                  type="text"
+                  v-model="address"
+                  label="Dirección"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite la Dirección',
+                  ]"
+                />
+                <q-input
+                  type="email"
+                  v-model="email"
+                  label="Correo"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite el Correo',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  v-model="municipality"
+                  label="Municipio"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite el Municipio',
+                  ]"
+                />
+                <q-input
+                  :type="isPwd ? 'password' : 'text'"
+                  v-model="password"
+                  label="Contraseña"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Dijite la Contraseña',
+                    (val) =>
+                      (val && val.trim().length >= 8) ||
+                      'La Contraseña debe tener minimo 8 dígitos',
+                  ]"
+                >
+                <template v-slot:append>
+                  <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer text-[#04162d]"
+                    @click="isPwd = !isPwd" />
+                </template>
+              </q-input>
+              </div>
+            </div>
+            <!-- div botones  -->
+            <div class="flex justify-center items-center gap-4">
+              <q-btn
+                icon="save_as"
+                label="GUARDAR"
+                :loading="loading"
+                type="submit"
+                class="text-white bg-green-800 rounded-2xl"
+              ></q-btn>
+              <q-btn
+                icon="cancel"
+                type="button"
+                class="text-white bg-red-700 rounded-2xl"
+                v-close-popup
+                >CERRAR
+              </q-btn>
+            </div>
+          </q-form>
+        </div>
+      </q-card>
+    </q-dialog>
+
+<!-- modal editar -->
+<q-dialog v-model="showModalEdit">
+      <q-card class="w-[400px]">
+        <q-card-section class="bg-[#04162d]">
+          <h5 class="text-center text-white font-bold p-2 text-xl">
+            EDITE LOS DATOS
+          </h5>
+        </q-card-section>
+        <div class="p-4">
+          <q-form ref="myForm" @submit.prevent.stop="UsersPut()">
+            <div class="flex w-full justify-center">
+              <div class="w-[45%]">
+                <q-input
+                  type="text"
+                  v-model="document"
+                  label="Documento"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite el Documento',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  v-model="name"
+                  label="Nombre"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite el Nombre',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  v-model="lastName"
+                  label="Apellidos"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.toString().trim().length > 0) ||
+                      'Digite los Apellidos',
+                  ]"
+                />
+                <q-input
+                  type="number"
+                  v-model="cel"
+                  label="Telefono"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Dijite su Telefono',
+                    (val) =>
+                      (val && val.trim().length === 10) ||
+                      'El número de teléfono debe tener 10 dígitos',
+                  ]"
+                />
+              </div>
+              <div class="w-[45%] ml-4">
+                <q-input
+                  type="text"
+                  v-model="address"
+                  label="Dirección"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite la Dirección',
+                  ]"
+                />
+                <q-input
+                  type="email"
+                  v-model="email"
+                  label="Correo"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite el Correo',
+                  ]"
+                />
+                <q-input
+                  type="text"
+                  v-model="municipality"
+                  label="Municipio"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Digite el Municipio',
+                  ]"
+                />
+                <q-input
+                  :type="isPwd ? 'password' : 'text'"
+                  v-model="password"
+                  label="Contraseña"
+                  lazy-rules
+                  :rules="[
+                    (val) =>
+                      (val && val.trim().length > 0) || 'Dijite la Contraseña',
+                    (val) =>
+                      (val && val.trim().length >= 8) ||
+                      'La Contraseña debe tener minimo 8 dígitos',
+                  ]"
+                >
+                <template v-slot:append>
+                  <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer text-[#04162d]"
+                    @click="isPwd = !isPwd" />
+                </template>
+              </q-input>
+              </div>
+            </div>
+            <!-- div botones  -->
+            <div class="flex justify-center items-center gap-4">
+              <q-btn
+                icon="save_as"
+                label="GUARDAR"
+                :loading="loading"
+                type="submit"
+                class="text-white bg-green-800 rounded-2xl"
+              ></q-btn>
+              <q-btn
+                icon="cancel"
+                type="button"
+                class="text-white bg-red-700 rounded-2xl"
+                v-close-popup
+                >CERRAR
+              </q-btn>
+            </div>
+          </q-form>
+        </div>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { usersStore } from "../store/users.js";
+import { LoginStore } from "../store/login.js";
 import { sweetDelete } from "@/Global/notify";
+import { useQuasar } from "quasar";
 
+const $q = useQuasar();
+
+$q.loading.show();
+$q.loading.hide();
 const storeUsers = usersStore();
+const storeLogin = LoginStore();
 
+let isPwd = ref(true);
+let showModal=ref(false)
+let showModalEdit=ref(false)
+let loading=ref(false)
+// variables
 let index = ref();
-
-
+let document=ref()
+let name=ref()
+let lastName=ref()
+let cel=ref()
+let address=ref()
+let email=ref()
+let municipality=ref()
+let password=ref()
+let user=ref(storeLogin.Email)
 
 // peticiones
 async function UsersGet() {
+  $q.loading.show();
   const res = await storeUsers.GetUsers();
   if (res && res.status < 299) {
     rows.value = res.data;
     rows.value.forEach((row, index) => {
       row.index = index + 1;
     });
+    $q.loading.hide();
   }
 }
 async function UsersPost() {
   loading.value = true;
-  const res = await storeUsers.PostExits(
-    { 
-        NumBill: null,
-        Name: nameExit.value,
-        Serial: serialExit.value,
-        Units:  unitsExit.value,
-        Price:  priceExit.value,
-        Discount: discount.value,
-        UserEmail: user.value,
-    }
+  const res = await storeUsers.PostUsers(
+    document.value,
+    name.value,
+    lastName.value,
+    cel.value,
+    address.value,
+    email.value,
+    municipality.value,
+    password.value,
+    user.value
   );
-  showModalExits.value = false;
+  showModal.value = false;
   UsersGet();
   loading.value = false;
 }
 async function UsersPut() {
   loading.value = true;
-  const res = await storeUsers.PutInventory(
+  const res = await storeUsers.PutUser(
     index.value,
-    supplier.value,
+    document.value,
     name.value,
-    serial.value,
-    units.value,
-    price.value,
-    expirationDate,
-    state.value,
+    lastName.value,
+    cel.value,
+    address.value,
+    email.value,
+    municipality.value,
+    password.value,
     user.value
   );
   showModalEdit.value = false;
@@ -181,23 +465,31 @@ async function StateUpdate(data) {
   }
 }
 
-
+function goInfo(data) {
+    (document.value = data.Document),
+    (name.value = data.Name),
+    (lastName.value = data.LastName),
+    (cel.value = data.Cel),
+    (address.value = data.Address),
+    (email.value = data.Email ),
+    (municipality.value = data.Municipio);
+    (password.value = data.Password);
+}
 function cleanForm() {
-  supplier.value = "";
-  name.value = "";
-  serial.value = "";
-  units.value = "";
-  price.value = "";
-  expirationDate.value = "";
-  state.value = "Disponible";
-  copias.value = "";
-  crearCopias.value = "";
-  unitsExit.value = "";
-  discount.value = "";
+  document.value=""
+  name.value=""
+  lastName.value=""
+  cel.value=""
+  address.value=""
+  email.value=""
+  municipality.value=""
+  password.value=""
 }
 // table
 let rows = ref([]);
-let pagination = { rowsPerPage: 50 };
+let pagination = ref({
+  rowsPerPage: 50,
+});
 let columns = ref([
   { name: "index", label: "N°", field: "index", align: "center" },
   { name: "proveedor", align: "center", label: "DOCUMENTO", field: "Document",

@@ -9,11 +9,9 @@ import '@quasar/extras/bootstrap-icons/bootstrap-icons.css'
 import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
 
 import 'quasar/src/css/index.sass'
-
 import App from './App.vue'
 import "./assets/style.css"
 import { Quasar, Notify, Loading } from 'quasar'
-
 import { createApp } from 'vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import {routes} from "../routes/routes.js"

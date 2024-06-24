@@ -34,13 +34,13 @@
       :rows="rows"
       :columns="columns"
       row-key="index"
-      virtual-scroll
-      v-model:pagination="pagination"
       class="inventTable h-[550px] lg:h-[720px] rounded-2xl"
       :filter="filter"
       @focusin="activateNavigation"
       @focusout="deactivateNavigation"
       @keydown="onKey"
+      virtual-scroll
+      v-model:pagination="pagination"
     >
       <template v-slot:top-left>
         <q-input
@@ -441,6 +441,12 @@ import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
 import { exitStore } from "../store/exits.js";
 import { sweetDelete } from "@/Global/notify";
+import { useQuasar } from "quasar";
+
+const $q = useQuasar();
+
+$q.loading.show();
+$q.loading.hide();
 
 const storeInventory = inventoryStore();
 const storeLogin = LoginStore();
@@ -478,6 +484,7 @@ let rows = ref([]);
 
 // peticiones
 async function InventoryGet() {
+  $q.loading.show();
   const res = await storeInventory.GetInventory(storeLogin.Email);
   if (res && res.status < 299) {
     rows.value = res.data;
@@ -489,6 +496,7 @@ async function InventoryGet() {
         0
       );
     });
+    $q.loading.hide();
   }
 }
 async function InventoryPost() {
@@ -529,9 +537,9 @@ async function InventoryPost() {
       );
     }
   }
+  loading.value = false;
   showModal.value = false;
   InventoryGet();
-  loading.value = false;
 }
 async function InventoryPut() {
   loading.value = true;
@@ -608,8 +616,9 @@ function cleanForm() {
 
 // <--------------------------------------------------------------------->
 // all table
-let pagination = { rowsPerPage: 50 };
-
+let pagination = ref({
+  rowsPerPage: 50,
+});
 let columns = ref([
   { name: "index", label: "N°", field: "index", align: "center" },
   {
@@ -660,7 +669,7 @@ let columns = ref([
   {
     name: "date",
     label: "FECHA",
-    field: (row) => row.createdAt.slice(0, 10),
+    field: (row) => row.createdAt,
     align: "center",
   },
   {

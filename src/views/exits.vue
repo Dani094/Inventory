@@ -173,7 +173,12 @@ import Report from "@/components/descargarExcel.vue"
 import {exitStore} from "@/store/exits.js"
 import { LoginStore } from "../store/login.js";
 import {sweetDelete} from "@/Global/notify"
+import { useQuasar } from "quasar";
 
+const $q = useQuasar();
+
+$q.loading.show();
+$q.loading.hide();
 const storeExits = exitStore();
 const storeLogin = LoginStore();
 
@@ -195,6 +200,7 @@ let TotalUnits=ref(0)
 
 // peticiones get,put,delete
 async function ExitsGet() {
+  $q.loading.show();
   const res = await storeExits.GetExits(storeLogin.Email);
   if (res && res.status < 299) {
     rows.value = res.data;
@@ -203,6 +209,7 @@ async function ExitsGet() {
       TotalUnits.value = 0;
       TotalUnits.value = rows.value.reduce((total, row) => total + row.Units, 0);
     });
+    $q.loading.hide();
   } 
 }
 async function ExitsPut() {
@@ -232,7 +239,9 @@ async function deleteItem(data) {
   });
 }
 // table  
-let pagination = { rowsPerPage: 50 };
+let pagination = ref({
+  rowsPerPage: 50,
+});
 let rows = ref([]);
 let columns = ref([
     { name: "index", label: "N°", field: "index", align: "center" },

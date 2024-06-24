@@ -111,7 +111,12 @@ import {sweetDelete} from "@/Global/notify"
 import { usersStore } from "../store/users.js";
 import { exitStore } from "@/store/exits.js";
 import { LoginStore } from "../store/login.js";
+import { useQuasar } from "quasar";
 
+const $q = useQuasar();
+
+$q.loading.show();
+$q.loading.hide();
 
 const user = usersStore();
 const storeExist = exitStore();
@@ -152,7 +157,9 @@ let userAddres = ref()
 let userEmail = ref()
 let userTown = ref()
 let arrayBill = ref()
-let pagination = ref({ rowsPerPage: 0 });
+let pagination = ref({
+  rowsPerPage: 50,
+});
 const visibleColumns = ref(["numero","vendedor", "Cliente", "Cantidad de productos", "Total", "Fecha", "options"]);
 let columns = ref([
   { name: "index", label: "N°", field: "index", align: "center",  sortable: true,  icon: "format_list_numbered", },
@@ -168,12 +175,15 @@ let columns = ref([
 let rows = ref([]);
 
 const getBill = async () => {
+  $q.loading.show();
   const res = await storeBilling.GetIBill(storeLogin.Email);
   if (res.status < 299) {
     rows.value = res.data;
     rows.value.forEach((row, index) => {
         row.index = index + 1;     
-})}
+    })
+      $q.loading.hide();
+    }
 };
 
 async function ExitsGet() {
