@@ -9,19 +9,19 @@ export const billStore = defineStore("billStore", () => {
   // Function Get inventory
   async function GetIBill(User) {
     try {
-      return await requestAxios.get(`/factura/all/${User}`, {
+      return await requestAxios.get(`/billing/all/${User}`, {
         headers: {
           token: useToken.token,
         },
       });
     } catch (error) {
-      notifyError("No fue posible obtener el Inventario");
+      notifyError("No hay datos de facturas");
     }
   }
   async function Filter(filter) {
     console.log(filter);
     try {
-      return await requestAxios.get(`/factura/${filter}`, {
+      return await requestAxios.get(`/billing/${filter}`, {
         headers: {
           token: useToken.token,
         },
@@ -36,7 +36,7 @@ export const billStore = defineStore("billStore", () => {
     console.log(data);
     try {
       return (
-        await requestAxios.post( "/factura/post", data,
+        await requestAxios.post( "/billing/post", data,
           {
             headers: {
               token: useToken.token,
@@ -56,7 +56,7 @@ export const billStore = defineStore("billStore", () => {
     console.log(id, data);
     try {
       return (
-        await requestAxios.put(`/factura/put/${id}`, data,
+        await requestAxios.put(`/billing/put/${id}`, data,
           {
             headers: {
               token: useToken.token,
@@ -74,7 +74,7 @@ export const billStore = defineStore("billStore", () => {
   async function DeleteBill(id) {
     try {
       return (
-        await requestAxios.delete(`/factura/delete/${id}`),
+        await requestAxios.delete(`/billing/delete/${id}`),
         notifySuccess("Articulo Eliminado Correctamente")
       );
     } catch (error) {
