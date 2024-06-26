@@ -389,8 +389,9 @@ async function ExitsPost() {
 // table 
 let rows=ref(props.rows)
 let columns=ref(props.columns)
-let pagination = { rowsPerPage: 50 };
-
+let pagination = ref({
+  rowsPerPage: 50,
+});
 
 // function filter
 let filter = ref("");

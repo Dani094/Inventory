@@ -59,6 +59,7 @@
               <li>Empresa: {{nameCompany}}</li>
               <li>Fecha de pago: {{datePay}}</li>
               <li>Metodo de pago: {{MethodPay}}</li>
+
             </ul>
           </div>
           <div class="col">

@@ -30,28 +30,30 @@ export const usersStore = defineStore("usersStore", () => {
     }
   }
   // Function post, put and delete users
-  async function PostInventory(
-    supplier,
+  async function PostUsers(
+    document,
     name,
-    serial,
-    units,
-    price,
-    expirationDate,
-    state,
+    lastName,
+    cel,
+    address,
+    email,
+    municipality,
+    password,
     user
   ) {
     try {
       return (
         await requestAxios.post(
-          "/inventory/post",
+          "/users/post",
           {
-            Supplier: supplier,
+            Document: document,
             Name: name,
-            Serial: serial,
-            Units: units,
-            Price: price,
-            ExpirationDate: expirationDate,
-            State: state,
+            Cel: cel,
+            LastName: lastName,
+            Address: address,
+            Email: email,
+            Municipio: municipality,
+            Password: password,
             UserEmail: user,
           },
           {
@@ -60,39 +62,41 @@ export const usersStore = defineStore("usersStore", () => {
             },
           }
         ),
-        notifySuccess("Registrado correctamente")
+        notifySuccess("Cliente Registrado correctamente")
       );
     } catch (error) {
       console.log(error);
       notifyError(
-        "No fue posible registrar o el serial ya existen en la base de datos"
+        "No fue posible registrar o el Documento ya existen en la base de datos"
       );
     }
   }
   async function PutUser(
     id,
-    name,
-    lastname,
     document,
-    email,
+    name,
+    lastName,
     cel,
-    municipality,
     address,
-    password
+    email,
+    municipality,
+    password,
+    user
   ) {
     try {
       return (
         await requestAxios.put(
           `/users/put/${id}`,
           {
-            Name: name,
-            LastName:lastname,
             Document: document,
-            Email: email,
+            Names: name,
+            LastName: lastName,
             Cel: cel,
-            Municipio:municipality,
+            Municipio: municipality,
             Address: address,
-            Password: password
+            Email: email,
+            Password: password,
+            UserUpdate: user,
           },
           {
             headers: {
@@ -119,17 +123,17 @@ export const usersStore = defineStore("usersStore", () => {
     }
   }
   // update state
-  async function UpdateState(id, estado){
+  async function UpdateState(id, estado) {
     try {
-     await requestAxios.put(`/users/state/${id}`,
-      {state:estado},
-      {
-      headers: 
-      {
-        token: useToken.token,
-      }
-      }
-    );
+      await requestAxios.put(`/users/state/${id}`,
+        { state: estado },
+        {
+          headers:
+          {
+            token: useToken.token,
+          }
+        }
+      );
       notifySuccess('Estado cambiado correctamente');
     } catch (error) {
       console.log(error);
@@ -140,7 +144,7 @@ export const usersStore = defineStore("usersStore", () => {
   return {
     GetUsers,
     GetUsersEmail,
-    PostInventory,
+    PostUsers,
     PutUser,
     DeleteUser,
     UpdateState,

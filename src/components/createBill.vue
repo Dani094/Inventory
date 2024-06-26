@@ -536,13 +536,17 @@ async function getProduct() {
   const res = await storeInventory.GetInventory(storeLogin.Email);
   resProduct.value = res;
   if (res.status < 299) {
+    const uniqueNames = new Set();
     for (let i in res.data) {
-      let object = { label: res.data[i].Name, value: res.data[i]._id };
-      let object1 = { label: res.data[i].Serial, value: res.data[i]._id };
-      let object2 = { label: res.data[i].Price, value: res.data[i]._id };
-      getProductName.value.push(object);
-      getProductId.value.push(object1);
-     
+      const name = res.data[i].Name;
+      if (!uniqueNames.has(name)) {
+        uniqueNames.add(name);
+        let object = { label: name, value: res.data[i]._id };
+        let object1 = { label: res.data[i].Serial, value: res.data[i]._id };
+        let object2 = { label: res.data[i].Price, value: res.data[i]._id };
+        getProductName.value.push(object);
+        getProductId.value.push(object1);
+      }
     }
   }
 }
