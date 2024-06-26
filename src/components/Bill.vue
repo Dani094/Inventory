@@ -57,7 +57,7 @@
               <li class="mb-4">¡Gracias por su compra!</li>
               <li>Informacion de pago: </li>
               <li>{{nameSeller}} </li>
-              <li>Naturista</li>
+              <li>Newxo</li>
               <li>Fecha de pago: {{}}</li>
             </ul>
           </div>
