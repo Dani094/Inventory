@@ -6,7 +6,7 @@
     <ul class="pl-1">
       <!-- logo  -->
       <li>
-        <img class="w-[40%] m-8" src="../assets/logoNewxo.png" alt="">
+        <img class="w-[40%] m-8" src="../../public/logoNewxo.png" alt="">
       </li>
       <!-- options  -->
       <router-link to="/home">

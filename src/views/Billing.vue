@@ -18,7 +18,7 @@
        </div>
     </div>
     <q-dialog v-model="dialog" class="py-5 px-0 mx-0 ">
-      <div v-if="showBill == 3" class=" sm:w-[100%]  min-h-[70vh] font-sans font-bold ">
+      <div v-if="showBill == 3" class=" w-[100%] sm:w-[100%] md:w-[70%] xl:w-[70%] min-h-[70vh] font-sans font-bold ">
         <bill  :dataBill="arrayBill"/>
       </div>
       <div v-else class="mr-2 xs:w-[100%] w-auto  rounded-[20px] bg-white  " >
@@ -47,7 +47,7 @@
                 </q-input> 
                 <div class="flex m-4 ">
                   <p class="mt-2">Dia</p>
-                  <q-checkbox v-model="filtroDay" color="blue" @click="getVentas()"/>
+                  <q-checkbox v-model="filtroDay" color="blue" @click="getBill()"/>
                 </div>
               </div>
               <div class="col">
@@ -124,7 +124,7 @@ let valEditCrea = ref()
 let  modalTitle = ref()
 let dialog = ref(false);
 let index = ref();
-let filtroDay = ref();
+let filtroDay = ref(true);
 let numBill = ref()
 let typeBill = ref(0)
 let nameSeller = ref()
@@ -170,11 +170,30 @@ let rows = ref([]);
 const getBill = async () => {
   const res = await storeBilling.GetIBill(storeLogin.Email);
   if (res.status < 299) {
-    rows.value = res.data;
-    rows.value.forEach((row, index) => {
-        row.index = index + 1;     
-})}
-};
+    let resBill = res.data;
+    if (filtroDay.value === true) {
+
+    const fechaActual = new Date();
+    const dia = fechaActual.getDate().toString().padStart(2, "0"); 
+    const mes = (fechaActual.getMonth() + 1).toString().padStart(2, "0");  
+    const anio = fechaActual.getFullYear();
+    const fechaFormateada = `${anio}-${mes}-${dia}`;
+    console.log(resBill)
+    resBill = resBill.filter((fecha) => fecha.date.slice(0, 10) === fechaFormateada );
+    rows.value = resBill;
+}
+
+
+} else {
+  rows.value = res.data;
+}
+
+
+rows.value.forEach((row, index) => {
+  row.index = index + 1;
+
+})
+}
 
 async function ExitsGet() {
   const res = await storeExist.GetExits(storeLogin.Email);
@@ -268,9 +287,9 @@ onMounted(() => {
   transform: rotate(160deg);
 }
 
-
-
-
+  .q-dialog__inner--minimized {
+    padding: 0px;
+}
 
 
 </style>

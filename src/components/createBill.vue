@@ -24,7 +24,7 @@
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                           <i class="material-icons text-gray-500">date</i>
                         </span>
-                        <input id="date" type="date" v-model="datePayBill"   class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+                        <input id="date" type="date" v-model="datePayBill"   class="block w-full p-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
                       </div>
             </div>
             <div class="mb-2">
@@ -44,7 +44,7 @@
                   <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                     <i class="material-icons text-gray-500">percent</i>
                   </span>
-                  <select id="discountType" v-model="valueDiscount"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  <select id="discountType" v-model="valueDiscount" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option disabled value="">Seleccione una opción</option>
                     <option v-for="option in optionsType" :key="option" :value="option">{{ option }}</option>
                   </select>
@@ -60,7 +60,17 @@
                   <input id="discount" type="number" v-model="discount" 
                     class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
                 </div>
-              </div>  
+              </div> 
+              <div class="mb-2">
+              <!-- Input impuesto -->
+              <label for="Impuesto" class="block text-sm font-medium text-gray-700">Metodo de pago </label>
+            <div class="relative ">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <i class="material-icons text-gray-500">credit_card</i>
+        </span>
+        <input id="Impuesto" type="text" v-model="MethodPay" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+      </div>
+            </div> 
         </div>     
 
        <!-- Cliente -->
@@ -125,7 +135,7 @@
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
           <i class="material-icons text-gray-500">production_quantity_limits</i>
         </span>
-        <input id="amountProduct" type="number" v-model="amountProduct"  @change=" valueTotal"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+        <input id="amountProduct" @change=" typeDiscount" type="number" v-model="amountProduct"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
       </div>
     </div>
   </div>
@@ -137,7 +147,7 @@
         <span class="absolute inset-y-0 left-0 flex items-center pl-3 ">
           <i class="material-icons text-gray-500">attach_money</i>
         </span>
-        <input id="priceProduct" type="number" v-model="priceProduct" @change=" valueTotal" class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+        <input id="priceProduct" type="number" v-model="priceProduct"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
       </div>
     </div>
     <!-- Input valor total productos -->
@@ -152,7 +162,7 @@
     </div>
   </div>
   <!-- boton agg productos -->
-      <div  @click="addOrUpdateProductList()"  class="rounded-md relative w-[115px] h-10 mt-2 mb-4 cursor-pointer flex items-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500">
+      <div  @click="addOrUpdateProductList()"    class="rounded-md relative w-[115px] h-10 mt-2 mb-4 cursor-pointer flex items-center border border-green-500 bg-green-500 group hover:bg-green-500 active:bg-green-500 active:border-green-500">
         <span class="text-white font-semibold ml-2 transform group-hover:translate-x-20 transition-all duration-300">Agregar</span>
         <span class="absolute right-0 h-full w-10 rounded-lg bg-green-500 flex items-center justify-center transform group-hover:translate-x-0 group-hover:w-full transition-all duration-300">
           <svg class="svg w-8 text-white" fill="none" height="24" stroke="currentColor" stroke-linecap="round"  stroke-linejoin="round" stroke-width="2"
@@ -190,9 +200,8 @@
       <!-- valores factura -->
       <div class="flex items-start justify-between mt-8">
         <div>
-          <h6 class="text-start text-black font-bold  text-[15px]">Tipo de descuento: {{ valueDiscount }} </h6>
-          <h6 class="text-start text-black font-bold  text-[15px]">Descuento: {{ discount }} </h6>
-          <h6 class="text-start text-black font-bold  text-[15px]">Iva: {{ impuesto }} </h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Descuento: {{ valorDescuento }} {{ discount }} </h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Iva: % {{ impuesto }} </h6>
           <h6 class="text-start text-black font-bold  text-[15px]">Cantidad Total productos: {{ amountTotalProdut }} </h6>
           <h6 class="text-start text-black font-bold  text-[15px]">Total: {{ totalPrice }}</h6>
         </div>
@@ -221,7 +230,7 @@ import { billStore } from "../store/billing.js";
 import { inventoryStore } from "@/store/inventory.js";
 import { exitStore } from "@/store/exits.js";
 import { LoginStore } from "../store/login.js";
-import billing from "@/views/Billing.vue";
+
 
 const props = defineProps({
   title: String,
@@ -245,7 +254,6 @@ let getIdProduct = ref([]);
 let priceProduct = ref();
 let totalPrice = ref(0);
 let listProduct = ref([]);
-let addProduct = ref(0);
 let rows = ref([]);
 let loading = ref(false);
 let getProductName = ref([]);
@@ -274,20 +282,18 @@ let showTableProduct = ref(false)
 let selectForm = ref(1)
 let selectNum = ref(0)
 let  message = ref()
-
-
+let valorDescuento = ref()
+let MethodPay =  ref()
+let editProduct = ref(false)
 // bill
 const getBill = async () => {
   const res = await storeBilling.GetIBill(storeLogin.Email);
-  console.log(res.data);
   if (res.status < 299) {
     rows.value = res.data
     rows.value.forEach((row, index) => {
       row.index = index + 1;
     });
-    console.log("triplehp");
     valueEditCrea.value = props.value
-    console.log(valueEditCrea.value);
     dataGoInfo.value = ""
 
     if (valueEditCrea.value == 1) {
@@ -317,7 +323,8 @@ async function postBill() {
     impuesto: impuesto.value,
     email: emailCustomer.value,
     number: numCustomer.value,
-    datePay: datePayBill.value
+    datePay: datePayBill.value,
+    MethodPay: MethodPay.value
   });
   await getBill()
 };
@@ -335,7 +342,8 @@ async function putInfoBill() {
     impuesto: impuesto.value,
     email: emailCustomer.value,
     number: numCustomer.value,
-    datePay: datePayBill.value
+    datePay: datePayBill.value,
+    MethodPay: MethodPay.value
   });
   getBill();
 }
@@ -353,6 +361,9 @@ async function putInfoBill() {
       message.value = "Debe llenar el campo de valor del descuento";
     } else if (discount.value == null || discount.value === "") {
       message.value = "Debe llenar el campo del descuento";
+    }
+    else if (!MethodPay.value) {
+      message.value = "Debe llenar el campo de metodo de pago";
     } else {
       message.value = "";
       selectForm.value = selectNum.value;
@@ -400,6 +411,7 @@ async function putInfoBill() {
  function EditarCrearBill() {
    if (valueEditCrea.value == 1) {
       getNumBill()
+
    }
   else if (valueEditCrea.value == 2){ 
       putInfoBill()
@@ -442,6 +454,7 @@ function goInfoBill() {
       emailCustomer.value = data.email;
       numCustomer.value = data.number;
       datePayBill.value = data.datePay.slice(0,10)
+      MethodPay.value = data.MethodPay
 }
 
 // Exist
@@ -481,11 +494,13 @@ const postExist = async () => {
         Discount: discount.value,      
         UserEmail: user.value,
       };
+      console.log(bill);
       const response = await storeExist.PostExits(bill);
     });
   } catch (error) {
     console.error("Error al enviar los datos de la factura:", error);
   }
+  reloadPage()
 };
 
 async function putInfoExist() { 
@@ -498,7 +513,6 @@ async function putInfoExist() {
         Units: product.Unidades,
         Price: product.precio,
         Discount: product.descuento,
-        typeDiscount: product.tipoDescuento,
         UserEmail: user.value,
       };
       const response = await storeExist.PutExits(idProductExist.value, bill);
@@ -506,11 +520,11 @@ async function putInfoExist() {
 }
 
 function goInfoExits(i) {    
+  editProduct.value = true
     SerialProduct.value = i.serial
     getIdExits.value = i.Id;
     totalPriceProduct.value  = i.valueTotal;
     priceProduct.value = i.precio
-    valueDiscount.value = i.tipoDescuento
     impuesto.value = impuesto.value
     discount.value = i.descuento
     amountProduct.value = i.Unidades
@@ -538,7 +552,7 @@ async function getProduct() {
   resProduct.value.data.forEach((producto) => {
     const idProducto = producto._id;
     const serial = producto.Serial
-    if ( valueEditCrea.value === 1) {
+    if ( editProduct.value === false) {
        if (getIdProduct.value ===  idProducto ) {
       SerialProduct.value = producto.Serial;
       NameProduct.value = producto.Name;
@@ -548,7 +562,7 @@ async function getProduct() {
       console.log("El ID no ", getIdProduct.value);
     }
     }
-    else if( valueEditCrea.value === 2){
+    else if( editProduct.value === true){
       if(serial ==  SerialProduct.value ){
       getIdProduct.value = producto._id
       NameProduct.value = producto.Name;
@@ -560,30 +574,10 @@ async function getProduct() {
   });
 }
 
-// El tipo de descuento ya se valor fijo o por porcentaje
-function typeDiscount() {
-  if (valueDiscount.value === "Porcentaje") {
-    const percentage = discount.value; 
-    const discountAmount = (totalPriceProduct.value * percentage) / 100; 
-    totalPrice.value -= discountAmount; 
-  } else if (valueDiscount.value === "valor fijo") {
-    const fixedDiscount = discount.value;
-    totalPrice.value -= fixedDiscount; 
-  }
-}
-
-// Valor total a partir de los productos
-function valueTotal() {
-  const percentage = impuesto.value; 
-    const discountAmount = (totalPriceProduct.value * percentage) / 100; 
-    totalPrice.value -= discountAmount; 
-  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) 
-}
-
 // funcion para array de productos ya sea para crear o editar
 const addOrUpdateProductList = () => {
   const productIndex = listProduct.value.findIndex(product => product.Id === getIdExits.value);
-  if (valueEditCrea.value == 2) {
+  if (editProduct.value == true) {
       listProduct.value.forEach((producto) => {
       if (producto.Id == getIdExits.value) {
       listProduct.value[productIndex] = {
@@ -605,15 +599,53 @@ const addOrUpdateProductList = () => {
       valueTotal: parseFloat(totalPriceProduct.value),
     });
   }
-  amountTotalProdut.value = 0
-  totalPrice.value = 0
-    listProduct.value.forEach((producto) => {
-    amountTotalProdut.value += parseInt(producto.Unidades);
-    totalPrice.value += parseFloat(producto.valueTotal)
-  })
+  editProduct.value = false
   showTableProduct.value = true 
+  typeDiscount()
   cleanProduct()
 };
+
+
+// Valor total a partir de los productos
+function valueTotal(descuento) { 
+  amountTotalProdut.value = 0
+  totalPrice.value = 0
+  let totalWithoutIva = 0
+  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) 
+  const percentage = impuesto.value; 
+    listProduct.value.forEach((producto) => {
+    amountTotalProdut.value += parseInt(producto.Unidades);
+    totalWithoutIva +=  parseInt(producto.valueTotal) 
+    const discountAmount = (totalWithoutIva * percentage) / 100; 
+     totalPrice.value =  discountAmount + totalWithoutIva - descuento
+  })
+}
+
+
+// El tipo de descuento ya se valor fijo o por porcentaje
+function typeDiscount() {
+    console.log(valueDiscount.value);
+  if (valueDiscount.value === "Porcentaje") {
+    const percentage = discount.value; 
+    console.log(percentage);
+    console.log(totalPriceProduct.value);
+    const discountAmount = (totalPriceProduct.value * percentage) / 100;
+    valueTotal(discountAmount)
+  } else if (valueDiscount.value === "valor fijo") {
+    const fixedDiscount = discount.value;
+    console.log(fixedDiscount);
+    valueTotal(fixedDiscount)
+  }
+
+  if (valueDiscount.value == "Porcentaje") {
+      console.log("sapo");
+        valorDescuento.value = "%"
+    }
+    else if (valueDiscount.value == "valor fijo"){
+       valorDescuento.value = "$"
+    }
+    
+}
 
 function DateNow() {
   const currentDate = new Date();
@@ -655,6 +687,7 @@ function restCant(data) {
       const unitsExit  = data.Unidades;
       const units2 = producto.Units
       if (units2 - unitsExit  == 0) {
+        const state = "Agotado"
       const id = producto._id;
       putInfoProduct(id, units2, unitsExit, state);
     }
@@ -671,6 +704,11 @@ function restCant(data) {
 async function putInfoProduct(id, units2, unitsExit, state) {
   const res = await storeInventory.PutUnits(id, units2, unitsExit, state);
 }
+
+const reloadPage = () => {
+  location.reload();
+}
+
 onBeforeMount(() => {
   getBill();
   getProduct();

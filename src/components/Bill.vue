@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div class=" w-[70%] xs:w-[100%] min-h-[90vh] pt-4 px-2 bg-white m-auto" @click=" printPage()">
+    <div class=" w-[100%] xs:w-[100%] min-h-[90vh] p-4 bg-white m-auto rounded-md text-[11px] sm:text-[13px]" id="invoice" >
       <div class="row">
         <div class="col">
-          <p class="text-[20px] sm:text-[40px] mt-4 w-[100%]  text-start "> FACTURA </p>
+          <p class="text-[20px] sm:text-[30px] mt-2 w-[100%]  text-start "> FACTURA </p>
           <ul class="mt-5  text-[16px]">
             <li>Factura n°: 00{{numBill}}</li>
             <li>Fecha: {{date}}</li>
           </ul>
         </div>
         <div class="col">
-          <div class=" w-22 h-28 pr-8 float-end">
-            <img class="w-full h-full " src="../assets/logoNewxo.png" alt="">
+          <div class=" w-40 h-36 pr-2 float-end">
+            <img class="w-full h-full  " src="../../public/logo.png" alt="">
           </div>
         </div>
       </div>
@@ -25,7 +25,7 @@
       </div>
       <div>
         <div class="border-t-2 font-sans border-black  py-2">
-          <div class="row mt-2 text-center bg-[#000000] text-white p-2 w-[100%]  ">
+          <div class="row mt-2 text-center bg-[#000000] text-white p-2 w-[100%] ">
             <div class="col">Descripcion:</div>
             <div class="col">Cantidad:</div>
             <div class="col">Precio Unitario: </div>
@@ -41,24 +41,24 @@
           </div>
           <div class="mt-2 bg-black w-full ">
             <ul class="float-end ">
-              <div class="col mr-1 "> Tipo Descuento {{ tipoDescuento }} </div>
-              <div class="col mr-1 "> Descuento {{ descuento }} </div>
-              <li>Iva: <strong class="font-normal ml-1"> $ {{impuesto}}</strong></li>
+              <div class="col mr-1 "> Descuento {{valorDescuento}} {{ descuento }} </div>
+              <li>Iva: <strong class="font-normal ml-1"> % {{impuesto}}</strong></li>
               <li>Subtotal: <strong class="font-normal ml-1"> $ {{SubTotalBill}}</strong> </li>
 
             </ul>
           </div>
         </div>
       </div>
-      <div class="mt-28 font-normal text-[15px] border-t-2 font-sans border-black  p-4 ">
+      <div class="mt-28 font-normal text-[15px]  sm:text-[14px] border-t-2 font-sans border-black  p-4 ">
         <div class="row">
           <div class="col">
             <ul>
               <li class="mb-4">¡Gracias por su compra!</li>
               <li>Informacion de pago: </li>
-              <li>{{nameSeller}} </li>
-              <li>Naturista</li>
-              <li>Fecha de pago: {{}}</li>
+              <li>Nombre vendedor: {{nameSeller}} </li>
+              <li>Empresa: {{nameCompany}}</li>
+              <li>Fecha de pago: {{datePay}}</li>
+              <li>Metodo de pago: {{MethodPay}}</li>
             </ul>
           </div>
           <div class="col">
@@ -69,7 +69,7 @@
               <li>{{userAddres}}</li>
               <li>{{userEmail}}</li>
               <li>{{userTown}}</li>
-              <li>www.naturistas.com</li>
+              <li>{{ sitioWeb }}</li>
             </ul>
           </div>
         </div>
@@ -77,15 +77,26 @@
       <div class="row h-10 mt-20 text-center">
         <div class="col " >
           <hr class="bg-dark h-[1px] w-[80%] m-auto">
-          <p>Firma Encargado</p>
+          <p>Elaborado por</p>
           
         </div>     
         <div class="col ">
           <hr class="bg-dark h-[1px] w-[80%] m-auto">
-          <p>Firma Cliente</p>
+          <p>Aceptada, Firma o sello</p>
           
         </div>      
       </div>
+      <div class="row w-[230px] h-10 mt-8 text-center flex  m-auto">
+        <p class="mr-1 ">Sofware elaborado por Newxo </p> 
+           <img class="w-5 h-6" src="../../public/logoNewxo.png" alt="">
+           
+      </div>
+
+      <div class="fixed float-end bottom-1  right-[17%]" >
+          <q-btn icon="download" label="Descargar"  type="submit" @click="generateInvoice()"  class=" text-white bg-[#04162d] rounded-1xl" ></q-btn>
+      <q-btn icon="cancel"  type="button" class=" text-white bg-red-700 rounded-1xl m-2"  v-close-popup> cerrar</q-btn>
+      </div>
+    
     </div>
   </div>
 </template>
@@ -93,11 +104,11 @@
 <script setup>
   import { ref, onMounted, } from "vue";
   import { billStore } from "../store/billing.js";
-  import { useModalStore } from "../store/storeModal.js"
-  import { sweetDelete } from "@/Global/notify"
   import { usersStore } from "../store/users.js";
   import { exitStore } from "@/store/exits.js";
   import { LoginStore } from "../store/login.js";
+  import { jsPDF } from 'jspdf';
+  import 'jspdf-autotable';
 
   const props = defineProps({
     title: String,
@@ -106,19 +117,9 @@
 
   const user = usersStore();
   const storeExist = exitStore();
-  const storeM = useModalStore()
   const storeBilling = billStore();
   const storeLogin = LoginStore();
 
-  let arrayEdit = ref()
-  let valEditCrea = ref()
-  let modalTitle = ref()
-  let state = ref(false)
-  let TotalUnits = ref();
-  let loading = ref(false);
-  let dialog = ref(false);
-  let index = ref();
-  let filtroDay = ref();
   let numBill = ref()
   let nameSeller = ref()
   let nameCustomer = ref()
@@ -128,15 +129,10 @@
   let discount = ref()
   let amountTotalProdut = ref()
   let totalPrice = ref()
-  let nameModel = ref()
-  let crearEditar = ref()
   let date = ref()
-  let filter = ref("");
-  let showBill = ref(false)
   let arrayShow = ref([])
   let rowsExist = ref()
   let listProduct = ref([])
-  let arrayDel = ref()
   let SubTotalBill = ref(0)
   let userName = ref()
   let userDocument = ref()
@@ -144,16 +140,142 @@
   let userAddres = ref()
   let userEmail = ref()
   let userTown = ref()
+  let descuento = ref()
+  let valorDescuento = ref()
+  let sitioWeb = ref()
   let data = ref(props.dataBill)
-
+  let datePay = ref()
   let rows = ref([]);
-  function printPage() {
-    window.print();
+  let nameCompany = ref("Natural")
+  let MethodPay = ref()
+  const loadImage = (src) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => resolve(img);
+    img.onerror = (err) => reject(`Error cargando la imagen: ${src}, Error: ${err}`);
+  });
+};
 
+const generateInvoice = async () => {
+  try {
+    const img = await loadImage('../../public/logo.png'); // Ruta del primer logo
+    const img2 = await loadImage('../../public/logoNewxo.png'); // Ruta del segundo logo
+
+    const doc = new jsPDF({ format: 'letter' });
+
+    // Añadir el logotipo principal
+    doc.addImage(img, 'PNG', 150, 10, 50, 30);
+
+    // Añadir el encabezado con estilos
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(40);
+    doc.text("FACTURA", 10, 30);
+
+    // Añadir el número de factura y la fecha
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(`Factura n.º: ${numBill.value}`, 10, 40);
+    doc.text(`Fecha: ${date.value}`, 10, 45);
+
+    // Añadir la información del cliente
+    doc.setFont("helvetica", "bold");
+    doc.text("Información Cliente:", 10, 60);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Nombre: ${nameCustomer.value}`, 10, 65);
+    doc.text(`Teléfono: ${numberCustormer.value}`, 10, 70);
+    doc.text(`Correo Electrónico: ${emailCustomer.value}`, 10, 75);
+
+    // Separador
+    doc.setLineWidth(0.5);
+    doc.line(10, 80, 200, 80);
+
+    // Añadir la tabla de productos
+    doc.autoTable({
+      startY: 85,
+      head: [['Descripción', 'Cantidad', 'Precio Unitario', 'Total']],
+      body: listProduct.value.map(product => [
+        product.name,
+        product.Unidades,
+        `$${product.precio.toFixed(2)}`,
+        `$${product.valueTotal.toFixed(2)}`
+      ]),
+      styles: {
+        halign: 'center',
+        fontSize: 10,
+        textColor: [0, 0, 0],
+      },
+      headStyles: {
+        fillColor: [0, 0, 0],
+        textColor: [255, 255, 255],
+      },
+      alternateRowStyles: {
+        fillColor: [230, 230, 230]
+      }
+    });
+
+    // Calcular el total
+    const subtotal = listProduct.value.reduce((sum, product) => sum + product.valueTotal, 0).toFixed(2);
+    const taxes = (subtotal * 0).toFixed(2); // Ajusta la tasa de impuestos según sea necesario
+    const total = (parseFloat(subtotal) + parseFloat(taxes)).toFixed(2);
+
+    // Añadir el subtotal, impuestos y total
+    const finalY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Subtotal: $${subtotal}`, 150, finalY);
+    doc.text(`Iva : ($${impuesto.value})`, 150, finalY + 5);
+    doc.text(`Descuento : ($${discount.value})`, 150, finalY + 10);
+    doc.setFontSize(14);
+    doc.text(`Total: $${total}`, 150, finalY + 15);
+
+    // Separador
+    doc.setLineWidth(0.5);
+    doc.line(10, finalY + 25, 200, finalY + 25);
+
+    // Añadir información adicional
+    doc.setFontSize(12);
+    
+    doc.text("¡Gracias por su compra!", 10, finalY + 35);
+    doc.setFont("helvetica", "normal");
+    doc.text("Información de pago:", 10, finalY + 45);
+    doc.text(`Nombre vendedor: ${nameSeller.value}`, 10, finalY + 50);
+    doc.text(`Método de pago: ${MethodPay.value}`, 10, finalY + 55);
+    doc.text(`Empresa: ${nameCompany.value}`, 10, finalY + 60);
+    doc.text(`Fecha de pago: ${datePay.value.slice(0,10)}`, 10, finalY + 65);
+
+    doc.text("Contacto:", 150, finalY + 45);
+    doc.text(userCel.value, 150, finalY + 50);
+    doc.text(userEmail.value, 150, finalY + 55);
+
+    // Dibujar líneas para las firmas
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "bold");
+    const lineY = finalY + 110; // Ajusta la posición vertical según sea necesario
+    doc.setLineWidth(0.5);
+    doc.line(10, lineY, 100, lineY); // Línea 1
+    doc.text("Elaborado por", 40, lineY + 5);
+    doc.line(115, lineY, 205, lineY); // Línea 2
+    doc.text("Aceptada, Firma o sello", 140, lineY + 5);
+
+    // Añadir el pie de página con el segundo logo
+    
+    doc.text("Software elaborado por Newxo", 75, lineY + 45);
+    doc.addImage(img2, 'PNG', 128, lineY + 41, 5, 5); // Posición y tamaño del segundo logo
+
+    // Guardar el documento
+    doc.save(`Factura_${numBill.value}.pdf`);
+  } catch (error) {
+    console.error('Error generando la factura:', error);
   }
+};
+
+
+
   const getBill = async () => {
     const res = await storeBilling.GetIBill(storeLogin.Email);
     if (res.status < 299) {
+      
       rows.value = res.data;
       rows.value.forEach((row, index) => {
         row.index = index + 1;
@@ -172,27 +294,36 @@
   function showBillFunc() {
     listProduct.value = []
     arrayShow.value = data.value
+    console.log(data.value);
     numBill.value = data.value.numFactura;
     nameSeller.value = data.value.vendedor;
     nameCustomer.value = data.value.cliente;
     emailCustomer.value = data.value.email
     numberCustormer.value = data.value.number
+    descuento.value = data.value.descuento
     impuesto.value = data.value.impuesto
     amountTotalProdut.value = data.value.CantProduct;
     totalPrice.value = data.value.PrecioVenta;
     date.value = data.value.date.slice(0, 10)
+    datePay.value = data.value.datePay.slice(0,10)
+    MethodPay.value = data.value.MethodPay
+
+    if (data.value.tipoDescuento == "Porcentaje") {
+        valorDescuento.value = "%"
+    }
+    else{
+       valorDescuento.value = "$"
+    }
     getListProduct()
-    console.log(totalPrice.value, discount.value);
     SubTotalBill.value = parseFloat(totalPrice.value - discount.value)
-    console.log(SubTotalBill.value);
   }
 
   function getListProduct() {
-    console.log(rowsExist.value);
     rowsExist.value.forEach((row, index) => {
       if (row.NumBill == numBill.value) {
         numBill.value = row.NumBill
         discount.value = row.Discount
+   
         listProduct.value.push({
           Id: row._id,
           serial: row.Serial,
@@ -203,6 +334,7 @@
           precio: row.Price,
           valueTotal: row.Total,
         });
+       
       }
     }
     );
@@ -212,7 +344,6 @@
     const res = await user.GetUsers();
     if (res.status < 299) {
       const data = res.data;
-      console.log(data);
       data.forEach((row, index) => {
         userName.value = row.Names
         userDocument.value = row.Document
@@ -236,6 +367,9 @@
   @media (min-width: 600px) {
     .q-dialog__inner--minimized > div {
         max-width: 100%;
+        padding: 0px;
     }
+
+
 }
 </style>
