@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class=" w-[100%] xs:w-[100%] min-h-[90vh] p-4 bg-white m-auto rounded-md text-[11px] sm:text-[13px]" id="invoice" >
+    <div class=" w-[100%] xs:w-[100%]  p-4 bg-white m-auto rounded-md text-[11px] sm:text-[13px]" id="invoice" >
       <div class="row">
         <div class="col">
           <p class="text-[20px] sm:text-[30px] mt-2 w-[100%]  text-start "> FACTURA </p>
@@ -93,7 +93,7 @@
           <p class="mr-1 mt-[1px]">Sofware elaborado por Newxo </p> <img class="w-5 h-6" src="../../public/logoNewxo.png" alt="">
       </div>
 
-      <div class="fixed float-end bottom-1  right-[17%]" >
+      <div class="fixed float-end bottom-1  right-[3%] xs:right-[3%]  md:right-[17%] xl:right-[17%]" >
           <q-btn icon="download"   type="submit" @click="generateInvoice()"  class="w-[50px] text-white bg-[#04162d] rounded-1xl" ></q-btn>
       <q-btn icon="cancel"  type="button" class=" text-white bg-red-700 rounded-1xl m-2"  v-close-popup></q-btn>
       </div>

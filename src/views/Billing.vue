@@ -18,7 +18,7 @@
        </div>
     </div>
     <q-dialog v-model="dialog" class="py-5 px-0 mx-0 ">
-      <div v-if="showBill == 3" class=" w-[100%] sm:w-[100%] md:w-[70%] xl:w-[70%] min-h-[70vh] font-sans font-bold ">
+      <div v-if="showBill == 3" class=" w-[100%] sm:w-[100%] md:w-[70%] xl:w-[70%] min-h-[100vh] font-sans font-bold ">
         <bill  :dataBill="arrayBill"/>
       </div>
       <div v-else class="mr-2 xs:w-[100%] w-auto  rounded-[20px] bg-white  " >
@@ -106,9 +106,7 @@ import { ref, onMounted,  } from "vue";
 import createbill from "@/components/createBill.vue";
 import bill from "@/components/Bill.vue"
 import { billStore } from "../store/billing.js";
-import {useModalStore} from "../store/storeModal.js"
 import {sweetDelete} from "@/Global/notify"
-import { usersStore } from "../store/users.js";
 import { exitStore } from "@/store/exits.js";
 import { LoginStore } from "../store/login.js";
 import { useQuasar } from "quasar";
@@ -117,45 +115,18 @@ const $q = useQuasar();
 
 $q.loading.show();
 $q.loading.hide();
-
-const user = usersStore();
 const storeExist = exitStore();
-const storeM =  useModalStore()
 const storeBilling = billStore();
 const storeLogin = LoginStore();
-
 let arrayEdit = ref()
 let valEditCrea = ref()
 let  modalTitle = ref()
 let dialog = ref(false);
 let index = ref();
 let filtroDay = ref(true);
-let numBill = ref()
-let typeBill = ref(0)
-let nameSeller = ref()
-let nameCustomer = ref()
-let emailCustomer = ref()
-let numberCustormer = ref()
-let impuesto = ref()
-let discount = ref()
-let amountTotalProdut = ref()
-let totalPrice = ref()
-let nameModel = ref()
-let crearEditar = ref()
-let date = ref()
 let filter = ref("");
 let showBill = ref(false)
-let arrayShow = ref([])
 let rowsExist = ref()
-let listProduct = ref([])
-let  arrayDel = ref()
-let SubTotalBill = ref(0)
-let userName = ref()
-let userDocument = ref()
-let userCel = ref()
-let userAddres = ref()
-let userEmail = ref()
-let userTown = ref()
 let arrayBill = ref()
 let pagination = ref({
   rowsPerPage: 50,
@@ -180,7 +151,6 @@ const getBill = async () => {
   if (res.status < 299) {
     let resBill = res.data;
     if (filtroDay.value === true) {
-
     const fechaActual = new Date();
     const dia = fechaActual.getDate().toString().padStart(2, "0"); 
     const mes = (fechaActual.getMonth() + 1).toString().padStart(2, "0");  
@@ -188,13 +158,11 @@ const getBill = async () => {
     const fechaFormateada = `${anio}-${mes}-${dia}`;
     resBill = resBill.filter((fecha) => fecha.date.slice(0, 10) === fechaFormateada );
     rows.value = resBill;
-}
-
-
-} else {
+  } else {
   rows.value = res.data;
+  }
 }
-    rows.value = res.data;
+
     rows.value.forEach((row, index) => {
         row.index = index + 1;     
     })
