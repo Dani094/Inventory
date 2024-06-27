@@ -43,7 +43,9 @@
             <ul class="float-end ">
               <div class="col mr-1 "> Descuento {{valorDescuento}} {{ descuento }} </div>
               <li>Iva: <strong class="font-normal ml-1"> % {{impuesto}}</strong></li>
+              <li>Valor Iva: <strong class="font-normal ml-1"> $ {{valueIva}}</strong></li>
               <li>Subtotal: <strong class="font-normal ml-1"> $ {{SubTotalBill}}</strong> </li>
+              <li>Total: <strong class="font-bold ml-1"> $ {{totalBill}}</strong> </li>
 
             </ul>
           </div>
@@ -147,6 +149,8 @@
   let rows = ref([]);
   let nameCompany = ref("Natural")
   let MethodPay = ref()
+  let totalBill = ref()
+  let valueIva = ref()
   const loadImage = (src) => {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -215,15 +219,16 @@ const generateInvoice = async () => {
 
     // Calcular el total
     const subtotal = listProduct.value.reduce((sum, product) => sum + product.valueTotal, 0).toFixed(2);
-    const taxes = (subtotal * 0).toFixed(2); // Ajusta la tasa de impuestos según sea necesario
-    const total = (parseFloat(subtotal) + parseFloat(taxes)).toFixed(2);
+    const taxes = valueIva.value; // Ajusta la tasa de impuestos según sea necesario
+    const total = (impuesto.value - parseFloat(subtotal) + parseFloat(taxes))
 
     // Añadir el subtotal, impuestos y total
     const finalY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(12);
+    doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
     doc.text(`Subtotal: $${subtotal}`, 150, finalY);
     doc.text(`Iva : ($${impuesto.value})`, 150, finalY + 5);
+    doc.text(`Valor Iva : ($${valueIva.value})`, 150, finalY + 5);
     doc.text(`Descuento : ($${discount.value})`, 150, finalY + 10);
     doc.setFontSize(14);
     doc.text(`Total: $${total}`, 150, finalY + 15);
@@ -233,7 +238,7 @@ const generateInvoice = async () => {
     doc.line(10, finalY + 25, 200, finalY + 25);
 
     // Añadir información adicional
-    doc.setFontSize(12);
+    doc.setFontSize(10);
     
     doc.text("¡Gracias por su compra!", 10, finalY + 35);
     doc.setFont("helvetica", "normal");
@@ -259,8 +264,8 @@ const generateInvoice = async () => {
 
     // Añadir el pie de página con el segundo logo
     
-    doc.text("Software elaborado por Newxo", 75, lineY + 45);
-    doc.addImage(img2, 'PNG', 128, lineY + 41, 5, 5); // Posición y tamaño del segundo logo
+    doc.text("Software elaborado por Newxo", 80, lineY + 45);
+    doc.addImage(img2, 'PNG', 132, lineY + 41, 5, 5); // Posición y tamaño del segundo logo
 
     // Guardar el documento
     doc.save(`Factura_${numBill.value}.pdf`);
@@ -293,7 +298,6 @@ const generateInvoice = async () => {
   function showBillFunc() {
     listProduct.value = []
     arrayShow.value = data.value
-    console.log(data.value);
     numBill.value = data.value.numFactura;
     nameSeller.value = data.value.vendedor;
     nameCustomer.value = data.value.cliente;
@@ -314,7 +318,10 @@ const generateInvoice = async () => {
        valorDescuento.value = "$"
     }
     getListProduct()
-    SubTotalBill.value = parseFloat(totalPrice.value - discount.value)
+    
+    SubTotalBill.value = parseFloat(totalPrice.value )
+    valueIva.value = (SubTotalBill.value * impuesto.value) / 100; 
+    totalBill.value =  parseFloat(valueIva.value + SubTotalBill.value - descuento.value )
   }
 
   function getListProduct() {

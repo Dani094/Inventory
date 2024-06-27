@@ -186,7 +186,6 @@ const getBill = async () => {
     const mes = (fechaActual.getMonth() + 1).toString().padStart(2, "0");  
     const anio = fechaActual.getFullYear();
     const fechaFormateada = `${anio}-${mes}-${dia}`;
-    console.log(resBill)
     resBill = resBill.filter((fecha) => fecha.date.slice(0, 10) === fechaFormateada );
     rows.value = resBill;
 }
