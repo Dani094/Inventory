@@ -87,15 +87,13 @@
           
         </div>      
       </div>
-      <div class="row w-[230px] h-10 mt-8 text-center flex  m-auto">
-        <p class="mr-1 ">Sofware elaborado por Newxo </p> 
-           <img class="w-5 h-6" src="../../public/logoNewxo.png" alt="">
-           
+      <div class="w-auto mt-8 mb-20 flex text-center justify-center items-center">
+          <p class="mr-1 mt-[1px]">Sofware elaborado por Newxo </p> <img class="w-5 h-6" src="../../public/logoNewxo.png" alt="">
       </div>
 
       <div class="fixed float-end bottom-1  right-[17%]" >
-          <q-btn icon="download" label="Descargar"  type="submit" @click="generateInvoice()"  class=" text-white bg-[#04162d] rounded-1xl" ></q-btn>
-      <q-btn icon="cancel"  type="button" class=" text-white bg-red-700 rounded-1xl m-2"  v-close-popup> cerrar</q-btn>
+          <q-btn icon="download"   type="submit" @click="generateInvoice()"  class="w-[50px] text-white bg-[#04162d] rounded-1xl" ></q-btn>
+      <q-btn icon="cancel"  type="button" class=" text-white bg-red-700 rounded-1xl m-2"  v-close-popup></q-btn>
       </div>
     
     </div>
