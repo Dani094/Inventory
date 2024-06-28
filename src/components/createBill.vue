@@ -217,7 +217,7 @@
       <!-- botones siguiente form -->
       <div id="textFormInvalidate" class="message text-red-800 mb-4" ></div>
         <q-btn v-show="selectForm == 1" icon="arrow_forward"  @click="selectNum = 2" type="submit" class="text-white bg-green-700 rounded-1xl m-2  float-end" >siguiente </q-btn>
-        <q-btn v-show="selectForm == 2" icon="arrow_forward"  @click="selectNum = 3" type="submit" class="text-white bg-green-700 rounded-1xl m-2  float-end" >siguiente </q-btn>
+        <q-btn v-show="selectForm == 2" icon="arrow_forward"  @click="selectNum = 3, typeDiscount()" type="submit" class="text-white bg-green-700 rounded-1xl m-2  float-end" >siguiente </q-btn>
         <!-- boton salir -->
         <q-btn icon="cancel"  type="button" class="text-white bg-red-700 rounded-1xl float-end  m-2" v-close-popup > cerrar</q-btn>
     </q-form>
@@ -313,6 +313,7 @@ const getBill = async () => {
 };
 
 async function postBill() {
+  console.log(totalPriceProduct.value);
   const bill = await storeBilling.NewBill({
     UserEmail: user.value,
     numFactura: numBill.value,
@@ -329,6 +330,7 @@ async function postBill() {
     MethodPay: MethodPay.value
   });
   await getBill()
+  totalPriceProduct.value = 0
 };
 
 async function putInfoBill() {
@@ -340,7 +342,7 @@ async function putInfoBill() {
     tipoDescuento: valueDiscount.value,
     descuento: discount.value,
     CantProduct: amountTotalProdut.value,
-    PrecioVenta: totalPrice.value,
+    PrecioVenta: totalPriceProduct.value,
     impuesto: impuesto.value,
     email: emailCustomer.value,
     number: numCustomer.value,
@@ -348,6 +350,8 @@ async function putInfoBill() {
     MethodPay: MethodPay.value
   });
   getBill();
+  totalPriceProduct.value = 0
+  
 }
 
   function formValidate() {
@@ -457,6 +461,8 @@ function goInfoBill() {
       numCustomer.value = data.number;
       datePayBill.value = data.datePay.slice(0,10)
       MethodPay.value = data.MethodPay
+
+
 }
 
 // Exist
@@ -485,6 +491,7 @@ async function ExitsGet() {
 
 const postExist = async () => {
   try {
+
     listProduct.value.forEach(async (product) => {
       restCant(product)
       const bill = {
@@ -496,14 +503,13 @@ const postExist = async () => {
         Discount: discount.value,      
         UserEmail: user.value,
       };
-      console.log(bill);
       const response = await storeExist.PostExits(bill);
-      reloadPage()
+      
     });
   } catch (error) {
     console.error("Error al enviar los datos de la factura:", error);
   }
-  
+  reloadPage()
 };
 
 async function putInfoExist() { 
@@ -515,7 +521,7 @@ async function putInfoExist() {
         Serial: product.serial,
         Units: product.Unidades,
         Price: product.precio,
-        Discount: product.descuento,
+        Discount: product.descuento,    
         UserEmail: user.value,
       };
       const response = await storeExist.PutExits(idProductExist.value, bill);
@@ -615,10 +621,11 @@ const addOrUpdateProductList = () => {
 
 // Valor total a partir de los productos
 function valueTotal(descuento) { 
+  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) 
   amountTotalProdut.value = 0
   totalPrice.value = 0
   let totalWithoutIva =  0
-  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) 
+  
   const percentage = impuesto.value; 
     listProduct.value.forEach((producto) => {
     amountTotalProdut.value += parseInt(producto.Unidades);
@@ -631,13 +638,17 @@ function valueTotal(descuento) {
 
 // El tipo de descuento ya se valor fijo o por porcentaje
 function typeDiscount() {
+  
   if (valueDiscount.value === "Porcentaje") {
-    const percentage = discount.value; 
+    const percentage = parseInt(discount.value); 
+    console.log(percentage);
+    console.log(totalPriceProduct.value);
     fixedDiscount.value = (totalPriceProduct.value * percentage) / 100;
+    console.log(fixedDiscount.value);
     valueTotal(fixedDiscount.value)
   } else if (valueDiscount.value === "valor fijo") {
     fixedDiscount.value = discount.value;
-    
+    console.log(fixedDiscount.value);
     valueTotal(fixedDiscount.value)
   }
 
@@ -666,7 +677,6 @@ function DateNow() {
   amountProduct.value = "";
   priceProduct.value = "";
   getIdProduct.value = "";          
-  totalPriceProduct.value = "";
 }
 
 function SumCant(dataI) {

@@ -41,11 +41,11 @@
           </div>
           <div class="mt-2 bg-black w-full ">
             <ul class="float-end ">
+              <li><strong class="text-1xl">Subtotal:</strong>  <strong class="font-normal ml-1 "> $ {{SubTotalBill}}</strong> </li>
               <div class="col mr-1 "> Descuento {{valorDescuento}} {{ descuento }} </div>
               <li>Iva: <strong class="font-normal ml-1"> % {{impuesto}}</strong></li>
               <li>Valor Iva: <strong class="font-normal ml-1"> $ {{valueIva}}</strong></li>
-              <li>Subtotal: <strong class="font-normal ml-1"> $ {{SubTotalBill}}</strong> </li>
-              <li>Total: <strong class="font-bold ml-1"> $ {{totalBill}}</strong> </li>
+              <li><strong class="text-[15px]">Total:</strong> <strong class="font-bold ml-1"> $ {{totalBill}}</strong> </li>
 
             </ul>
           </div>
@@ -302,17 +302,22 @@ const generateInvoice = async () => {
     datePay.value = data.value.datePay.slice(0,10)
     MethodPay.value = data.value.MethodPay
 
+    let descuentoBill = 0    
+    getListProduct()
+    SubTotalBill.value = listProduct.value.reduce((sum, product) => sum = product.Unidades  * product.precio, 0)
+    valueIva.value = (SubTotalBill.value * impuesto.value) / 100; 
+    
+    
     if (data.value.tipoDescuento == "Porcentaje") {
         valorDescuento.value = "%"
+        descuentoBill = (SubTotalBill.value * descuento.value) / 100; 
+        totalBill.value =  parseFloat(valueIva.value + SubTotalBill.value - descuentoBill )
     }
     else{
        valorDescuento.value = "$"
+       descuentoBill = descuento.value
+       totalBill.value =  parseFloat(valueIva.value + SubTotalBill.value - descuentoBill )
     }
-    getListProduct()
-    
-    SubTotalBill.value = listProduct.value.reduce((sum, product) => sum = product.Unidades  * product.precio, 0)
-    valueIva.value = (SubTotalBill.value * impuesto.value) / 100; 
-    totalBill.value =  parseFloat(valueIva.value + SubTotalBill.value - descuento.value )
   }
 
   function getListProduct() {
@@ -320,7 +325,7 @@ const generateInvoice = async () => {
       if (row.NumBill == numBill.value) {
         numBill.value = row.NumBill
         discount.value = row.Discount
-   
+       
         listProduct.value.push({
           Id: row._id,
           serial: row.Serial,
@@ -331,6 +336,7 @@ const generateInvoice = async () => {
           precio: row.Price,
           valueTotal: row.Total,
         });
+       
        
       }
     }
