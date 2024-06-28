@@ -186,7 +186,7 @@
           <div class="col-2 mr-1 "> {{ item.name }}</div>
            <div class="col mr-1 ">#{{ item.Unidades }}</div>
            <div class="col mr-1 ">${{ item.precio }}</div>
-           <div class="col mr-1 ">${{ item.valueTotal }}</div>
+           <div class="col mr-1 ">${{ item.valueTotal.toLocaleString() }}</div>
            <div v-show="valueEditCrea === 2" class="col mr-1"> 
             <div  class="button w-8 h-8 cursor-pointer bg-white"  @click="goInfoExits(item)">
               <svg height="1em" viewBox="0 0 512 512">
@@ -200,10 +200,10 @@
       <!-- valores factura -->
       <div class="flex items-start justify-between mt-8">
         <div>
-          <h6 class="text-start text-black font-bold  text-[15px]">Descuento: {{ valorDescuento }} {{ discount }} </h6>
-          <h6 class="text-start text-black font-bold  text-[15px]">Iva: % {{ impuesto }} </h6>
-          <h6 class="text-start text-black font-bold  text-[15px]">Cantidad Total productos: {{ amountTotalProdut }} </h6>
-          <h6 class="text-start text-black font-bold  text-[15px]">Total: {{ totalPrice }}</h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Descuento = {{ valorDescuento }} {{ discount }} = {{fixedDiscount}} </h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Iva: % {{ impuesto }} =  {{ discountAmount.toLocaleString() }} </h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Cantidad de productos = {{ amountTotalProdut }} </h6>
+          <h6 class="text-start text-black font-bold  text-[15px]">Total = {{ totalPrice.toLocaleString() }}</h6>
         </div>
       </div>
       <hr class="border border-dashed border-gray-500/50 my-2" />
@@ -285,6 +285,8 @@ let  message = ref()
 let valorDescuento = ref()
 let MethodPay =  ref()
 let editProduct = ref(false)
+let discountAmount = ref(0)
+let fixedDiscount = ref(0)
 // bill
 const getBill = async () => {
   const res = await storeBilling.GetIBill(storeLogin.Email);
@@ -319,7 +321,7 @@ async function postBill() {
     tipoDescuento: valueDiscount.value,
     descuento: discount.value,
     CantProduct: amountTotalProdut.value,
-    PrecioVenta: totalPrice.value,
+    PrecioVenta: totalPriceProduct.value,
     impuesto: impuesto.value,
     email: emailCustomer.value,
     number: numCustomer.value,
@@ -496,11 +498,12 @@ const postExist = async () => {
       };
       console.log(bill);
       const response = await storeExist.PostExits(bill);
+      reloadPage()
     });
   } catch (error) {
     console.error("Error al enviar los datos de la factura:", error);
   }
-  reloadPage()
+  
 };
 
 async function putInfoExist() { 
@@ -614,35 +617,31 @@ const addOrUpdateProductList = () => {
 function valueTotal(descuento) { 
   amountTotalProdut.value = 0
   totalPrice.value = 0
-  let totalWithoutIva = 0
+  let totalWithoutIva =  0
   totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) 
   const percentage = impuesto.value; 
     listProduct.value.forEach((producto) => {
     amountTotalProdut.value += parseInt(producto.Unidades);
     totalWithoutIva +=  parseInt(producto.valueTotal) 
-    const discountAmount = (totalWithoutIva * percentage) / 100; 
-     totalPrice.value =  discountAmount + totalWithoutIva - descuento
+    discountAmount.value = (totalWithoutIva * percentage) / 100;  
+    totalPrice.value =  discountAmount.value + totalWithoutIva - descuento
   })
 }
 
 
 // El tipo de descuento ya se valor fijo o por porcentaje
 function typeDiscount() {
-    console.log(valueDiscount.value);
   if (valueDiscount.value === "Porcentaje") {
     const percentage = discount.value; 
-    console.log(percentage);
-    console.log(totalPriceProduct.value);
-    const discountAmount = (totalPriceProduct.value * percentage) / 100;
-    valueTotal(discountAmount)
+    fixedDiscount.value = (totalPriceProduct.value * percentage) / 100;
+    valueTotal(fixedDiscount.value)
   } else if (valueDiscount.value === "valor fijo") {
-    const fixedDiscount = discount.value;
-    console.log(fixedDiscount);
-    valueTotal(fixedDiscount)
+    fixedDiscount.value = discount.value;
+    
+    valueTotal(fixedDiscount.value)
   }
 
   if (valueDiscount.value == "Porcentaje") {
-      console.log("sapo");
         valorDescuento.value = "%"
     }
     else if (valueDiscount.value == "valor fijo"){
