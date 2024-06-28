@@ -14,7 +14,7 @@
                     <input type="text" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Nombre(s)" v-model="name">
                 </div>
                 <div class="flex-1">
-                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Apellido(s)" v-model="lastname">
+                    <input type="text" class="w-full py-2 px-4 outline-none rounded-lg font-bold shadow bg-[#F7F7F7] text-black" placeholder="Apellido(s)" v-model="lastName">
                 </div>
             </div>
             <!-- info Document -->
@@ -111,13 +111,14 @@ const storeLogin = LoginStore();
 
 let id = ref();
 let name = ref();
-let lastname = ref();
+let lastName = ref();
 let document = ref();
 let email = ref();
 let cel = ref();
 let municipality = ref();
 let address = ref();
 let password = ref();
+let user=ref(storeLogin.Email)
 
 let originalData = ref({});
 
@@ -127,7 +128,7 @@ async function UsersGet() {
     for (let i in res.data) {
       id.value = res.data[i]._id;
       name.value = res.data[i].Name;
-      lastname.value = res.data[i].LastName;
+      lastName.value = res.data[i].LastName;
       document.value = res.data[i].Document;
       email.value = res.data[i].Email;
       cel.value = res.data[i].Cel;
@@ -138,7 +139,7 @@ async function UsersGet() {
     // Guardar datos originales
     originalData.value = {
       name: name.value,
-      lastname: lastname.value,
+      lastname: lastName.value,
       document: document.value,
       email: email.value,
       cel: cel.value,
@@ -152,14 +153,15 @@ async function UsersGet() {
 async function UserPut() {
   const res = await storeUsers.PutUser(
     id.value,
-    name.value,
-    lastname.value,
     document.value,
-    email.value,
+    name.value,
+    lastName.value,
     cel.value,
-    municipality.value,
     address.value,
-    password.value
+    email.value,
+    municipality.value,
+    password.value,
+    user.value
   );
   UsersGet();
 }
@@ -167,7 +169,7 @@ async function UserPut() {
 const isModified = computed(() => {
   return (
     name.value !== originalData.value.name ||
-    lastname.value !== originalData.value.lastname ||
+    lastName.value !== originalData.value.lastName ||
     document.value !== originalData.value.document ||
     email.value !== originalData.value.email ||
     cel.value !== originalData.value.cel ||
