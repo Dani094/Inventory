@@ -669,14 +669,14 @@ let columns = ref([
   {
     name: "date",
     label: "FECHA",
-    field: (row) => row.createdAt,
+    field: (row) => row.createdAt.slice(0,10),
     align: "center",
   },
   {
     name: "date",
     label: "FECHA DE VENCIMIENTO",
     field: (row) =>
-      row.ExpirationDate ? row.ExpirationDate : "Sin Fecha",
+      row.ExpirationDate ? row.ExpirationDate.slice(0, 10) : "Sin Fecha",
     align: "center",
     style: (row) => {
       const expirationDate = new Date(row.ExpirationDate);
@@ -696,7 +696,7 @@ let columns = ref([
     name: "updateAt",
     align: "center",
     label: "ULTIMO CAMBIO",
-    field: (row) => (row.updatedAt ? row.updatedAt.slice(0, 16) : "NA"),
+    field: (row) => (row.updatedAt ? row.updatedAt.slice(0, 10) : "NA"),
   },
   {
     name: "state",
