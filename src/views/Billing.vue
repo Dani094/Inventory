@@ -97,6 +97,7 @@
           </template>
         </q-table>
     <!-- tables -->
+
   </div>
 </div>
 </template>
@@ -113,6 +114,7 @@ import { useQuasar } from "quasar";
 
 const $q = useQuasar();
 
+
 $q.loading.show();
 $q.loading.hide();
 const storeExist = exitStore();
@@ -123,7 +125,7 @@ let valEditCrea = ref()
 let  modalTitle = ref()
 let dialog = ref(false);
 let index = ref();
-let filtroDay = ref(true);
+let filtroDay = ref(false);
 let filter = ref("");
 let showBill = ref(false)
 let rowsExist = ref()
@@ -150,6 +152,7 @@ const getBill = async () => {
   const res = await storeBilling.GetIBill(storeLogin.Email);
   if (res.status < 299) {
     let resBill = res.data;
+   
     if (filtroDay.value === true) {
     const fechaActual = new Date();
     const dia = fechaActual.getDate().toString().padStart(2, "0"); 
@@ -162,6 +165,9 @@ const getBill = async () => {
   rows.value = res.data;
   }
 }
+
+
+
 
     rows.value.forEach((row, index) => {
         row.index = index + 1;     

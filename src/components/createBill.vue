@@ -207,11 +207,11 @@
         </div>
       </div>
       <hr class="border border-dashed border-gray-500/50 my-2" />
-
+       
       <!-- div botones crear y editar -->
       <div class="flex justify-end items-center gap-4">
-        <q-btn v-if="valueEditCrea == 1" :disabled="!isModified" icon="save_as" label="Generar Factura"   :loading="loading" type="submit" v-close-popup class="text-white bg-[#04162d] rounded-1xl" ></q-btn>
-        <q-btn v-else icon="edit" label="Editar Factura" :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" v-close-popup></q-btn>
+        <q-btn v-if="valueEditCrea == 1" @click="actulizar = true" :disabled="!isModified" icon="save_as" label="Generar Factura"   :loading="loading" type="submit" v-close-popup class="text-white bg-[#04162d] rounded-1xl" ></q-btn>
+        <q-btn v-else icon="edit" @click="actulizar = true" label="Editar Factura" :loading="loading" type="submit" class="text-white bg-[#04162d] rounded-1xl" v-close-popup></q-btn>
       </div>
       </div>
       <!-- botones siguiente form -->
@@ -230,7 +230,6 @@ import { billStore } from "../store/billing.js";
 import { inventoryStore } from "@/store/inventory.js";
 import { exitStore } from "@/store/exits.js";
 import { LoginStore } from "../store/login.js";
-
 
 const props = defineProps({
   title: String,
@@ -287,6 +286,7 @@ let MethodPay =  ref()
 let editProduct = ref(false)
 let discountAmount = ref(0)
 let fixedDiscount = ref(0)
+let actulizar =  ref(false)
 // bill
 const getBill = async () => {
   const res = await storeBilling.GetIBill(storeLogin.Email);
@@ -486,6 +486,10 @@ async function ExitsGet() {
       }
       }
     );
+    console.log(actulizar.value);
+   if (actulizar.value == true) {
+     reloadPage()
+   }
   } 
 }
 
@@ -509,7 +513,7 @@ const postExist = async () => {
   } catch (error) {
     console.error("Error al enviar los datos de la factura:", error);
   }
-  reloadPage()
+  ExitsGet()
 };
 
 async function putInfoExist() { 

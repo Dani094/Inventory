@@ -218,9 +218,9 @@ const generateInvoice = async () => {
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
     doc.text(`Subtotal: $${subtotal}`, 150, finalY);
+    doc.text(`Descuento : (${valorDescuento.value}${discount.value})`, 150, finalY + 15);
     doc.text(`Iva : ($${impuesto.value})`, 150, finalY + 5);
     doc.text(`Valor Iva : ($${valueIva.value})`, 150, finalY + 10);
-    doc.text(`Descuento : ($${discount.value})`, 150, finalY + 15);
     doc.setFontSize(14);
     doc.text(`Total: $${total}`, 150, finalY + 20);
 
@@ -242,6 +242,7 @@ const generateInvoice = async () => {
     doc.text("Contacto:", 150, finalY + 45);
     doc.text(userCel.value, 150, finalY + 50);
     doc.text(userEmail.value, 150, finalY + 55);
+    doc.text(userTown.value, 150, finalY + 55);
 
     // Dibujar líneas para las firmas
     doc.setFontSize(10);
@@ -260,6 +261,7 @@ const generateInvoice = async () => {
 
     // Guardar el documento
     doc.save(`Factura_${numBill.value}.pdf`);
+
   } catch (error) {
     console.error('Error generando la factura:', error);
   }
