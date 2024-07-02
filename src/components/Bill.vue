@@ -152,14 +152,7 @@
   let totalBill = ref()
   let valueIva = ref()
   let img = ref('../../public/logoNewxo.png' )
-//   const loadImage = (src) => {
-//   return new Promise((resolve, reject) => {
-//     const img = new Image();
-//     img.src = src;
-//     img.onload = () => resolve(img);
-//     img.onerror = (err) => reject(`Error cargando la imagen: ${src}, Error: ${err}`);
-//   });
-// };
+
 
 const generateInvoice = async () => {
   try {
@@ -258,7 +251,7 @@ const generateInvoice = async () => {
         reader.readAsDataURL(blob);
       });
     });
-    doc.addImage(imgData, 'PNG', 132, lineY + 41, 5, 5); // Posición y tamaño del segundo logo
+     doc.addImage(imgData, 'PNG', 132, lineY + 41, 5, 5); // Posición y tamaño del segundo logo
 
     // Guardar el documento
     doc.save(`Factura_${numBill.value}.pdf`);

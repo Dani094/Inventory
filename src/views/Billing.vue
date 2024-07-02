@@ -27,7 +27,8 @@
     </q-dialog>
     <!-- table -->
     <div class="w-[100%] mt-6">           
-        <q-table flat bordered :visible-columns="visibleColumns" title="Facturas" :rows="rows" :columns="columns" row-key="index"
+        <q-table flat bordered :visible-columns="visibleColumns"  :filter="filter"  @focusin="activateNavigation"  @focusout="deactivateNavigation"
+      @keydown="onKey" title="Facturas" :rows="rows" :columns="columns" row-key="index"
           virtual-scroll class="inventTable h-[450px] lg:h-[680px] rounded-2xl" v-model:pagination="pagination" :rows-per-page-options="[0]">
           <template v-slot:header="props">
             <q-tr :props="props">
@@ -126,10 +127,10 @@ let  modalTitle = ref()
 let dialog = ref(false);
 let index = ref();
 let filtroDay = ref(false);
-let filter = ref("");
 let showBill = ref(false)
 let rowsExist = ref()
 let arrayBill = ref()
+let search =  ref()
 let pagination = ref({
   rowsPerPage: 50,
 });
@@ -226,6 +227,103 @@ async function modalCreaEdit(p) {
     dialog.value = true
   }
 }
+
+// function filter
+let filter = ref("");
+const tableRef = ref(null);
+const navigationActive = ref(false);
+const selected = ref([]);
+
+const activateNavigation = () => {
+  navigationActive.value = true;
+};
+
+const deactivateNavigation = () => {
+  navigationActive.value = false;
+};
+
+const onKey = (evt) => {
+  if (
+    navigationActive.value !== true ||
+    [33, 34, 35, 36, 38, 40].indexOf(evt.keyCode) === -1 ||
+    tableRef.value === null
+  ) {
+    return;
+  }
+
+  evt.preventDefault();
+
+  const { computedRowsNumber, computedRows } = tableRef.value;
+
+  if (computedRows.length === 0) {
+    return;
+  }
+
+  const currentIndex =
+    selected.value.length > 0
+      ? computedRows.indexOf(toRaw(selected.value[0]))
+      : -1;
+  const currentPage = pagination.value.page;
+  const rowsPerPage =
+    pagination.value.rowsPerPage === 0
+      ? computedRowsNumber
+      : pagination.value.rowsPerPage;
+  const lastIndex = computedRows.length - 1;
+  const lastPage = Math.ceil(computedRowsNumber / rowsPerPage);
+
+  let index = currentIndex;
+  let page = currentPage;
+
+  switch (evt.keyCode) {
+    case 36: // Home
+      page = 1;
+      index = 0;
+      break;
+    case 35: // End
+      page = lastPage;
+      index = rowsPerPage - 1;
+      break;
+    case 33: // PageUp
+      page = currentPage <= 1 ? lastPage : currentPage - 1;
+      if (index < 0) {
+        index = 0;
+      }
+      break;
+    case 34: // PageDown
+      page = currentPage >= lastPage ? 1 : currentPage + 1;
+      if (index < 0) {
+        index = rowsPerPage - 1;
+      }
+      break;
+    case 38: // ArrowUp
+      if (currentIndex <= 0) {
+        page = currentPage <= 1 ? lastPage : currentPage - 1;
+        index = rowsPerPage - 1;
+      } else {
+        index = currentIndex - 1;
+      }
+      break;
+    case 40: // ArrowDown
+      if (currentIndex >= lastIndex) {
+        page = currentPage >= lastPage ? 1 : currentPage + 1;
+        index = 0;
+      } else {
+        index = currentIndex + 1;
+      }
+      break;
+  }
+
+  if (page !== pagination.value.page) {
+    pagination.value.page = page;
+
+    nextTick(() => {
+      const { computedRows } = tableRef.value;
+      selected.value = [computedRows[Math.min(index, computedRows.length - 1)]];
+      tableRef.value.$el.focus();
+    });
+  }
+};
+
 onMounted(() => {
   getBill();
   ExitsGet()
