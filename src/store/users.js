@@ -89,7 +89,7 @@ export const usersStore = defineStore("usersStore", () => {
           `/users/put/${id}`,
           {
             Document: document,
-            Names: name,
+            Name: name,
             LastName: lastName,
             Cel: cel,
             Municipio: municipality,

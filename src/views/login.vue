@@ -15,7 +15,7 @@
             </h3>
           </div>
           <!-- inputs -->
-          <div class="p-[5rem]">
+          <div class="p-[3rem] lg:p-[5rem]">
             <div class="w-full mt-6">
               <h5 class="text-xl font-serif"><strong>Usuario</strong></h5>
               <q-input autocomplete="current-text" v-model="user" label="DIGITE SU CORREO" stack-label>
