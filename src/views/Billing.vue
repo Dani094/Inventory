@@ -17,8 +17,8 @@
          <q-btn icon="add" class="rounded-xl ml-2 bg-[#04162d] text-white" @click="modalCreaEdit(1)"></q-btn>
        </div>
     </div>
-    <q-dialog v-model="dialog" class="py-5 px-0 mx-0 ">
-      <div v-if="showBill == 3" class=" w-[100%] sm:w-[100%] md:w-[70%] xl:w-[70%] min-h-[100vh] font-sans font-bold ">
+    <q-dialog v-model="dialog" >
+      <div v-if="showBill == 3" class=" w-[100%] sm:w-[100%] md:w-[70%] xl:w-[60%] min-h-[90vh] mt-12 font-sans font-bold ">
         <bill  :dataBill="arrayBill"/>
       </div>
       <div v-else class="mr-2 xs:w-[100%] w-auto  rounded-[20px] bg-white  " >
@@ -141,7 +141,7 @@ let columns = ref([
   { name: "vendedor", align: "center", label: "Vendedor", field: "vendedor", sortable: true, icon: "store",},
   { name: "Cliente", align: "center", label: "Cliente", field: "cliente", sortable: true, icon: "person", },
   { name: "Cantidad de productos", align: "center", label: "Cantidad", field: "CantProduct", sortable: true, icon: "inventory", },
-  { name: "Total", align: "center", label: "Total", field: "PrecioVenta", sortable: true, icon: "attach_money",},
+  { name: "Total", align: "center", label: "Total", field: (row) => parseFloat(row.PrecioVenta).toLocaleString(), sortable: true, icon: "attach_money",},
   { name: "Fecha", align: "center", label: "Fecha", field: (row) => row.date.slice(0, 10), sortable: true, icon: "event",},
   { name: "options", align: "center", label: "Opciones", sortable: true,icon: "settings",
   },

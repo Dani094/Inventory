@@ -35,17 +35,18 @@
             <div class="row w-full p-2 text-center border-b border-t border-black-0.4">
               <div class="col mr-1 "> {{ item.name }}</div>
               <div class="col mr-1 "> {{ item.Unidades }} </div>
-              <div class="col mr-1 ">$ {{ item.precio }} </div>
-              <div class="col mr-1 ">$ {{ item.valueTotal }} </div>
+              <div class="col mr-1 ">$ {{ item.precio.toLocaleString() }} </div>
+              <div class="col mr-1 ">$ {{ item.valueTotal.toLocaleString() }} </div>
             </div>
           </div>
           <div class="mt-2 bg-black w-full ">
             <ul class="float-end ">
-              <li><strong class="text-1xl">Subtotal:</strong>  <strong class="font-normal ml-1 "> $ {{SubTotalBill}}</strong> </li>
-              <div class="col mr-1 "> Descuento {{valorDescuento}} {{ descuento }} </div>
+              <li><strong class="text-1xl">Subtotal:</strong>  <strong class="font-normal ml-1 "> $ {{SubTotalBill.toLocaleString() }}</strong> </li>
               <li>Iva: <strong class="font-normal ml-1"> % {{impuesto}}</strong></li>
-              <li>Valor Iva: <strong class="font-normal ml-1"> $ {{valueIva}}</strong></li>
-              <li><strong class="text-[15px]">Total:</strong> <strong class="font-bold ml-1"> $ {{totalBill}}</strong> </li>
+              <li>Valor Iva: <strong class="font-normal ml-1"> $ {{valueIva }}</strong></li>
+              <div class="col mr-1 "> Descuento {{valorDescuento}} {{ descuento }} </div>
+              <div class="col mr-1 "> Valor del descuento $ {{ descuentoBill }} </div>
+              <li><strong class="text-[15px]">Total:</strong> <strong class="font-bold ml-1"> $ {{totalBill }}</strong> </li>
 
             </ul>
           </div>
@@ -93,7 +94,7 @@
           <p class="mr-1 mt-[1px]">Sofware elaborado por Newxo </p> <img class="w-5 h-6" src="../../public/logoNewxo.png" alt="">
       </div>
 
-      <div class="fixed float-end bottom-1  right-[3%] xs:right-[3%]  md:right-[17%] xl:right-[17%]" >
+      <div class="fixed float-end bottom-1  right-[3%] xs:right-[3%]  md:right-[17%] xl:right-[22%]" >
           <q-btn icon="download"   type="submit" @click="generateInvoice()"  class="w-[50px] text-white bg-[#04162d] rounded-1xl" ></q-btn>
       <q-btn icon="cancel"  type="button" class=" text-white bg-red-700 rounded-1xl m-2"  v-close-popup></q-btn>
       </div>
@@ -152,13 +153,12 @@
   let totalBill = ref()
   let valueIva = ref()
   let img = ref('../../public/logoNewxo.png' )
-
+  let descuentoBill = ref()
 
 const generateInvoice = async () => {
   try {
     // Crear un nuevo documento PDF
     const doc = new jsPDF();
-
     // Añadir el encabezado con estilos
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(40);
@@ -208,30 +208,27 @@ const generateInvoice = async () => {
     doc.setFont('helvetica', 'bold');
     doc.text(`Subtotal: $${subtotal}`, 150, finalY);
     doc.text(`Descuento : (${valorDescuento.value}${discount.value})`, 150, finalY + 5);
-    doc.text(`Iva : ($${impuesto.value})`, 150, finalY + 10);
-    doc.text(`Valor Iva : ($${valueIva.value})`, 150, finalY + 15);
+    doc.text(`Descuento : (${valorDescuento.value}${descuentoBill.value})`, 150, finalY + 10);
+    doc.text(`Iva : ($${impuesto.value})`, 150, finalY + 15);
+    doc.text(`Valor Iva : ($${valueIva.value})`, 150, finalY + 20);
     doc.setFontSize(14);
-    doc.text(`Total: $${totalBill.value}`, 150, finalY + 25);
-
+    doc.text(`Total: $${totalBill.value}`, 150, finalY + 30);
     // Separador
     doc.setLineWidth(0.5);
-    doc.line(10, finalY + 30, 200, finalY + 30);
-
+    doc.line(10, finalY + 40, 200, finalY + 40);
     // Añadir información adicional
     doc.setFontSize(10);
-    doc.text('¡Gracias por su compra!', 10, finalY + 40);
+    doc.text('¡Gracias por su compra!', 10, finalY + 50);
     doc.setFont('helvetica', 'normal');
-    doc.text('Información de pago:', 10, finalY + 50);
-    doc.text(`Nombre vendedor: ${nameSeller.value}`, 10, finalY + 55);
-    doc.text(`Método de pago: ${MethodPay.value}`, 10, finalY + 60);
-    doc.text(`Empresa: ${nameCompany.value}`, 10, finalY + 65);
-    doc.text(`Fecha de pago: ${datePay.value.slice(0, 10)}`, 10, finalY + 70);
-
-    doc.text('Contacto:', 150, finalY + 45);
-    doc.text(userCel.value, 150, finalY + 50);
-    doc.text(userEmail.value, 150, finalY + 55);
-    doc.text(userTown.value, 150, finalY + 60);
-
+    doc.text('Información de pago:', 10, finalY + 55);
+    doc.text(`Nombre vendedor: ${nameSeller.value}`, 10, finalY + 60);
+    doc.text(`Método de pago: ${MethodPay.value}`, 10, finalY + 65);
+    doc.text(`Empresa: ${nameCompany.value}`, 10, finalY + 70);
+    doc.text(`Fecha de pago: ${datePay.value.slice(0, 10)}`, 10, finalY + 75);
+    doc.text('Contacto:', 150, finalY + 50);
+    doc.text(userCel.value, 150, finalY + 55);
+    doc.text(userEmail.value, 150, finalY + 60);
+    doc.text(userTown.value, 150, finalY + 65);
     // Dibujar líneas para las firmas
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
@@ -241,7 +238,6 @@ const generateInvoice = async () => {
     doc.text('Elaborado por', 40, lineY + 5);
     doc.line(115, lineY, 205, lineY); // Línea 2
     doc.text('Aceptada, Firma o sello', 140, lineY + 5);
-
     // Añadir el pie de página con el segundo logo
     doc.text('Software elaborado por Newxo', 80, lineY + 45);
     const imgData = await fetch(img.value).then(res => res.blob()).then(blob => {
@@ -252,7 +248,6 @@ const generateInvoice = async () => {
       });
     });
      doc.addImage(imgData, 'PNG', 132, lineY + 41, 5, 5); // Posición y tamaño del segundo logo
-
     // Guardar el documento
     doc.save(`Factura_${numBill.value}.pdf`);
   } catch (error) {
@@ -260,12 +255,9 @@ const generateInvoice = async () => {
   }
 };
 
-
-
   const getBill = async () => {
     const res = await storeBilling.GetIBill(storeLogin.Email);
     if (res.status < 299) {
-      
       rows.value = res.data;
       rows.value.forEach((row, index) => {
         row.index = index + 1;
@@ -296,23 +288,8 @@ const generateInvoice = async () => {
     date.value = data.value.date.slice(0, 10)
     datePay.value = data.value.datePay.slice(0,10)
     MethodPay.value = data.value.MethodPay
-
-    let descuentoBill = 0    
     getListProduct()
-    SubTotalBill.value = listProduct.value.reduce((sum, product) => sum = product.Unidades  * product.precio, 0)
-    valueIva.value = (SubTotalBill.value * impuesto.value) / 100; 
-    
-    
-    if (data.value.tipoDescuento == "Porcentaje") {
-        valorDescuento.value = "%"
-        descuentoBill = (SubTotalBill.value * descuento.value) / 100; 
-        totalBill.value =  parseFloat(valueIva.value + SubTotalBill.value - descuentoBill )
-    }
-    else{
-       valorDescuento.value = "$"
-       descuentoBill = descuento.value
-       totalBill.value =  parseFloat(valueIva.value + SubTotalBill.value - descuentoBill )
-    }
+    values()
   }
 
   function getListProduct() {
@@ -320,7 +297,6 @@ const generateInvoice = async () => {
       if (row.NumBill == numBill.value) {
         numBill.value = row.NumBill
         discount.value = row.Discount
-       
         listProduct.value.push({
           Id: row._id,
           serial: row.Serial,
@@ -331,12 +307,25 @@ const generateInvoice = async () => {
           precio: row.Price,
           valueTotal: row.Total,
         });
-       
-       
       }
-    }
-    );
+    });
   }
+
+function values() {
+  SubTotalBill.value = listProduct.value.reduce((sum, product) => sum + (product.Unidades * product.precio), 0);
+    valueIva.value = (SubTotalBill.value * impuesto.value) / 100; 
+    if (data.value.tipoDescuento == "Porcentaje") {
+        valorDescuento.value = "%"
+        descuentoBill.value = (SubTotalBill.value * descuento.value) / 100; 
+        totalBill.value =  parseFloat(valueIva.value + SubTotalBill.value - descuentoBill.value )
+    }
+    else{
+       valorDescuento.value = "$"
+       descuentoBill.value = descuento.value
+       totalBill.value =  parseFloat(valueIva.value + SubTotalBill.value - descuentoBill.value )
+    }
+}
+
 
   const getUser = async () => {
     const res = await user.GetUsers();

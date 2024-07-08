@@ -157,7 +157,7 @@
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
           <i class="material-icons text-gray-500">receipt_long</i>
         </span>
-        <input id="precioTotal" type="number" v-model="totalPriceProduct"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
+        <input id="precioTotal" type="number" v-model="valueProduct"  class="block w-full pl-10 pr-10 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
       </div>
     </div>
   </div>
@@ -266,7 +266,7 @@ let user = ref(storeLogin.Email);
 let UserUpdate = ref()
 let discount = ref();
 let valueDiscount = ref();
-let optionsType = ref(["Porcentaje", "valor fijo"]);
+let optionsType = ref(["porcentaje", "valor fijo"]);
 let dataGoInfo = ref()
 let rowsExist = ref()
 let valueEditCrea = ref()
@@ -287,6 +287,7 @@ let editProduct = ref(false)
 let discountAmount = ref(0)
 let fixedDiscount = ref(0)
 let actulizar =  ref(false)
+let valueProduct = ref(0)
 // bill
 const getBill = async () => {
   const res = await storeBilling.GetIBill(storeLogin.Email);
@@ -313,7 +314,6 @@ const getBill = async () => {
 };
 
 async function postBill() {
-  console.log(totalPriceProduct.value);
   const bill = await storeBilling.NewBill({
     UserEmail: user.value,
     numFactura: numBill.value,
@@ -322,7 +322,7 @@ async function postBill() {
     tipoDescuento: valueDiscount.value,
     descuento: discount.value,
     CantProduct: amountTotalProdut.value,
-    PrecioVenta: totalPriceProduct.value,
+    PrecioVenta: totalPrice.value,
     impuesto: impuesto.value,
     email: emailCustomer.value,
     number: numCustomer.value,
@@ -449,6 +449,7 @@ function getNumBill() {
 
 function goInfoBill() {
     const data = dataGoInfo.value
+    console.log(data);
       numBill.value = data.numFactura;
       nameSeller.value = data.vendedor;
       nameCustomer.value = data.cliente;
@@ -461,6 +462,7 @@ function goInfoBill() {
       numCustomer.value = data.number;
       datePayBill.value = data.datePay.slice(0,10)
       MethodPay.value = data.MethodPay
+      console.log(MethodPay.value);
 
 
 }
@@ -486,7 +488,6 @@ async function ExitsGet() {
       }
       }
     );
-    console.log(actulizar.value);
    if (actulizar.value == true) {
      reloadPage()
    }
@@ -517,6 +518,7 @@ const postExist = async () => {
 };
 
 async function putInfoExist() { 
+  console.log( "list", listProduct.value );
   listProduct.value.forEach(async (product) => {
     idProductExist.value = product.Id
       const bill = {
@@ -525,7 +527,7 @@ async function putInfoExist() {
         Serial: product.serial,
         Units: product.Unidades,
         Price: product.precio,
-        Discount: product.descuento,    
+        Discount: discount.value,    
         UserEmail: user.value,
       };
       const response = await storeExist.PutExits(idProductExist.value, bill);
@@ -539,7 +541,6 @@ function goInfoExits(i) {
     totalPriceProduct.value  = i.valueTotal;
     priceProduct.value = i.precio
     impuesto.value = impuesto.value
-    discount.value = i.descuento
     amountProduct.value = i.Unidades
     getValues()
   }
@@ -603,7 +604,7 @@ const addOrUpdateProductList = () => {
             name: NameProduct.value,
             Unidades: parseInt(amountProduct.value),
             precio: parseFloat(priceProduct.value),
-            valueTotal: parseFloat(totalPriceProduct.value),
+            valueTotal: parseFloat(valueProduct.value),
           };
       }
     }) 
@@ -625,16 +626,27 @@ const addOrUpdateProductList = () => {
 
 // Valor total a partir de los productos
 function valueTotal(descuento) { 
-  totalPriceProduct.value = priceProduct.value * parseInt(amountProduct.value) 
+  totalPriceProduct.value = 0
   amountTotalProdut.value = 0
   totalPrice.value = 0
   let totalWithoutIva =  0
+  if (valueEditCrea.value == 1) {
+     valueProduct.value = priceProduct.value * parseInt(amountProduct.value) 
+     totalPriceProduct.value = valueProduct.value
+  }
+  else{
+    valueProduct.value = priceProduct.value * parseInt(amountProduct.value)
+    totalPriceProduct.value = listProduct.value.reduce((sum, product) => sum + (product.Unidades * product.precio), 0);
+    
+  }
   
+
   const percentage = impuesto.value; 
     listProduct.value.forEach((producto) => {
     amountTotalProdut.value += parseInt(producto.Unidades);
     totalWithoutIva +=  parseInt(producto.valueTotal) 
-    discountAmount.value = (totalWithoutIva * percentage) / 100;  
+    discountAmount.value = (totalWithoutIva * percentage) / 100; 
+    console.log(discountAmount.value, totalWithoutIva);
     totalPrice.value =  discountAmount.value + totalWithoutIva - descuento
   })
 }
@@ -646,13 +658,10 @@ function typeDiscount() {
   if (valueDiscount.value === "Porcentaje") {
     const percentage = parseInt(discount.value); 
     console.log(percentage);
-    console.log(totalPriceProduct.value);
     fixedDiscount.value = (totalPriceProduct.value * percentage) / 100;
-    console.log(fixedDiscount.value);
     valueTotal(fixedDiscount.value)
   } else if (valueDiscount.value === "valor fijo") {
     fixedDiscount.value = discount.value;
-    console.log(fixedDiscount.value);
     valueTotal(fixedDiscount.value)
   }
 

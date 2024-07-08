@@ -8,7 +8,7 @@
                 </div>
                 <!-- num  -->
                 <div>
-                    <h1 class="font-bold text-3xl">{{ "$"+num.toLocaleString() }}</h1>
+                    <h1 class="font-bold text-3xl">{{ signo +num.toLocaleString() }}</h1>
                     <p class="text-[#04162d] text-xl" :class="ticketColors.textColor">{{ title }}</p>
                 </div>
                 <hr class="border border-dashed border-gray-500/50 my-4">
@@ -18,6 +18,8 @@
 </template>
 
 <script setup>
+import { ref, onMounted, } from "vue";
+let signo = ref()
 const props = defineProps({
   num: Number,
   title: String,
@@ -38,21 +40,25 @@ const getTicketColors = (title) => {
       ticketColors.icon = "fa-solid fa-boxes";
       ticketColors.iconColor = "text-green-500";
       ticketColors.textColor = "text-green-500";
+      signo.value = "$ "
       break;
     case "Total Salidas":
       ticketColors.icon = "fa-solid fa-truck";
       ticketColors.iconColor = "text-blue-500";
       ticketColors.textColor = "text-blue-500";
+      signo.value = "$ "
       break;
     case "Productos Agotados":
       ticketColors.icon = "fa-solid fa-exclamation-circle";
       ticketColors.iconColor = "text-pink-500";
       ticketColors.textColor = "text-pink-500";
+      signo.value = "# "
       break;
     case "Productos Vencidos":
       ticketColors.icon = "fa-solid fa-calendar-times";
       ticketColors.iconColor = "text-yellow-500";
       ticketColors.textColor = "text-yellow-500";
+      signo.value = "# "
       break;
     default:
       ticketColors.icon = "fa-solid fa-ticket";
