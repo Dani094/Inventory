@@ -139,7 +139,7 @@ async function UsersGet() {
     // Guardar datos originales
     originalData.value = {
       name: name.value,
-      lastname: lastName.value,
+      lastName: lastName.value,
       document: document.value,
       email: email.value,
       cel: cel.value,

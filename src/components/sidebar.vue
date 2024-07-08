@@ -72,7 +72,7 @@
           ]"
           class="hover:bg-[#E7E8F3] hover:text-black text-center p-4 rounded-tl-xl rounded-bl-xl transition"
         >
-          <span class="material-icons text-2xl"> person </span>
+          <span class="material-icons text-2xl"> settings </span>
         </li>
       </router-link>
 
@@ -108,7 +108,7 @@
   >
     <router-link to="/user">
       <button class="p-2">
-        <span class="material-icons"> person </span>
+        <span class="material-icons"> settings </span>
       </button>
     </router-link>
     <router-link to="/home">
