@@ -98,7 +98,6 @@
           <q-btn icon="download"   type="submit" @click="generateInvoice()"  class="w-[50px] text-white bg-[#04162d] rounded-1xl" ></q-btn>
       <q-btn icon="cancel"  type="button" class=" text-white bg-red-700 rounded-1xl m-2"  v-close-popup></q-btn>
       </div>
-    
     </div>
   </div>
 </template>
@@ -152,22 +151,24 @@
   let MethodPay = ref()
   let totalBill = ref()
   let valueIva = ref()
-  let img = ref('../../public/logoNewxo.png' )
+  let img = ref("../../public/logoNewxo.png" )
   let descuentoBill = ref()
-
-const generateInvoice = async () => {
+  const generateInvoice = async () => {
   try {
     // Crear un nuevo documento PDF
     const doc = new jsPDF();
+
     // Añadir el encabezado con estilos
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(40);
     doc.text('FACTURA', 10, 30);
+
     // Añadir el número de factura y la fecha
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(12);
     doc.text(`Factura n.º: ${numBill.value}`, 10, 40);
     doc.text(`Fecha: ${date.value}`, 10, 45);
+
     // Añadir la información del cliente
     doc.setFont('helvetica', 'bold');
     doc.text('Información Cliente:', 10, 60);
@@ -175,9 +176,11 @@ const generateInvoice = async () => {
     doc.text(`Nombre: ${nameCustomer.value}`, 10, 65);
     doc.text(`Teléfono: ${numberCustormer.value}`, 10, 70);
     doc.text(`Correo Electrónico: ${emailCustomer.value}`, 10, 75);
+
     // Separador
     doc.setLineWidth(0.5);
     doc.line(10, 80, 200, 80);
+
     // Añadir la tabla de productos
     doc.autoTable({
       startY: 85,
@@ -201,9 +204,11 @@ const generateInvoice = async () => {
         fillColor: [230, 230, 230]
       }
     });
+
     // Calcular el total
     const subtotal = listProduct.value.reduce((sum, product) => sum + product.valueTotal, 0);
     const finalY = doc.lastAutoTable.finalY + 10;
+
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text(`Subtotal: $${subtotal}`, 150, finalY);
@@ -211,11 +216,14 @@ const generateInvoice = async () => {
     doc.text(`Descuento : (${valorDescuento.value}${descuentoBill.value})`, 150, finalY + 10);
     doc.text(`Iva : ($${impuesto.value})`, 150, finalY + 15);
     doc.text(`Valor Iva : ($${valueIva.value})`, 150, finalY + 20);
+
     doc.setFontSize(14);
     doc.text(`Total: $${totalBill.value}`, 150, finalY + 30);
+
     // Separador
     doc.setLineWidth(0.5);
     doc.line(10, finalY + 40, 200, finalY + 40);
+
     // Añadir información adicional
     doc.setFontSize(10);
     doc.text('¡Gracias por su compra!', 10, finalY + 50);
@@ -224,11 +232,16 @@ const generateInvoice = async () => {
     doc.text(`Nombre vendedor: ${nameSeller.value}`, 10, finalY + 60);
     doc.text(`Método de pago: ${MethodPay.value}`, 10, finalY + 65);
     doc.text(`Empresa: ${nameCompany.value}`, 10, finalY + 70);
-    doc.text(`Fecha de pago: ${datePay.value.slice(0, 10)}`, 10, finalY + 75);
+    if (datePay.value) {
+      doc.text(`Fecha de pago: ${datePay.value.slice(0, 10)}`, 10, finalY + 75);
+    } else {
+      doc.text(`Fecha de pago: N/A`, 10, finalY + 75);
+    }
     doc.text('Contacto:', 150, finalY + 50);
     doc.text(userCel.value, 150, finalY + 55);
     doc.text(userEmail.value, 150, finalY + 60);
     doc.text(userTown.value, 150, finalY + 65);
+
     // Dibujar líneas para las firmas
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
@@ -238,22 +251,38 @@ const generateInvoice = async () => {
     doc.text('Elaborado por', 40, lineY + 5);
     doc.line(115, lineY, 205, lineY); // Línea 2
     doc.text('Aceptada, Firma o sello', 140, lineY + 5);
+
     // Añadir el pie de página con el segundo logo
     doc.text('Software elaborado por Newxo', 80, lineY + 45);
-    const imgData = await fetch(img.value).then(res => res.blob()).then(blob => {
-      return new Promise(resolve => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.readAsDataURL(blob);
+
+    // Añadir imagen (si es necesario)
+    try {
+   
+      const imgData = await fetch(img.value).then(res => {
+        if (!res.ok) {
+          throw new Error('Image not found');
+        }
+        return res.blob();
+      }).then(blob => {
+        return new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        });
       });
-    });
-     doc.addImage(imgData, 'PNG', 132, lineY + 41, 5, 5); // Posición y tamaño del segundo logo
+      doc.addImage(imgData, 'PNG', 132, lineY + 41, 5, 5); // Posición y tamaño del segundo logo
+    } catch (imageError) {
+      console.error('Error cargando la imagen:', imageError);
+      doc.text('Error cargando el logo', 132, lineY + 41);
+    }
+
     // Guardar el documento
     doc.save(`Factura_${numBill.value}.pdf`);
   } catch (error) {
     console.error('Error generando la factura:', error);
   }
 };
+
 
   const getBill = async () => {
     const res = await storeBilling.GetIBill(storeLogin.Email);
