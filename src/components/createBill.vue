@@ -625,7 +625,8 @@ const addOrUpdateProductList = () => {
 
 
 // Valor total a partir de los productos
-function valueTotal(descuento) { 
+function valueTotal(descuento) {
+  console.log("tripe"); 
   totalPriceProduct.value = 0
   amountTotalProdut.value = 0
   totalPrice.value = 0

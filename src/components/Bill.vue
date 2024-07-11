@@ -91,7 +91,7 @@
         </div>      
       </div>
       <div class="w-auto mt-8 mb-20 flex text-center justify-center items-center">
-          <p class="mr-1 mt-[1px]">Sofware elaborado por Newxo </p> <img class="w-5 h-6" src="../../public/logoNewxo.png" alt="">
+          <p class="mr-1 mt-[1px]">Sofware elaborado por Newxo </p> <img class="w-5 h-6" src="../assets/logoNewxo.png" alt="">
       </div>
 
       <div class="fixed float-end bottom-1  right-[3%] xs:right-[3%]  md:right-[17%] xl:right-[22%]" >
@@ -256,25 +256,25 @@
     doc.text('Software elaborado por Newxo', 80, lineY + 45);
 
     // Añadir imagen (si es necesario)
-    try {
+    // try {
    
-      const imgData = await fetch(img.value).then(res => {
-        if (!res.ok) {
-          throw new Error('Image not found');
-        }
-        return res.blob();
-      }).then(blob => {
-        return new Promise(resolve => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.readAsDataURL(blob);
-        });
-      });
-      doc.addImage(imgData, 'PNG', 132, lineY + 41, 5, 5); // Posición y tamaño del segundo logo
-    } catch (imageError) {
-      console.error('Error cargando la imagen:', imageError);
-      doc.text('Error cargando el logo', 132, lineY + 41);
-    }
+    //   const imgData = await fetch(img.value).then(res => {
+    //     if (!res.ok) {
+    //       throw new Error('Image not found');
+    //     }
+    //     return res.blob();
+    //   }).then(blob => {
+    //     return new Promise(resolve => {
+    //       const reader = new FileReader();
+    //       reader.onload = () => resolve(reader.result);
+    //       reader.readAsDataURL(blob);
+    //     });
+    //   });
+    //   doc.addImage(imgData, 'PNG', 132, lineY + 41, 5, 5); // Posición y tamaño del segundo logo
+    // } catch (imageError) {
+    //   console.error('Error cargando la imagen:', imageError);
+    //   doc.text('Error cargando el logo', 132, lineY + 41);
+    // }
 
     // Guardar el documento
     doc.save(`Factura_${numBill.value}.pdf`);
