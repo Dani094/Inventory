@@ -15,7 +15,7 @@ const checkAuth = () => {
     return false;
   const dateLogin = userStore.dateLogin.split("T")[0];
   const dateNow = new Date().toISOString().split("T")[0];
-
+  
   if (dateLogin !== dateNow || !token) return false;
   return true;
 };
