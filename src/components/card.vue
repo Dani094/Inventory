@@ -19,7 +19,7 @@
 
 <script setup>
 import { ref, onMounted, } from "vue";
-let signo = ref()
+let signo = ref("$")
 const props = defineProps({
   num: Number,
   title: String,
@@ -42,7 +42,7 @@ const getTicketColors = (title) => {
       ticketColors.textColor = "text-green-500";
       signo.value = "$ "
       break;
-    case "Total Salidas":
+    case "Total Ventas":
       ticketColors.icon = "fa-solid fa-truck";
       ticketColors.iconColor = "text-blue-500";
       ticketColors.textColor = "text-blue-500";

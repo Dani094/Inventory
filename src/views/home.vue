@@ -30,7 +30,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-6">
             <!-- Card -->
             <CardInfo :num="TotalUnits" :title="'Total Inventario'" :newRoute="'/inventory'" />
-            <CardInfo :num="TotalUnits2" :title="'Total Salidas'" :newRoute="'/exits'" />
+            <CardInfo :num="TotalUnits2" :title="'Total Ventas'" :newRoute="'/exits'" />
             <CardInfo :num="spent" :title="'Productos Agotados'" :newRoute="'/inventory'" />
             <CardInfo :num="expiration" :title="'Productos Vencidos'" :newRoute="'/inventory'" />
         </div>
@@ -54,7 +54,7 @@
                 <ChartUse :chartInventory="true" :newType="'pie'" chartId="chart3" class="w-full h-[500px] flex justify-center items-center"/>
             </div>
             <div class="w-full bg-white rounded-2xl lg:col-span-7">
-                <h1 class="text-[#04162d] w-full text-center text-2xl font-bold p-4">SALIDAS MENSUAL</h1>
+                <h1 class="text-[#04162d] w-full text-center text-2xl font-bold p-4">VENTAS MENSUAL</h1>
                 <ChartUse :chartExits="true" :title="'Salidas'" :newType="'line'" chartId="chart2" />
             </div>
             <div class="w-full bg-white rounded-2xl lg:col-span-5">

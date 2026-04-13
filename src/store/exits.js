@@ -15,11 +15,10 @@ export const exitStore = defineStore("exitStore", () => {
         },
       });
     } catch (error) {
-      notifyError("No fue posible obtener el Inventario");
+      notifyError("No fue posible obtener las Ventas");
     }
   }
   async function PostExits(data) {
-    console.log(data);
     try {
       return ( await requestAxios.post("/exits/post", data,
           {
@@ -28,7 +27,7 @@ export const exitStore = defineStore("exitStore", () => {
             },
           }
         ),
-        notifySuccess("Salida Exitosa")
+        notifySuccess("Venta Exitosa")
       );
     } catch (error) {
       console.log(error);

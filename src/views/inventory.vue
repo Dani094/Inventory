@@ -577,9 +577,9 @@ async function ExitsPost() {
         NumBill: null,
         Name: nameExit.value,
         Serial: serialExit.value,
-        Units:  unitsExit.value,
-        Price:  priceExit.value,
-        Discount: discount.value,
+        Units: parseFloat(unitsExit.value),
+        Price:  parseFloat(priceExit.value),
+        Discount: parseFloat(discount.value),
         UserEmail: user.value,
     }
   );
@@ -617,7 +617,7 @@ function cleanForm() {
 // <--------------------------------------------------------------------->
 // all table
 let pagination = ref({
-  rowsPerPage: 50,
+  rowsPerPage: 20,
 });
 let columns = ref([
   { name: "index", label: "N°", field: "index", align: "center" },
@@ -628,19 +628,20 @@ let columns = ref([
     field: "Supplier",
   },
   {
-    name: "proveedor",
+    name: "name",
     align: "center",
     label: "NOMBRE",
     field: "Name",
   },
   {
-    name: "proveedor",
+    name: "serial",
     align: "center",
     label: "SERIAL",
-    field: "Serial",
+    field: (row) =>
+      row.Serial ? row.Serial : "NA",
   },
   {
-    name: "proveedor",
+    name: "unidades",
     align: "center",
     label: "UNIDADES",
     field: (row) => parseFloat(row.Units).toLocaleString(),
@@ -655,15 +656,15 @@ let columns = ref([
     }
   },
   {
-    name: "proveedor",
+    name: "precio unidad",
     align: "center",
     label: "PRECIO UNITARIO",
     field: (row) => parseFloat(row.Price).toLocaleString(),
   },
   {
-    name: "proveedor",
+    name: "precio compra",
     align: "center",
-    label: "PRECIO COMPRA",
+    label: "PRECIO TOTAL",
     field: (row) => parseFloat(row.SellingPrice).toLocaleString(),
   },
   {
