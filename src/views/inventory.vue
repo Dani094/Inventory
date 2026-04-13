@@ -380,7 +380,7 @@
                   :rules="[
                     (val) =>
                       (val &&
-                        val.toString().length > 0 &&
+                        val.toString().trim().length > 0 &&
                         parseInt(val) > 0 &&
                         parseInt(val) <= units2) ||
                       'No puede ser 0, Mayor o Menor a las Unidades Disponibles',
