@@ -10,9 +10,7 @@ export const billStore = defineStore("billStore", () => {
   async function GetIBill(User) {
     try {
       return await requestAxios.get(`/billing/all/${User}`, {
-        headers: {
-          token: useToken.token,
-        },
+    
       });
     } catch (error) {
       notifyError("No hay datos de facturas");
@@ -22,9 +20,7 @@ export const billStore = defineStore("billStore", () => {
     console.log(filter);
     try {
       return await requestAxios.get(`/billing/${filter}`, {
-        headers: {
-          token: useToken.token,
-        },
+    
       });
     } catch (error) {
       notifyError("No Se Encuentra en el Inventario");
@@ -37,11 +33,6 @@ export const billStore = defineStore("billStore", () => {
     try {
       return (
         await requestAxios.post( "/billing/post", data,
-          {
-            headers: {
-              token: useToken.token,
-            },
-          }
         ),
         notifySuccess("Registrado correctamente")
       );
@@ -58,9 +49,7 @@ export const billStore = defineStore("billStore", () => {
       return (
         await requestAxios.put(`/billing/put/${id}`, data,
           {
-            headers: {
-              token: useToken.token,
-            },
+            
           }
         ),
         notifySuccess("Inventario Actualizado Correctamente")
@@ -90,9 +79,7 @@ export const billStore = defineStore("billStore", () => {
       return (
         await requestAxios.post(`/salidas/post`,
           {
-            headers: {
-              token: useToken.token,
-            },
+            
           }
         ),
         notifySuccess("Salida Registrada Correctamente")

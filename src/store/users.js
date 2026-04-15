@@ -10,9 +10,7 @@ export const usersStore = defineStore("usersStore", () => {
   async function GetUsers() {
     try {
       return await requestAxios.get("/users/all", {
-        headers: {
-          token: useToken.token,
-        },
+    
       });
     } catch (error) {
       notifyError("No fue posible obtener los Usuarios");
@@ -21,9 +19,7 @@ export const usersStore = defineStore("usersStore", () => {
   async function GetUsersEmail(Email) {
     try {
       return await requestAxios.get(`/users/get/${Email}`, {
-        headers: {
-          token: useToken.token,
-        },
+    
       });
     } catch (error) {
       notifyError("No fue posible obtener el Usuario");
@@ -57,9 +53,7 @@ export const usersStore = defineStore("usersStore", () => {
             UserEmail: user,
           },
           {
-            headers: {
-              token: useToken.token,
-            },
+            
           }
         ),
         notifySuccess("Cliente Registrado correctamente")
@@ -99,9 +93,7 @@ export const usersStore = defineStore("usersStore", () => {
             UserUpdate: user,
           },
           {
-            headers: {
-              token: useToken.token,
-            },
+            
           }
         ),
         notifySuccess("Usuario Actualizado Correctamente")

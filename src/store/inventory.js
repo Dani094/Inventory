@@ -10,9 +10,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   async function GetInventory(User) {
     try {
       return await requestAxios.get(`/inventory/get/${User}`, {
-        headers: {
-          token: useToken.token,
-        },
+
       });
     } catch (error) {
       notifyError("No fue posible obtener el Inventario");
@@ -44,9 +42,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             UserEmail: user,
           },
           {
-            headers: {
-              token: useToken.token,
-            },
+            
           }
         ),
         notifySuccess("Registrado correctamente")
@@ -82,9 +78,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             UserUpdate: user,
           },
           {
-            headers: {
-              token: useToken.token,
-            },
+            
           }
         ),
         notifySuccess("Inventario Actualizado Correctamente")

@@ -14,23 +14,31 @@ export const LoginStore = defineStore('LoginStore', () => {
   const Email = ref(null)
   const dateLogin = ref(null)
   
-  async function newLogin(dataUser) {
+      async function newLogin(dataUser) {
       try {
-          const response =  await requestAxios.post(`/login`,dataUser)
-          const decoded = jwtDecode(response.data.token);
-          token.value = response.data.token
-          dateLogin.value = new Date().toISOString();
-          rol.value = decoded.rol 
-          user.value = decoded.user
-          Name.value = decoded.Name
-          Email.value = decoded.Email
-          notifySuccess('BIENVENIDO');
-          return response
-        } catch (error) {
-          console.log('errrrr',error);
-          notifyError(error.response.data.msg);
-          throw new Error(error)
-        }
+        // Limpiamos antes de empezar
+        token.value = null; 
+
+        const response = await requestAxios.post(`/login`, dataUser);
+        const decoded = jwtDecode(response.data.token);
+        
+        // Guardamos los datos
+        token.value = response.data.token;
+        dateLogin.value = new Date().toISOString();
+        rol.value = decoded.rol;
+        user.value = decoded.user;
+        Name.value = decoded.Name;
+        Email.value = decoded.Email;
+
+        notifySuccess('BIENVENIDO');
+        return response;
+      } catch (error) {
+        // Si falla, nos aseguramos de que el token sea null
+        token.value = null;
+        const message = error.response?.data?.msg || "Error en el servidor";
+        notifyError(message);
+        throw error;
+      }
     }
 
     async function newContraseña(dataUser) {

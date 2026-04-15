@@ -10,9 +10,7 @@ export const exitStore = defineStore("exitStore", () => {
   async function GetExits(User) {
     try {
       return await requestAxios.get(`/exits/get/${User}`, {
-        headers: {
-          token: useToken.token,
-        },
+    
       });
     } catch (error) {
       notifyError("No fue posible obtener las Ventas");
@@ -22,9 +20,7 @@ export const exitStore = defineStore("exitStore", () => {
     try {
       return ( await requestAxios.post("/exits/post", data,
           {
-            headers: {
-              token: useToken.token,
-            },
+            
           }
         ),
         notifySuccess("Venta Exitosa")
@@ -43,9 +39,7 @@ export const exitStore = defineStore("exitStore", () => {
       return (
         await requestAxios.put(`/exits/put/${id}`, data,
           {
-            headers: {
-              token: useToken.token,
-            },
+            
           }
         ),
         notifySuccess("Salida Actualizada Correctamente")
