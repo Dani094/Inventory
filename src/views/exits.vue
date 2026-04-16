@@ -1,417 +1,321 @@
 <template>
-    <div class="lg:pl-40 lg:pr-20 p-4">
-        <!-- title -->
-            <div class="mb-4">
-                <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl">
-                    <span class="material-icons text-5xl"> arrow_right </span>
-                    SALIDAS
-                </h1>
-            </div>
-            <!-- total y download-->
-        <div class="flex justify-between py-4">
-            <div class="flex items-center">
-                <div class="bg-[#04162d] px-4 p-2 rounded-2xl">
-                    <h4 class="text-xl text-white font-bold">
-                        Total Unidades: {{ TotalUnits }}
-                    </h4>
-                </div>
-            </div>
-            <Report :exits="true"/>
+  <div class="lg:p-20 p-6 bg-[#f8fafc] min-h-screen">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+      <div>
+        <h1 class="text-[#1a2332] text-4xl font-black tracking-tight flex items-center gap-2">
+          <div class="w-2 h-8 bg-orange-600 rounded-full"></div>
+          SALIDAS
+        </h1>
+        <p class="text-gray-400 text-sm mt-1 ml-4 italic">Registro histórico de despachos y ventas</p>
+      </div>
 
-        </div>
-        <!-- table  -->
-        <!-- <Tables :rows="rows" :columns="columns" /> -->
-        <q-table
-      flat
-      :separator="'cell'"
-      bordered
-      :rows="rows"
-      :columns="columns"
-      row-key="index"
-      virtual-scroll
-      v-model:pagination="pagination"
-      class="inventTable h-[550px] lg:h-[720px] rounded-2xl"
-      :filter="filter"
-      @focusin="activateNavigation"
-      @focusout="deactivateNavigation"
-      @keydown="onKey"
-    >
-      <template v-slot:top-left>
-        <q-input
-          borderless
-          dense
-          debounce="300"
-          v-model="filter"
-          placeholder="Buscar"
-          class="bg-[#E7E8F3] w-full pl-4 pr-4 rounded-lg outline-none"
-        >
-          <template v-slot:prepend>
-            <q-icon name="search" class="text-[#04162d]" />
-          </template>
-        </q-input>
-      </template>
-      <!-- opciones  -->
-      <template v-slot:body-cell-options="props">
-        <q-td :props="props">
-          <div class="text-white">
-            <q-btn
-              round
-              icon="edit"
-              class="q-mx-md bg-[#04162d]"
-              size="xs"
-              title="Editar"
-              @click="
-                (index = props.row._id),
-                  goInfo(props.row),
-                  (showModalEdit = true)
-              "
-            >
-            </q-btn>
-            <q-btn
-              round
-              icon="delete"
-              class="q-mx bg-[#04162d]"
-              size="xs"
-              title="Borrar"
-              @click="deleteItem(props.row)"
-            ></q-btn>
-          </div>
-        </q-td>
-      </template>
-    </q-table>
-        <!-- modals -->
-    <q-dialog v-model="showModalEdit">
-      <q-card class="w-[400px]">
-        <q-card-section class="bg-[#04162d]">
-          <h5 class="text-center text-white font-bold p-2 text-xl">
-            INGRESA LOS DATOS
-          </h5>
-        </q-card-section>
-        <div class="p-4">
-          <q-form ref="myForm" @submit.prevent.stop="ExitsPut()">
-            <div class="flex w-full justify-center">
-              <div class="w-[45%]">
-                <q-input
-                  type="text"
-                  v-model="nameExit"
-                  label="Nombre del Producto"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.toString().trim().length > 0) ||
-                      'Digite el Nombre',
-                  ]"
-                />
-                <q-input
-                  type="text"
-                  v-model="serialExit"
-                  label="Serial"
-                  class="mb-5"
-                />
-                <q-input
-                  type="number"
-                  v-model="units2"
-                  label="Unidades Sacadas"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.toString().trim().length > 0) ||
-                      'Digite las Unidades',
-                  ]"
-                />
-              </div>
-              <div class="w-[45%] ml-4">
-                <q-input
-                  type="number"
-                  v-model="priceExit"
-                  label="Precio Unitario"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.toString().trim().length > 0) ||
-                      'Digite el Precio',
-                  ]"
-                /><q-input
-                  type="number"
-                  v-model="discount"
-                  label="Descuento"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.toString().trim().length > 0) ||
-                      'Digite el Descuento',
-                  ]"
-                />
-              </div>
-            </div>
-            <div class="flex justify-center items-center gap-4">
-              <q-btn
-                icon="save_as"
-                label="Actualizar"
-                :loading="loading"
-                type="submit"
-                class="text-white bg-green-800 rounded-2xl"
-              ></q-btn>
-              <q-btn
-                icon="cancel"
-                type="button"
-                class="text-white bg-red-700 rounded-2xl"
-                v-close-popup
-                >CERRAR
-              </q-btn>
-            </div>
-          </q-form>
-        </div>
-      </q-card>
-    </q-dialog>
+      <div class="flex items-center gap-3">
+        <Report :exits="true" />
+      </div>
     </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+        <div class="bg-orange-50 p-4 rounded-2xl">
+          <span class="material-icons text-orange-600">logout</span>
+        </div>
+        <div>
+          <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Items Retirados</p>
+          <h3 class="text-2xl font-black text-[#1a2332]">{{ TotalUnits?.toLocaleString() }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+      <div class="p-6 border-b border-gray-50">
+        <div class="relative w-full md:w-80">
+          <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</span>
+          <input 
+            v-model="filter"
+            type="text" 
+            placeholder="Buscar salida..."
+            class="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 border border-transparent focus:border-orange-500 transition-all text-sm"
+          >
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50/50">
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Factura / Fecha</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Producto</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Cant.</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Total</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50">
+            <tr v-for="row in filteredRows" :key="row._id" class="hover:bg-gray-50/50 transition-colors group text-sm">
+              <td class="px-6 py-5">
+                <div class="flex flex-col">
+                  <span class="font-bold text-[#1a2332]">#{{ row.NumBill || 'S/F' }}</span>
+                  <span class="text-[10px] text-gray-400">{{ row.createdAt?.slice(0, 10) }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-5">
+                <div class="flex flex-col">
+                  <span class="font-bold text-[#1a2332] uppercase">{{ row.Name }}</span>
+                  <span class="text-[10px] text-gray-400">{{ row.Serial || 'Sin Serial' }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-5 text-center font-black text-orange-600">{{ row.Units }}</td>
+              <td class="px-6 py-5">
+                <div class="flex flex-col">
+                  <span class="font-bold text-[#1a2332]">$ {{ (row.Price * row.Units).toLocaleString() }}</span>
+                  <span v-if="row.Discount > 0" class="text-[10px] text-red-500 font-bold">- ${{ row.Discount.toLocaleString() }} Desc.</span>
+                </div>
+              </td>
+              <td class="px-6 py-5">
+                <div class="flex justify-center items-center gap-2">
+                  <button @click="openEdit(row)" class="p-2 hover:bg-blue-50 text-blue-600 rounded-xl transition-colors">
+                    <span class="material-icons text-lg">edit</span>
+                  </button>
+                  <button @click="deleteItem(row)" class="p-2 hover:bg-red-50 text-red-600 rounded-xl transition-colors">
+                    <span class="material-icons text-lg">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div v-if="showModalEdit" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalEdit = false"></div>
+      <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
+        <div class="bg-[#1a2332] p-6 text-white flex justify-between items-center">
+          <h3 class="text-xl font-black uppercase tracking-tight">Editar Registro</h3>
+          <button @click="showModalEdit = false" class="hover:rotate-90 transition-transform">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        
+        <form @submit.prevent="ExitsPut" class="p-8 space-y-6">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1">
+              <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Producto</label>
+              <input v-model="nameExit" type="text" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
+            </div>
+            <div class="space-y-1">
+              <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Serial</label>
+              <input v-model="serialExit" type="text" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
+            </div>
+            <div class="space-y-1">
+              <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Cant. Vendida</label>
+              <input v-model="units2" type="number" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
+            </div>
+            <div class="space-y-1">
+              <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Precio Unit.</label>
+              <input v-model="priceExit" type="number" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
+            </div>
+            <div class="col-span-2 space-y-1">
+              <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Descuento Aplicado</label>
+              <input v-model="discount" type="number" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <button type="submit" :disabled="loading" class="flex-1 bg-[#1a2332] text-white font-bold py-4 rounded-2xl hover:bg-slate-800 transition-all active:scale-95">
+              {{ loading ? 'GUARDANDO...' : 'ACTUALIZAR SALIDA' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import {ref, onMounted} from "vue"
-import Report from "@/components/descargarExcel.vue"
-import {exitStore} from "@/store/exits.js"
+import { ref, onMounted, computed } from "vue";
+import Report from "@/components/descargarExcel.vue";
+import { exitStore } from "@/store/exits.js";
 import { LoginStore } from "../store/login.js";
-import {sweetDelete} from "@/Global/notify"
-import { useQuasar } from "quasar";
+import { inventoryStore } from "@/store/inventory.js";
+import { sweetDelete } from "@/Global/notify";
 
-const $q = useQuasar();
-
-$q.loading.show();
-$q.loading.hide();
+// Inicialización de Stores
 const storeExits = exitStore();
 const storeLogin = LoginStore();
+const storeInventory = inventoryStore();
 
-
-let showModal = ref(false);
+// Estados de la Interfaz (UI)
 let showModalEdit = ref(false);
-let loading=ref()
-// variables 
-let index=ref()
+let loading = ref(false);
+let filter = ref("");
+
+// Variables del Formulario y Datos
+let index = ref();
 let nameExit = ref("");
 let serialExit = ref("");
 let units2 = ref();
-let unitsExit = ref();
 let priceExit = ref();
 let discount = ref("");
-let user=ref(storeLogin.Email)
-let TotalUnits=ref(0)
+let user = ref(storeLogin.Email);
+let TotalUnits = ref(0);
+let rows = ref([]);
 
-
-// peticiones get,put,delete
+/**
+ * Obtiene el historial de salidas desde el servidor
+ */
 async function ExitsGet() {
-  $q.loading.show();
-  const res = await storeExits.GetExits(storeLogin.Email);
-  if (res && res.status < 299) {
-    rows.value = res.data;
-    rows.value.forEach((row, index) => {
-      row.index= index + 1;
-      TotalUnits.value = 0;
-      TotalUnits.value = rows.value.reduce((total, row) => total + row.Units, 0);
-    });
-    $q.loading.hide();
-  } 
+  try {
+    const res = await storeExits.GetExits(storeLogin.Email);
+    if (res && res.status < 299) {
+      rows.value = res.data || [];
+      TotalUnits.value = rows.value.reduce((total, row) => total + (Number(row.Units) || 0), 0);
+    }
+  } catch (error) {
+    console.error("Error al obtener salidas:", error);
+    rows.value = [];
+  }
 }
+
+/**
+ * Prepara los datos y abre el modal de edición
+ */
+function openEdit(row) {
+  index.value = row._id;
+  goInfo(row);
+  showModalEdit.value = true;
+}
+
+/**
+ * Llena las variables reactivas con la información de la fila seleccionada
+ */
+function goInfo(data) {
+  nameExit.value = data.Name;
+  serialExit.value = data.Serial;
+  units2.value = data.Units;
+  priceExit.value = data.Price;
+  discount.value = data.Discount;
+}
+
+/**
+ * Actualiza un registro de salida existente
+ */
 async function ExitsPut() {
   loading.value = true;
-  const res = await storeExits.PutExits(index.value,
-  {
-    Name:nameExit.value,
-    Serial:serialExit.value,
-    Units:parseFloat(units2.value),
-    Price:parseFloat(priceExit.value),
-    Discount:parseFloat(discount.value),
-    UserUpdate:user.value
+  try {
+    await storeExits.PutExits(index.value, {
+      Name: nameExit.value,
+      Serial: serialExit.value,
+      Units: parseFloat(units2.value),
+      Price: parseFloat(priceExit.value),
+      Discount: parseFloat(discount.value),
+      UserUpdate: user.value
+    });
+    showModalEdit.value = false;
+    await ExitsGet(); // Refresca la tabla
+  } catch (error) {
+    console.error("Error al actualizar salida:", error);
+  } finally {
+    loading.value = false;
   }
-);
-  showModalEdit.value = false;
-  ExitsGet();
-  loading.value = false;
 }
+
+/**
+ * Elimina una salida y devuelve el stock al inventario automáticamente
+ */
 async function deleteItem(data) {
   sweetDelete(data, async () => {
     try {
-      await storeExits.DeleteExits(data._id);
-      ExitsGet();
+
+      console.log(data);
+      
+      // 1. Intentar devolver el stock al inventario
+      if (data.IdProduct) {
+        try {
+          // Usamos el multiplicador -1 para sumar las unidades de vuelta
+          const unitsToReturn = Number(data.Units);
+          console.log(unitsToReturn);
+          
+
+          await storeInventory.PutUnits(
+            data.IdProduct, 
+            0, // Unidades actuales (el store suele manejar el cálculo interno)
+            unitsToReturn, 
+            "Disponible"
+          );
+          console.log("Stock devuelto exitosamente");
+        } catch (invError) {
+          console.error("Error al devolver stock, procediendo con la eliminación:", invError);
+          // No bloqueamos el borrado si falla la devolución de stock
+        }
+      } else {
+        console.warn("La salida no tiene IdProduct asociado.");
+      }
+
+      // 2. Borrar el registro de salida
+      const res = await storeExits.DeleteExits(data._id);
+      
+      // 3. Refrescar datos de la vista
+      if (res) {
+        await ExitsGet(); 
+        
+        // Actualizar el store de inventario en segundo plano para mantener consistencia
+        if (storeInventory.GetInventory) {
+          storeInventory.GetInventory(storeLogin.Email).catch(e => console.log("Error refresh inv:", e));
+        }
+      }
+
     } catch (error) {
-      console.log(error);
+      console.error("Error crítico en deleteItem:", error);
     }
   });
 }
-// table  
-let pagination = ref({
-  rowsPerPage: 50,
-});
-let rows = ref([]);
-let columns = ref([
-    { name: "index", label: "N°", field: "index", align: "center" },
-    {
-        name: "NumBill",
-        align: "center",
-        label: "Numero de Factura",
-        field: "NumBill",
-    },
-    {
-        name: "name",
-        align: "center",
-        label: "NOMBRE",
-        field: "Name",
-    },
-    {
-        name: "serial",
-        align: "center",
-        label: "SERIAL",
-        field: "Serial",
-    },
-    {
-        name: "units",
-        align: "center",
-        label: "UNIDADES",
-        field: "Units",
-    },
-    {
-        name: "price",
-        align: "center",
-        label: "PRECIO UNITARIO",
-        field: (row) => parseFloat(row.Price).toLocaleString(),
 
-    },
-    {
-        name: "price",
-        align: "center",
-        label: "PRECIO TOTAL",
-        field: (row) => parseFloat(row.Price*row.Units).toLocaleString(),
-
-    },
-    {
-        name: "discount",
-        align: "center",
-        label: "DESCUENTO",
-        field: (row) => parseFloat(row.Discount).toLocaleString(),
-    },
-    {
-        name: "total",
-        align: "center",
-        label: "TOTAL",
-        field: (row) => parseFloat(row.Total).toLocaleString(),
-    },
-    {
-        name: "date",
-        label: "FECHA",
-        field: (row) => row.createdAt.slice(0, 10),
-        align: "center",
-    },
-    {
-        name: "options",
-        align: "center",
-        label: "OPCIONES",
-    },
-]);
-// function filter
-let filter = ref("");
-const tableRef = ref(null);
-const navigationActive = ref(false);
-const selected = ref([]);
-
-const activateNavigation = () => {
-  navigationActive.value = true;
-};
-
-const deactivateNavigation = () => {
-  navigationActive.value = false;
-};
-
-const onKey = (evt) => {
-  if (
-    navigationActive.value !== true ||
-    [33, 34, 35, 36, 38, 40].indexOf(evt.keyCode) === -1 ||
-    tableRef.value === null
-  ) {
-    return;
-  }
-
-  evt.preventDefault();
-
-  const { computedRowsNumber, computedRows } = tableRef.value;
-
-  if (computedRows.length === 0) {
-    return;
-  }
-
-  const currentIndex =
-    selected.value.length > 0
-      ? computedRows.indexOf(toRaw(selected.value[0]))
-      : -1;
-  const currentPage = pagination.value.page;
-  const rowsPerPage =
-    pagination.value.rowsPerPage === 0
-      ? computedRowsNumber
-      : pagination.value.rowsPerPage;
-  const lastIndex = computedRows.length - 1;
-  const lastPage = Math.ceil(computedRowsNumber / rowsPerPage);
-
-  let index = currentIndex;
-  let page = currentPage;
-
-  switch (evt.keyCode) {
-    case 36: // Home
-      page = 1;
-      index = 0;
-      break;
-    case 35: // End
-      page = lastPage;
-      index = rowsPerPage - 1;
-      break;
-    case 33: // PageUp
-      page = currentPage <= 1 ? lastPage : currentPage - 1;
-      if (index < 0) {
-        index = 0;
-      }
-      break;
-    case 34: // PageDown
-      page = currentPage >= lastPage ? 1 : currentPage + 1;
-      if (index < 0) {
-        index = rowsPerPage - 1;
-      }
-      break;
-    case 38: // ArrowUp
-      if (currentIndex <= 0) {
-        page = currentPage <= 1 ? lastPage : currentPage - 1;
-        index = rowsPerPage - 1;
-      } else {
-        index = currentIndex - 1;
-      }
-      break;
-    case 40: // ArrowDown
-      if (currentIndex >= lastIndex) {
-        page = currentPage >= lastPage ? 1 : currentPage + 1;
-        index = 0;
-      } else {
-        index = currentIndex + 1;
-      }
-      break;
-  }
-
-  if (page !== pagination.value.page) {
-    pagination.value.page = page;
-
-    nextTick(() => {
-      const { computedRows } = tableRef.value;
-      selected.value = [computedRows[Math.min(index, computedRows.length - 1)]];
-      tableRef.value.$el.focus();
-    });
-  }
-};
-
-function goInfo(data) {
-    (nameExit.value = data.Name),
-    (serialExit.value = data.Serial),
-    (units2.value = data.Units),
-    (priceExit.value = data.Price),
-    (discount.value = data.Discount)
+/**
+ * Limpia las variables del formulario
+ */
+function cleanForm() {
+  nameExit.value = "";
+  serialExit.value = "";
+  units2.value = "";
+  priceExit.value = "";
+  discount.value = "";
 }
 
+/**
+ * Filtro de búsqueda en tiempo real para la tabla
+ */
+const filteredRows = computed(() => {
+  if (!filter.value) return rows.value;
+  const search = filter.value.toLowerCase();
+  return rows.value.filter(row => 
+    row.Name?.toLowerCase().includes(search) ||
+    row.NumBill?.toString().includes(search) ||
+    row.Serial?.toLowerCase().includes(search)
+  );
+});
+
+// Carga inicial de datos
 onMounted(() => {
   ExitsGet();
 });
 </script>
+
+<style scoped>
+.animate-modal {
+  animation: pop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Scrollbar personalizada para la tabla */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 6px;
+}
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+</style>

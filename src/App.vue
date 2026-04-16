@@ -3,10 +3,12 @@ import Sidebar from "@/components/sidebar.vue"
 </script>
 
 <template>
-  <div>
+  <div class="flex h-screen overflow-hidden bg-[#E7E8F3]">
     <Sidebar/>
     <!-- <Home /> -->
-    <router-view></router-view>
+    <div class="flex-1 h-full overflow-y-auto">
+      <router-view></router-view>
+    </div>
   </div>
   
 </template>

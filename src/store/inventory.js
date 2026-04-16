@@ -24,7 +24,6 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     units,
     price,
     expirationDate,
-    state,
     user
   ) {
     try {
@@ -38,7 +37,6 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             Units: units,
             Price: price,
             ExpirationDate: expirationDate,
-            State: state,
             UserEmail: user,
           },
           {
@@ -62,7 +60,6 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     units,
     price,
     expirationDate,
-    state,
     user
   ) {
     try {
@@ -74,7 +71,6 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             Units: units,
             Price: price,
             ExpirationDate: expirationDate,
-            State: state,
             UserUpdate: user,
           },
           {
@@ -101,13 +97,12 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   }
 
   // Funciones para manejar las salidas de inventario
-  async function PutUnits(id, units2, unitsExit, state) {
-    console.log(id, units2, unitsExit, state);
+  async function PutUnits(id, units2) {
+    console.log(id, units2);
     try {
       return (
         await requestAxios.put(`/inventory/putUnits/${id}`, {
-          Units: units2 - unitsExit,
-          State: state
+          Units: units2,
         }),
         notifySuccess("Cantidad Actualizada")
       );

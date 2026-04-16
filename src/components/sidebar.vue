@@ -1,137 +1,105 @@
 <template>
   <div
-    class="bg-[#04162d] fixed lg:left-0 top-0 w-28 h-full flex flex-col justify-between py-3 rounded-tr-xl rounded-br-xl text-white z-10 transition-all"
-    :class="{ 'left-0': showSidebar, '-left-full': !showSidebar }"
-  >
-    <ul class="pl-1">
-      <!-- logo  -->
-      <li>
-        <img class="w-[40%] m-8" src="../assets/logoNewxo.png" alt="">
-      </li>
-      <!-- options  -->
-      <router-link to="/home">
-        <li
-          :class="[
-            $route.path == '/home'
-              ? 'text-[#04162d] bg-[#E7E8F3]'
-              : 'text-default',
-          ]"
-          class="hover:bg-[#E7E8F3] hover:text-black text-center p-4 rounded-tl-xl rounded-bl-xl transition"
-        >
-          <span class="material-icons text-2xl"> home </span>
-        </li>
-      </router-link>
-
-      <router-link to="/inventory">
-        <li
-          :class="[
-            $route.path == '/inventory'
-              ? 'text-[#04162d] bg-[#E7E8F3]'
-              : 'text-default',
-          ]"
-          class="hover:bg-[#E7E8F3] hover:text-black text-center p-4 rounded-tl-xl rounded-bl-xl transition"
-        >
-          <span class="material-icons text-2xl"> inventory </span>
-        </li>
-      </router-link>
-
-      <router-link to="/exits">
-        <li
-          :class="[
-            $route.path == '/exits'
-              ? 'text-[#04162d] bg-[#E7E8F3]'
-              : 'text-default',
-          ]"
-          class="hover:bg-[#E7E8F3] hover:text-black text-center p-4 rounded-tl-xl rounded-bl-xl transition"
-        >
-          <span class="material-icons text-2xl">
-            production_quantity_limits
-          </span>
-        </li>
-      </router-link>
-
-      <router-link to="/bill">
-        <li
-          :class="[
-            $route.path == '/bill'
-              ? 'text-[#04162d] bg-[#E7E8F3]'
-              : 'text-default',
-          ]"
-          class="hover:bg-[#E7E8F3] hover:text-black text-center p-4 rounded-tl-xl rounded-bl-xl transition"
-        >
-          <span class="material-icons text-2xl"> attach_money </span>
-        </li>
-      </router-link>
-
-      <router-link to="/user">
-        <li
-          :class="[
-            $route.path == '/user'
-              ? 'text-[#04162d] bg-[#E7E8F3]'
-              : 'text-default',
-          ]"
-          class="hover:bg-[#E7E8F3] hover:text-black text-center p-4 rounded-tl-xl rounded-bl-xl transition"
-        >
-          <span class="material-icons text-2xl"> settings </span>
-        </li>
-      </router-link>
-
-      <router-link to="/users" v-if="storelogin.rol== 'Admin'">
-        <li
-          :class="[
-            $route.path == '/users'
-              ? 'text-[#04162d] bg-[#E7E8F3]'
-              : 'text-default',
-          ]"
-          class="hover:bg-[#E7E8F3] hover:text-black text-center p-4 rounded-tl-xl rounded-bl-xl transition"
-        >
-          <span class="material-icons text-2xl"> group_add </span>
-        </li>
-      </router-link>
-    </ul>
-    <!-- div logout  -->
+  class="bg-[#1a2332] h-full flex flex-col justify-between py-6 text-gray-400 z-40 transition-all border-r border-gray-800 shadow-2xl shrink-0"
+  :class="[
+    showSidebar 
+      ? 'fixed left-0 w-72' 
+      : 'fixed -left-full lg:static lg:translate-x-0 lg:w-64'
+  ]"
+>
     <div>
-      <ul class="pl-4 mb-10 lg:mb-0">
-        <li
-          class="hover:bg-[#E7E8F3] hover:text-[#04162d]  rounded-tl-xl rounded-bl-xl p-4 text-center transition"
-        >
-          <router-link to="/" @click="logout()">
-            <span class="material-icons text-2xl"> logout </span>
-          </router-link>
-        </li>
-      </ul>
+      <div class="px-6 mb-10 flex items-center gap-3">
+        <div class="bg-white p-1 rounded-md">
+           <img class="w-6 h-6 object-contain" src="../assets/logoNewxo.png" alt="Logo">
+        </div>
+        <div class="flex flex-col">
+          <span class="text-white font-bold text-sm tracking-tight">Newxo System</span>
+          <span class="text-[10px] uppercase tracking-widest text-gray-500">Centro de gestión</span>
+        </div>
+      </div>
+
+      <nav class="space-y-1 px-3">
+        <router-link to="/home" v-slot="{ isActive }">
+          <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'hover:bg-[#252f41] hover:text-gray-200']" 
+               class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
+            <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">home</span>
+            <span class="font-medium text-sm">Dashboard</span>
+          </div>
+        </router-link>
+
+        <router-link to="/inventory" v-slot="{ isActive }">
+          <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'hover:bg-[#252f41] hover:text-gray-200']" 
+               class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
+            <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">inventory_2</span>
+            <span class="font-medium text-sm">Inventario</span>
+          </div>
+        </router-link>
+
+        <router-link to="/exits" v-slot="{ isActive }">
+          <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'hover:bg-[#252f41] hover:text-gray-200']" 
+               class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
+            <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">shopping_cart</span>
+            <span class="font-medium text-sm">Ventas</span>
+          </div>
+        </router-link>
+
+        <router-link to="/bill" v-slot="{ isActive }">
+          <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'hover:bg-[#252f41] hover:text-gray-200']" 
+               class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
+            <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">payments</span>
+            <span class="font-medium text-sm">Facturación</span>
+          </div>
+        </router-link>
+
+        <router-link to="/history" v-slot="{ isActive }">
+          <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'hover:bg-[#252f41] hover:text-gray-200']" 
+               class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
+            <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">history</span>
+            <span class="font-medium text-sm">Historial</span>
+          </div>
+        </router-link>
+
+        <router-link to="/user" v-slot="{ isActive }">
+          <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'hover:bg-[#252f41] hover:text-gray-200']" 
+               class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
+            <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">settings</span>
+            <span class="font-medium text-sm">Ajustes</span>
+          </div>
+        </router-link>
+
+        <router-link v-if="storelogin.rol == 'Admin'" to="/users" v-slot="{ isActive }">
+          <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'hover:bg-[#252f41] hover:text-gray-200']" 
+               class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
+            <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">group</span>
+            <span class="font-medium text-sm">Usuarios</span>
+          </div>
+        </router-link>
+      </nav>
+    </div>
+
+    <div class="px-4 space-y-4">
+      <!-- <button class="w-full bg-white text-[#1a2332] font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg hover:bg-gray-100 transition shadow-white/5">
+        <span class="material-icons text-sm">add</span>
+        <span class="text-xs uppercase tracking-wider">Nueva Salida</span>
+      </button> -->
+
+      <div @click="logout()" class=" flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-all cursor-pointer group">
+        <span class="material-icons text-xl">logout</span>
+        <span class="font-medium text-sm">Cerrar Sesión</span>
+      </div>
     </div>
   </div>
-  <!-- menu movil  -->
-  <nav
-    class="bg-[#04162d] lg:hidden fixed w-full mb-0 bottom-[0] left-0 text-2xl text-white py-2 px-8 flex items-center justify-between rounded-tl-md rounded-tr-md z-50"
-  >
-    <router-link to="/user">
-      <button class="p-2">
-        <span class="material-icons"> settings </span>
-      </button>
-    </router-link>
-    <router-link to="/home">
-      <button class="p-2">
-        <span class="material-icons"> home </span>
-      </button>
-    </router-link>
-    <router-link to="/inventory">
-      <button class="p-2">
-        <span class="material-icons"> inventory </span>
-      </button>
-    </router-link>
-    <button @click="toggleSidebar()" class="p-2">
-      <span class="material-icons">
-        {{ showSidebar ? "close" : "menu" }}
-      </span>
-    </button>
+
+  <nav class="bg-[#1a2332] lg:hidden fixed w-[94%] bottom-4 left-1/2 -translate-x-1/2 text-white py-3 px-6 flex items-center justify-between rounded-2xl z-50 shadow-2xl border border-gray-700">
+    <router-link to="/home"><span class="material-icons text-gray-400 focus:text-white">home</span></router-link>
+    <router-link to="/inventory"><span class="material-icons text-gray-400">inventory_2</span></router-link>
+    <router-link to="/bill"><span class="material-icons text-gray-400">payments</span></router-link>
+    <button @click="toggleSidebar()"><span class="material-icons text-white bg-blue-600 p-2 rounded-full shadow-lg shadow-blue-600/30">{{ showSidebar ? "close" : "menu" }}</span></button>
   </nav>
-  <!-- color 1 #3f55ff  -->
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { LoginStore } from "../store/login.js";
 import { useRouter } from "vue-router";
 
@@ -144,15 +112,23 @@ function toggleSidebar() {
 }
 
 const logout = () => {
-    storelogin.logoutUser();
-    router.push("/");
+  storelogin.logoutUser();
+  router.push("/");
 };
 
-const currentDate = new Date();
-const dateLogin = new Date(storelogin.dateLogin);
-
-//si la fecha actual es mayor a la fecha de inicio de sesion + 1 dia
-if (currentDate > dateLogin.setDate(dateLogin.getDate() + 1)) {
-  logout();
-}
+// Validación de sesión
+onMounted(() => {
+  const currentDate = new Date();
+  const dateLogin = new Date(storelogin.dateLogin);
+  if (currentDate > dateLogin.setDate(dateLogin.getDate() + 1)) {
+    logout();
+  }
+});
 </script>
+
+<style scoped>
+/* Para suavizar las transiciones de Tailwind */
+.router-link-active div {
+  @apply bg-[#2d3a4f] text-white;
+}
+</style>

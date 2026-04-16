@@ -1,668 +1,285 @@
 <template>
-  <div class="lg:pl-40 lg:pr-20 p-4">
-    <!-- title -->
-    <div class="mb-4">
-      <h1 class="text-[#04162d] text-3xl font-bold pt-4 rounded-xl">
-        <span class="material-icons text-5xl"> arrow_right </span>
-        CLIENTES
-      </h1>
-    </div>
-    <!-- btn add -->
-    <div class="flex justify-between py-4">
-        <div class="flex items-center">
-          <div>
-            
-          </div>
+  <div class="min-h-screen bg-[#F4F7FE] lg:p-20 p-6 font-sans text-[#1e293b]">
+    
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <div class="w-1 h-6 bg-[#4F46E5] rounded-full"></div>
+          <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Cuentas de clientes</span>
         </div>
-      <div class="flex gap-2">
-          <q-btn
-            icon="add"
-            class="rounded-xl bg-[#04162d] text-white"
-            @click="(showModal = true), cleanForm()">
-          </q-btn>
+        <h1 class="text-4xl font-extrabold text-[#0F172A] tracking-tight flex items-center gap-2">
+          Clientes
+        </h1>
+      </div>
+
+      <button 
+        @click="(showModal = true), cleanForm()" 
+        class="flex items-center gap-2 px-6 py-3 bg-[#111827] text-white rounded-2xl hover:bg-indigo-600 transition-all shadow-lg shadow-indigo-900/10 font-bold text-sm"
+      >
+        <span class="material-icons text-lg">add</span>
+        Nuevo Cliente
+      </button>
+    </header>
+
+    <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 mb-6 flex items-center justify-between">
+      <div class="relative w-full max-w-md">
+        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+          <span class="material-icons text-xl">search</span>
+        </span>
+        <input 
+          v-model="filter" 
+          type="text" 
+          placeholder="Buscar por nombre, documento o correo..." 
+          class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-sm font-medium"
+        >
+      </div>
+      <div class="hidden md:flex items-center gap-2 text-slate-400 text-xs font-bold px-4">
+        <span class="material-icons text-sm">filter_list</span>
+        {{ rows.length }} REGISTROS ENCONTRADOS
       </div>
     </div>
-    <!-- table -->
-    <q-table
-      flat
-      :separator="'cell'"
-      bordered
-      :rows="rows"
-      :columns="columns"
-      row-key="index"
-      virtual-scroll
-      v-model:pagination="pagination"
-      class="inventTable h-[550px] lg:h-[720px] rounded-2xl"
-      :filter="filter"
-      @focusin="activateNavigation"
-      @focusout="deactivateNavigation"
-      @keydown="onKey"
-    >
-      <template v-slot:top-left>
-        <q-input
-          borderless
-          dense
-          debounce="300"
-          v-model="filter"
-          placeholder="Buscar"
-          class="bg-[#E7E8F3] w-full pl-4 pr-4 rounded-lg outline-none"
-        >
-          <template v-slot:prepend>
-            <q-icon name="search" class="text-[#04162d]" />
-          </template>
-        </q-input>
-      </template>
-      <!-- opciones  -->
-      <template v-slot:body-cell-options="props">
-        <q-td :props="props">
-          <div class="text-white">
-            <q-btn
-              round
-              icon="edit"
-              class="q-mx bg-[#04162d]"
-              size="xs"
-              title="Editar"
-              @click="
-                (index = props.row._id),
-                  goInfo(props.row),
-                  (showModalEdit = true)
-              "
-            >
-            </q-btn>
-            <q-btn 
-              v-if="props.row.state == 0" 
-              round 
-              size="xs" 
-              class="mx-1"
-              color="green-10"
-              @click="StateUpdate(props.row)"
-              icon="check"
-              >
-            </q-btn>
-            <q-btn 
-              v-else 
-              round
-              class="mx-1"
-              size="xs" 
-              color="red" 
-              @click="StateUpdate(props.row)"
-              icon="close"
-              >
-            </q-btn>
-            <q-btn
-              round
-              icon="delete"
-              class="bg-[#04162d]"
-              size="xs"
-              title="Borrar"
-              @click="deleteItem(props.row)"
-            ></q-btn>
+
+    <div class="bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50/50 border-b border-slate-100">
+              <th v-for="col in columns" :key="col.name" class="px-6 py-5 text-[11px] font-black uppercase tracking-widest text-slate-500">
+                {{ col.label }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, idx) in filteredRows" :key="idx" class="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
+              <td class="px-6 py-4 text-xs font-bold text-slate-400">#{{ row.index }}</td>
+              <td class="px-6 py-4 text-sm font-bold text-[#0F172A]">{{ row.Document }}</td>
+              <td class="px-6 py-4 text-sm font-medium text-slate-600">{{ row.Name }} {{ row.LastName }}</td>
+              <td class="px-6 py-4 text-sm text-slate-500">{{ row.Cel }}</td>
+              <td class="px-6 py-4 text-sm text-slate-500">
+                <div class="flex flex-col">
+                  <span>{{ row.Email }}</span>
+                  <span class="text-[10px] text-slate-400 uppercase tracking-tighter">{{ row.Municipio }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <span :class="row.state == 1 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'" class="px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                  {{ row.state == 1 ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-1">
+                  <button @click="(index = row._id), goInfo(row), (showModalEdit = true)" class="action-btn-mini hover:bg-indigo-50 hover:text-indigo-600">
+                    <span class="material-icons text-sm">edit</span>
+                  </button>
+                  <button @click="StateUpdate(row)" :class="row.state == 1 ? 'hover:bg-rose-50 hover:text-rose-600' : 'hover:bg-emerald-50 hover:text-emerald-600'" class="action-btn-mini text-slate-400">
+                    <span class="material-icons text-sm">{{ row.state == 1 ? 'block' : 'check_circle' }}</span>
+                  </button>
+                  <button @click="deleteItem(row)" class="action-btn-mini hover:bg-rose-50 hover:text-rose-600">
+                    <span class="material-icons text-sm">delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div v-if="showModal || showModalEdit" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0f172a]/40 backdrop-blur-sm">
+      <div class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+        <div class="bg-[#111827] p-8 text-white flex justify-between items-center">
+          <div>
+            <h3 class="text-xl font-bold">{{ showModalEdit ? 'Editar Cliente' : 'Nuevo Cliente' }}</h3>
+            <p class="text-slate-400 text-xs mt-1 uppercase tracking-widest font-bold">Información de contacto y acceso</p>
           </div>
-        </q-td>
-      </template>
-    </q-table>
-
- <!-- modals -->
-  <!-- modal crear -->
- <q-dialog v-model="showModal">
-      <q-card class="w-[400px]">
-        <q-card-section class="bg-[#04162d]">
-          <h5 class="text-center text-white font-bold p-2 text-xl">
-            INGRESA LOS DATOS
-          </h5>
-        </q-card-section>
-        <div class="p-4">
-          <q-form ref="myForm" @submit.prevent.stop="UsersPost()">
-            <div class="flex w-full justify-center">
-              <div class="w-[45%]">
-                <q-input
-                  type="text"
-                  v-model="document"
-                  label="Documento"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Digite el Documento',
-                  ]"
-                />
-                <q-input
-                  type="text"
-                  v-model="name"
-                  label="Nombre"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.toString().trim().length > 0) ||
-                      'Digite el Nombre',
-                  ]"
-                />
-                <q-input
-                  type="text"
-                  v-model="lastName"
-                  label="Apellidos"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.toString().trim().length > 0) ||
-                      'Digite los Apellidos',
-                  ]"
-                />
-                <q-input
-                  type="number"
-                  v-model="cel"
-                  label="Telefono"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Dijite su Telefono',
-                    (val) =>
-                      (val && val.trim().length === 10) ||
-                      'El número de teléfono debe tener 10 dígitos',
-                  ]"
-                />
-              </div>
-              <div class="w-[45%] ml-4">
-                <q-input
-                  type="text"
-                  v-model="address"
-                  label="Dirección"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Digite la Dirección',
-                  ]"
-                />
-                <q-input
-                  type="email"
-                  v-model="email"
-                  label="Correo"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Digite el Correo',
-                  ]"
-                />
-                <q-input
-                  type="text"
-                  v-model="municipality"
-                  label="Municipio"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Digite el Municipio',
-                  ]"
-                />
-                <q-input
-                  :type="isPwd ? 'password' : 'text'"
-                  v-model="password"
-                  label="Contraseña"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Dijite la Contraseña',
-                    (val) =>
-                      (val && val.trim().length >= 8) ||
-                      'La Contraseña debe tener minimo 8 dígitos',
-                  ]"
-                >
-                <template v-slot:append>
-                  <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer text-[#04162d]"
-                    @click="isPwd = !isPwd" />
-                </template>
-              </q-input>
-              </div>
-            </div>
-            <!-- div botones  -->
-            <div class="flex justify-center items-center gap-4">
-              <q-btn
-                icon="save_as"
-                label="GUARDAR"
-                :loading="loading"
-                type="submit"
-                class="text-white bg-green-800 rounded-2xl"
-              ></q-btn>
-              <q-btn
-                icon="cancel"
-                type="button"
-                class="text-white bg-red-700 rounded-2xl"
-                v-close-popup
-                >CERRAR
-              </q-btn>
-            </div>
-          </q-form>
+          <button @click="showModal = false; showModalEdit = false" class="text-slate-400 hover:text-white transition-colors">
+            <span class="material-icons">close</span>
+          </button>
         </div>
-      </q-card>
-    </q-dialog>
 
-<!-- modal editar -->
-<q-dialog v-model="showModalEdit">
-      <q-card class="w-[400px]">
-        <q-card-section class="bg-[#04162d]">
-          <h5 class="text-center text-white font-bold p-2 text-xl">
-            EDITE LOS DATOS
-          </h5>
-        </q-card-section>
-        <div class="p-4">
-          <q-form ref="myForm" @submit.prevent.stop="UsersPut()">
-            <div class="flex w-full justify-center">
-              <div class="w-[45%]">
-                <q-input
-                  type="text"
-                  v-model="document"
-                  label="Documento"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Digite el Documento',
-                  ]"
-                />
-                <q-input
-                  type="text"
-                  v-model="name"
-                  label="Nombre"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.toString().trim().length > 0) ||
-                      'Digite el Nombre',
-                  ]"
-                />
-                <q-input
-                  type="text"
-                  v-model="lastName"
-                  label="Apellidos"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.toString().trim().length > 0) ||
-                      'Digite los Apellidos',
-                  ]"
-                />
-                <q-input
-                  type="number"
-                  v-model="cel"
-                  label="Telefono"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Dijite su Telefono',
-                    (val) =>
-                      (val && val.trim().length === 10) ||
-                      'El número de teléfono debe tener 10 dígitos',
-                  ]"
-                />
-              </div>
-              <div class="w-[45%] ml-4">
-                <q-input
-                  type="text"
-                  v-model="address"
-                  label="Dirección"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Digite la Dirección',
-                  ]"
-                />
-                <q-input
-                  type="email"
-                  v-model="email"
-                  label="Correo"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Digite el Correo',
-                  ]"
-                />
-                <q-input
-                  type="text"
-                  v-model="municipality"
-                  label="Municipio"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Digite el Municipio',
-                  ]"
-                />
-                <q-input
-                  :type="isPwd ? 'password' : 'text'"
-                  v-model="password"
-                  label="Contraseña"
-                  lazy-rules
-                  :rules="[
-                    (val) =>
-                      (val && val.trim().length > 0) || 'Dijite la Contraseña',
-                    (val) =>
-                      (val && val.trim().length >= 8) ||
-                      'La Contraseña debe tener minimo 8 dígitos',
-                  ]"
-                >
-                <template v-slot:append>
-                  <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer text-[#04162d]"
-                    @click="isPwd = !isPwd" />
-                </template>
-              </q-input>
+        <form @submit.prevent="showModalEdit ? UsersPut() : UsersPost()" class="p-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="space-y-1">
+              <label class="input-label">Documento</label>
+              <input v-model="document" type="text" class="meridian-input" required>
+            </div>
+            <div class="space-y-1">
+              <label class="input-label">Nombre</label>
+              <input v-model="name" type="text" class="meridian-input" required>
+            </div>
+            <div class="space-y-1">
+              <label class="input-label">Apellidos</label>
+              <input v-model="lastName" type="text" class="meridian-input" required>
+            </div>
+            <div class="space-y-1">
+              <label class="input-label">Teléfono</label>
+              <input v-model="cel" type="text" class="meridian-input" required maxlength="10">
+            </div>
+            <div class="space-y-1">
+              <label class="input-label">Dirección</label>
+              <input v-model="address" type="text" class="meridian-input" required>
+            </div>
+            <div class="space-y-1">
+              <label class="input-label">Municipio</label>
+              <input v-model="municipality" type="text" class="meridian-input" required>
+            </div>
+            <div class="space-y-1">
+              <label class="input-label">Email</label>
+              <input v-model="email" type="email" class="meridian-input" required>
+            </div>
+            <div class="space-y-1">
+              <label class="input-label">Contraseña</label>
+              <div class="relative">
+                <input :type="isPwd ? 'password' : 'text'" v-model="password" class="meridian-input w-full" required>
+                <button type="button" @click="isPwd = !isPwd" class="absolute right-3 top-2.5 text-slate-400">
+                  <span class="material-icons text-lg">{{ isPwd ? 'visibility_off' : 'visibility' }}</span>
+                </button>
               </div>
             </div>
-            <!-- div botones  -->
-            <div class="flex justify-center items-center gap-4">
-              <q-btn
-                icon="save_as"
-                label="GUARDAR"
-                :loading="loading"
-                type="submit"
-                class="text-white bg-green-800 rounded-2xl"
-              ></q-btn>
-              <q-btn
-                icon="cancel"
-                type="button"
-                class="text-white bg-red-700 rounded-2xl"
-                v-close-popup
-                >CERRAR
-              </q-btn>
-            </div>
-          </q-form>
-        </div>
-      </q-card>
-    </q-dialog>
+          </div>
+
+          <div class="flex justify-end gap-3">
+            <button type="button" @click="showModal = false; showModalEdit = false" class="px-6 py-3 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-100 transition-all uppercase">
+              Cancelar
+            </button>
+            <button type="submit" :disabled="loading" class="px-8 py-3 bg-[#4F46E5] text-white rounded-xl font-bold text-sm hover:bg-indigo-600 shadow-lg shadow-indigo-200 transition-all flex items-center gap-2">
+              <span v-if="loading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+              {{ showModalEdit ? 'ACTUALIZAR DATOS' : 'GUARDAR CLIENTE' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
+<style scoped>
+.meridian-input {
+  @apply w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all text-sm font-semibold text-slate-700;
+}
+
+.input-label {
+  @apply text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1;
+}
+
+.action-btn-mini {
+  @apply p-2 rounded-lg text-slate-400 transition-all duration-200 flex items-center justify-center;
+}
+
+.action-btn-mini:hover {
+  @apply shadow-sm scale-110;
+}
+
+/* Transiciones de tabla */
+tr {
+  transition: all 0.2s ease-in-out;
+}
+</style>
+
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { usersStore } from "../store/users.js";
 import { LoginStore } from "../store/login.js";
 import { sweetDelete } from "@/Global/notify";
-import { useQuasar } from "quasar";
 
-const $q = useQuasar();
-
-$q.loading.show();
-$q.loading.hide();
 const storeUsers = usersStore();
 const storeLogin = LoginStore();
 
-let isPwd = ref(true);
-let showModal=ref(false)
-let showModalEdit=ref(false)
-let loading=ref(false)
-// variables
-let index = ref();
-let document=ref()
-let name=ref()
-let lastName=ref()
-let cel=ref()
-let address=ref()
-let email=ref()
-let municipality=ref()
-let password=ref()
-let user=ref(storeLogin.Email)
+const isPwd = ref(true);
+const showModal = ref(false);
+const showModalEdit = ref(false);
+const loading = ref(false);
 
-// peticiones
+const index = ref();
+const document = ref();
+const name = ref();
+const lastName = ref();
+const cel = ref();
+const address = ref();
+const email = ref();
+const municipality = ref();
+const password = ref();
+const user = ref(storeLogin.Email);
+
+// Filtro computado (reemplazo del filter de q-table)
+const filter = ref("");
+const rows = ref([]);
+
+const filteredRows = computed(() => {
+  if (!filter.value) return rows.value;
+  const search = filter.value.toLowerCase();
+  return rows.value.filter(row => 
+    row.Name.toLowerCase().includes(search) || 
+    row.Document.toLowerCase().includes(search) ||
+    row.Email.toLowerCase().includes(search)
+  );
+});
+
+// Peticiones
 async function UsersGet() {
-  $q.loading.show();
   const res = await storeUsers.GetUsers();
   if (res && res.status < 299) {
-    rows.value = res.data;
-    rows.value.forEach((row, index) => {
-      row.index = index + 1;
-    });
-    $q.loading.hide();
+    rows.value = res.data.map((row, i) => ({ ...row, index: i + 1 }));
   }
 }
+
 async function UsersPost() {
   loading.value = true;
-  const res = await storeUsers.PostUsers(
-    document.value,
-    name.value,
-    lastName.value,
-    cel.value,
-    address.value,
-    email.value,
-    municipality.value,
-    password.value,
-    user.value
-  );
+  await storeUsers.PostUsers(document.value, name.value, lastName.value, cel.value, address.value, email.value, municipality.value, password.value, user.value);
   showModal.value = false;
-  UsersGet();
+  await UsersGet();
   loading.value = false;
 }
+
 async function UsersPut() {
   loading.value = true;
-  const res = await storeUsers.PutUser(
-    index.value,
-    document.value,
-    name.value,
-    lastName.value,
-    cel.value,
-    address.value,
-    email.value,
-    municipality.value,
-    password.value,
-    user.value
-  );
+  await storeUsers.PutUser(index.value, document.value, name.value, lastName.value, cel.value, address.value, email.value, municipality.value, password.value, user.value);
   showModalEdit.value = false;
-  UsersGet();
+  await UsersGet();
   loading.value = false;
 }
+
 async function deleteItem(data) {
   sweetDelete(data, async () => {
     try {
       await storeUsers.DeleteUser(data._id);
-      UsersGet();
-    } catch (error) {
-      console.log(error);
-    }
+      await UsersGet();
+    } catch (error) { console.log(error); }
   });
 }
+
 async function StateUpdate(data) {
-  let res = ""
-  if (data.state == 1) {
-    res = await storeUsers.UpdateState(data._id, 0)
-    UsersGet()
-  } else {
-    res = await storeUsers.UpdateState(data._id, 1)
-    UsersGet()
-  }
+  const newState = data.state == 1 ? 0 : 1;
+  await storeUsers.UpdateState(data._id, newState);
+  await UsersGet();
 }
 
 function goInfo(data) {
-    (document.value = data.Document),
-    (name.value = data.Name),
-    (lastName.value = data.LastName),
-    (cel.value = data.Cel),
-    (address.value = data.Address),
-    (email.value = data.Email ),
-    (municipality.value = data.Municipio);
-    (password.value = data.Password);
+  document.value = data.Document;
+  name.value = data.Name;
+  lastName.value = data.LastName;
+  cel.value = data.Cel;
+  address.value = data.Address;
+  email.value = data.Email;
+  municipality.value = data.Municipio;
+  password.value = data.Password;
 }
+
 function cleanForm() {
-  document.value=""
-  name.value=""
-  lastName.value=""
-  cel.value=""
-  address.value=""
-  email.value=""
-  municipality.value=""
-  password.value=""
+  document.value = ""; name.value = ""; lastName.value = ""; cel.value = "";
+  address.value = ""; email.value = ""; municipality.value = ""; password.value = "";
 }
-// table
-let rows = ref([]);
-let pagination = ref({
-  rowsPerPage: 50,
-});
-let columns = ref([
-  { name: "index", label: "N°", field: "index", align: "center" },
-  { name: "proveedor", align: "center", label: "DOCUMENTO", field: "Document",
-  },
-  {
-    name: "proveedor",
-    align: "center",
-    label: "NOMBRE",
-    field: "Name",
-  },
-  {
-    name: "proveedor",
-    align: "center",
-    label: "APELLIDOS",
-    field: "LastName",
-  },
-  {
-    name: "proveedor",
-    align: "center",
-    label: "TELEFONO",
-    field: "Cel",
-  },
-  {
-    name: "proveedor",
-    align: "center",
-    label: "DIRECCIÓN",
-    field: "Address",
-  },
-  {
-    name: "proveedor",
-    align: "center",
-    label: "CORREO",
-    field: "Email",
-  },
-  {
-    name: "proveedor",
-    align: "center",
-    label: "MUNICIPIO",
-    field: "Municipio",
-  },
-  {
-    name: "date",
-    label: "CONTRASEÑA",
-    type:"password",
-    field: (row) => row.Password.slice(0, 10),
-    format: val => '•'.repeat(val.length),
-    align: "center",
-  },
-  {
-    name: "date",
-    label: "FECHA",
-    field: (row) => row.createdAt.slice(0, 10),
-    align: "center",
-  },
-  {
-    name: "updateAt",
-    align: "center",
-    label: "ULTIMO CAMBIO",
-    field: (row) => (row.updatedAt ? row.updatedAt.slice(0, 10) : "NA"),
-  },
-  {
-    name: "state",
-    align: "center",
-    label: "ESTADO",
-    field: (row) => (row.state == 1 ? "Activo" : "Inactivo"),
-    style: (row) => {
-      if (row.State === "Inactivo") {
-        return "color: red";
-      }
-      return "color: green";
-    },
-  },
-  {
-    name: "options",
-    align: "center",
-    label: "OPCIONES",
-  },
-]);
-// function filter
-let filter = ref("");
-const tableRef = ref(null);
-const navigationActive = ref(false);
-const selected = ref([]);
 
-const activateNavigation = () => {
-  navigationActive.value = true;
-};
+const columns = [
+  { name: "index", label: "#" },
+  { name: "doc", label: "Documento" },
+  { name: "name", label: "Cliente" },
+  { name: "tel", label: "Teléfono" },
+  { name: "loc", label: "Ubicación / Email" },
+  { name: "state", label: "Estado" },
+  { name: "options", label: "Acciones" },
+];
 
-const deactivateNavigation = () => {
-  navigationActive.value = false;
-};
-
-const onKey = (evt) => {
-  if (
-    navigationActive.value !== true ||
-    [33, 34, 35, 36, 38, 40].indexOf(evt.keyCode) === -1 ||
-    tableRef.value === null
-  ) {
-    return;
-  }
-
-  evt.preventDefault();
-
-  const { computedRowsNumber, computedRows } = tableRef.value;
-
-  if (computedRows.length === 0) {
-    return;
-  }
-
-  const currentIndex =
-    selected.value.length > 0
-      ? computedRows.indexOf(toRaw(selected.value[0]))
-      : -1;
-  const currentPage = pagination.value.page;
-  const rowsPerPage =
-    pagination.value.rowsPerPage === 0
-      ? computedRowsNumber
-      : pagination.value.rowsPerPage;
-  const lastIndex = computedRows.length - 1;
-  const lastPage = Math.ceil(computedRowsNumber / rowsPerPage);
-
-  let index = currentIndex;
-  let page = currentPage;
-
-  switch (evt.keyCode) {
-    case 36: // Home
-      page = 1;
-      index = 0;
-      break;
-    case 35: // End
-      page = lastPage;
-      index = rowsPerPage - 1;
-      break;
-    case 33: // PageUp
-      page = currentPage <= 1 ? lastPage : currentPage - 1;
-      if (index < 0) {
-        index = 0;
-      }
-      break;
-    case 34: // PageDown
-      page = currentPage >= lastPage ? 1 : currentPage + 1;
-      if (index < 0) {
-        index = rowsPerPage - 1;
-      }
-      break;
-    case 38: // ArrowUp
-      if (currentIndex <= 0) {
-        page = currentPage <= 1 ? lastPage : currentPage - 1;
-        index = rowsPerPage - 1;
-      } else {
-        index = currentIndex - 1;
-      }
-      break;
-    case 40: // ArrowDown
-      if (currentIndex >= lastIndex) {
-        page = currentPage >= lastPage ? 1 : currentPage + 1;
-        index = 0;
-      } else {
-        index = currentIndex + 1;
-      }
-      break;
-  }
-
-  if (page !== pagination.value.page) {
-    pagination.value.page = page;
-
-    nextTick(() => {
-      const { computedRows } = tableRef.value;
-      selected.value = [computedRows[Math.min(index, computedRows.length - 1)]];
-      tableRef.value.$el.focus();
-    });
-  }
-};
 onMounted(() => {
   UsersGet();
 });
