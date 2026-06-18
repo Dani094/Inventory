@@ -1,26 +1,35 @@
 <template>
   <div class="lg:p-20 p-6 bg-[#f8fafc] min-h-screen">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+<!-- --------------------------------------------------------------------------------------
+      TITLE
+-------------------------------------------------------------------------------------- -->
       <div>
         <h1 class="text-[#1a2332] text-4xl font-black tracking-tight flex items-center gap-2">
-          <div class="w-2 h-8 bg-[#770202] rounded-full"></div>
+          <div class="w-2 h-8 bg-[#40d124] rounded-full"></div>
           INVENTARIO
         </h1>
         <p class="text-gray-400 text-sm mt-1 ml-4 italic">Gestión de activos y stock en tiempo real</p>
       </div>
 
+<!-- --------------------------------------------------------------------------------------
+      BUTTON
+-------------------------------------------------------------------------------------- -->
       <div class="flex items-center gap-3">
         <Report :inventory="true" />
         <button 
           @click="(showModal = true), cleanForm()"
-          class="bg-[#1a2332] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-slate-800 transition-all shadow-sm active:scale-95"
+          class="bg-[#1a2332] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#40d124] transition-all shadow-sm active:scale-95"
         >
-          <span class="material-icons text-sm">add</span>
-          Nuevo Item
+          Agregar
+          <span class="material-icons text-base text-green-600">add</span>
         </button>
       </div>
     </div>
 
+<!-- --------------------------------------------------------------------------------------
+      TOTAL UNITS
+-------------------------------------------------------------------------------------- -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
         <div class="bg-blue-50 p-4 rounded-2xl">
@@ -33,43 +42,48 @@
       </div>
     </div>
 
+<!-- --------------------------------------------------------------------------------------
+      TABLE
+-------------------------------------------------------------------------------------- -->
     <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+
       <div class="p-6 border-b border-gray-50 flex flex-col md:flex-row justify-between gap-4">
         <div class="relative w-full md:w-80">
           <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</span>
           <input 
             v-model="filter"
             type="text" 
-            placeholder="Buscar en el ledger..."
+            placeholder="Buscar"
             class="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500/20 border border-transparent focus:border-blue-500 transition-all text-sm"
-          >
-        </div>
+          ></div>
       </div>
 
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
-            <tr class="bg-gray-50/50">
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Producto / Vencimiento</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Proveedor / Serial</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Stock</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Precio Unit.</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 ">Valor Total</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Estado</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Acciones</th>
+            <tr class="bg-gray-50/50 text-[12px] font-bold uppercase tracking-wide text-center text-black px-6 py-4">
+              <th class="px-6 py-4">Proveedor</th>
+              <th class="px-6 py-4">Nombre</th>
+              <th class="px-6 py-4">Cantidad</th>
+              <th class="px-6 py-4">Total Compra</th>
+              <th class="px-6 py-4">Precio Unidad Compra</th>
+              <th class="px-6 py-4">Precio Unidad Venta</th>
+              <th class="px-6 py-4">Total Gramos</th>
+              <th class="px-6 py-4">Estado</th>
+              <th class="">Opciones</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-50">
             <tr v-for="row in filteredRows" :key="row._id" class="hover:bg-gray-50/50 transition-colors group">
               <td class="px-6 py-5">
                 <div class="flex flex-col">
-                  <span class="font-bold text-[#1a2332] uppercase">{{ row.Name }}</span>
+                  <span class="font-bold text-black uppercase">{{ row.Supplier }}</span>
                   <span class="text-[11px] text-gray-400 italic">Vence: {{ row.ExpirationDate ? row.ExpirationDate.slice(0, 10) : 'N/A' }}</span>
                 </div>
               </td>
               <td class="px-6 py-5">
                 <div class="flex flex-col text-sm text-gray-600">
-                  <span class="font-medium text-gray-700">{{ row.Supplier }}</span>
+                  <span class="font-medium text-gray-700">{{ row.Name }}</span>
                   <span class="text-[10px] font-mono text-gray-400 uppercase tracking-tighter">{{ row.Serial || 'Sin Serial' }}</span>
                 </div>
               </td>
@@ -80,12 +94,23 @@
                 </div>
               </td>
               <td class="px-6 py-5 font-bold text-[#1a2332]">
-                $ {{ row.Price.toLocaleString() }}
+                $ {{ Number(row.PriceBuy).toLocaleString()}}
+              </td>
+              <td class="px-6 py-5 font-bold text-[#1a2332]">
+                $ {{ Number(row.PriceSale).toLocaleString()}}
               </td>
               <td class="px-6 py-5">
                 <span class="font-black text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl text-xs">
-                  $ {{ (row.Price * row.Units).toLocaleString() }}
+                  $ {{ (row.PriceBuy * row.Units).toLocaleString() }}
                 </span>
+              </td>
+              <td class="px-6 py-5">
+                <span class="font-black text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl text-xs">
+                  $ {{ (row.PriceSale * row.Units).toLocaleString() }}
+                </span>
+              </td>
+              <td class="px-6 py-5 font-bold text-[#1a2332]">
+                $ {{ Number(row.CantGrams).toLocaleString()}}
               </td>
               <td class="px-6 py-5">
                 <span :class="getStateBadge(row.State)" class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-sm border">
@@ -93,7 +118,7 @@
                 </span>
               </td>
               <td class="px-6 py-5">
-                <div class="flex justify-center items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div class="flex justify-center items-center gap-2">
                   <button @click="openEdit(row)" class="p-2 hover:bg-blue-50 text-blue-600 rounded-xl transition-colors">
                     <span class="material-icons text-lg">edit</span>
                   </button>
@@ -111,11 +136,15 @@
       </div>
     </div>
 
+
+<!-- --------------------------------------------------------------------------------------
+      MODAL ADD
+-------------------------------------------------------------------------------------- -->
     <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModal = false"></div>
       <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
-        <div class="bg-[#1a2332] p-6 text-white flex justify-between">
-          <h3 class="font-black uppercase tracking-tight">Nuevo Producto</h3>
+        <div class="bg-[#1a2332] p-6 text-white flex justify-between text-xl">
+          <h3 class="font-black uppercase tracking-tight text-center">agregar producto</h3>
           <button @click="showModal = false"><span class="material-icons">close</span></button>
         </div>
         <form @submit.prevent="InventoryPost" class="p-8 space-y-4">
@@ -123,10 +152,18 @@
             <input v-model="supplier" placeholder="Proveedor" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="name" placeholder="Nombre" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="units" placeholder="Unidades" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="price" placeholder="Precio" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="serial" placeholder="Serial" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="expirationDate" placeholder="Fecha de Vencimiento" type="date" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <select v-model="copias" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-600">
+            <input  v-model="priceBuy" placeholder="Precio Unitario de Compra" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input v-model="priceSale" placeholder="Precio Unitario de Venta" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input v-model="cantGrams" placeholder="Cantidad en Gramos" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <div class="flex flex-col bg-gray-50 rounded-2xl p-2 justify-center">
+              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider">Fecha de Vencimiento</span>
+              <input 
+                v-model="expirationDate" 
+                type="date" 
+                class="bg-transparent border-none text-sm text-gray-600 p-0 focus:ring-0 w-full"
+              >
+            </div>            
+            <select v-model="copias" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500">
               <option value="" disabled>¿Copias?</option>
               <option value="No">No</option>
               <option value="Sí">Sí</option>
@@ -137,7 +174,9 @@
         </form>
       </div>
     </div>
-
+<!-- --------------------------------------------------------------------------------------
+      MODAL EDIT
+-------------------------------------------------------------------------------------- -->
     <div v-if="showModalEdit" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalEdit = false"></div>
       <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
@@ -158,7 +197,9 @@
         </form>
       </div>
     </div>
-
+<!-- --------------------------------------------------------------------------------------
+      MODAL Exits
+-------------------------------------------------------------------------------------- -->
     <div v-if="showModalExits" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalExits = false"></div>
       <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
@@ -205,9 +246,11 @@ let index = ref();
 let supplier = ref("");
 let name = ref("");
 let serial = ref("");
-let units = ref(0);
-let price = ref(0);
-let expirationDate = ref("");
+let units = ref();
+let priceBuy = ref();
+let priceSale= ref();
+let cantGrams= ref();
+let expirationDate = ref();
 let state = ref("Disponible");
 let user = ref(storeLogin.Email);
 let TotalUnits = ref(0);
@@ -263,15 +306,16 @@ async function InventoryGet() {
 
 async function InventoryPost() {
   loading.value = true;
-  await storeInventory.PostInventory(supplier.value, name.value, serial.value, units.value, price.value, expirationDate.value, user.value);
+  await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, cantGrams.value, expirationDate.value, user.value);
   
   if (crearCopias.value >= 1) {
     const itemToDuplicate = {
       Supplier: supplier.value,
       Name: name.value,
-      Serial: serial.value,
       Units: units.value,
-      Price: price.value,
+      PriceBuy: priceBuy.value,
+      PriceSale: priceSale.value,
+      CantGrams: cantGrams.value,
       ExpirationDate: expirationDate.value,
       UserEmail: user.value,
     };
@@ -282,15 +326,15 @@ async function InventoryPost() {
       await storeInventory.PostInventory(
         duplicatedItem.Supplier,
         duplicatedItem.Name,
-        duplicatedItem.Serial,
         duplicatedItem.Units,
-        duplicatedItem.Price,
+        duplicatedItem.PriceBuy,
+        duplicatedItem.PriceSale,
+        duplicatedItem.CantGrams,
         duplicatedItem.ExpirationDate,
         duplicatedItem.UserEmail
       );
     }
   }
-  
   showModal.value = false;
   InventoryGet();
   loading.value = false;
@@ -330,24 +374,12 @@ async function ExitsPost() {
       Discount: parseFloat(discount.value),
       UserEmail: user.value,
     });
-
-    // 4. EL DESCUENTO REAL:
-    // Aquí es donde se "saca" del inventario. 
-    // Asegúrate de enviar los valores como números.
-
     await storeInventory.PutUnits(
-      index.value,  
-      -cantSalida, 
+      index.value,-cantSalida, 
     );
-    
-    // 5. Finalización
-    showModalExits.value = false;
-    
-    // IMPORTANTE: Debemos esperar a que el inventario se recargue del servidor
+    showModalExits.value = false;    
     await InventoryGet(); 
-    
     cleanForm();
-
   } catch (error) {
     console.error("Error en el proceso de salida:", error);
     alert("Hubo un error al descontar del inventario");
@@ -376,12 +408,13 @@ function goInfo2(data) {
 function cleanForm() {
   supplier.value = "";
   name.value = "";
-  serial.value = "";
-  units.value = 0;
-  price.value = 0;
-  expirationDate.value = "";
+  units.value = null;
+  priceBuy.value = null;
+  priceSale.value = null;
+  cantGrams.value= null;
+  expirationDate.value = null;
   copias.value = "";
-  crearCopias.value = 0;
+  crearCopias.value = null;
   unitsExit.value = 0;
   discount.value = 0;
 }
@@ -389,7 +422,7 @@ function cleanForm() {
 onMounted(() => InventoryGet());
 </script>
 
-<style scoped>
+<!-- <style scoped>
 .animate-modal { animation: pop 0.25s ease-out; }
 @keyframes pop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-</style>
+</style> -->

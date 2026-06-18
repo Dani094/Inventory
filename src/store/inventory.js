@@ -20,9 +20,10 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   async function PostInventory(
     supplier,
     name,
-    serial,
     units,
-    price,
+    priceBuy,
+    priceSale,
+    cantGrams,
     expirationDate,
     user
   ) {
@@ -33,9 +34,10 @@ export const inventoryStore = defineStore("inventoryStore", () => {
           {
             Supplier: supplier,
             Name: name,
-            Serial: serial,
             Units: units,
-            Price: price,
+            PriceBuy: priceBuy,
+            PriceSale: priceSale,
+            CantGrams: cantGrams,
             ExpirationDate: expirationDate,
             UserEmail: user,
           },
@@ -43,12 +45,12 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             
           }
         ),
-        notifySuccess("Registrado correctamente")
+        notifySuccess("Agregado correctamente")
       );
     } catch (error) {
       console.log(error);
       notifyError(
-        "No fue posible registrar o el serial ya existen en la base de datos"
+        "No fue posible agregar correctamente"
       );
     }
   }

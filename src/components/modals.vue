@@ -60,6 +60,15 @@
                 ]"
               />
               <q-input
+                type="number"
+                v-model="price"
+                label="Precio Unitario"
+                lazy-rules
+                :rules="[
+                  (val) => (val && val.trim().length > 0) || 'Digite el Precio',
+                ]"
+              />
+              <q-input
                 type="date"
                 v-model="expirationDate"
                 label="Fecha de Vencimiento"
@@ -156,7 +165,9 @@ let supplier = ref("");
 let name = ref("");
 let serial = ref("");
 let units = ref();
-let price = ref();
+let priceUnit = ref();
+let priceBuy = ref();
+let priceSale = ref();
 let expirationDate = ref("");
 let state = ref("Disponible");
 let states = ref(["Disponible", "Agotado", "Oferta"]);
