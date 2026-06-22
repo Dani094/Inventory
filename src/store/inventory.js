@@ -41,9 +41,6 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             ExpirationDate: expirationDate,
             UserEmail: user,
           },
-          {
-            
-          }
         ),
         notifySuccess("Agregado correctamente")
       );
@@ -58,9 +55,10 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     id,
     supplier,
     name,
-    serial,
     units,
-    price,
+    priceBuy, 
+    priceSale,
+    cantGrams,
     expirationDate,
     user
   ) {
@@ -69,15 +67,13 @@ export const inventoryStore = defineStore("inventoryStore", () => {
         await requestAxios.put(`/inventory/put/${id}`,       {
             Supplier: supplier,
             Name: name,
-            Serial: serial,
             Units: units,
-            Price: price,
+            SellingPrice: priceBuy, 
+            PurchasePrice: priceSale,
+            CantGrams:cantGrams,
             ExpirationDate: expirationDate,
             UserUpdate: user,
           },
-          {
-            
-          }
         ),
         notifySuccess("Inventario Actualizado Correctamente")
       );
@@ -137,11 +133,6 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   async function GetForDay(fecha,User) {
     try {
       const response = await requestAxios.get(`/inventory/getDia/${fecha}/${User}`,
-        {
-          headers: {
-            token: useToken.token,
-          },
-        }
       );
       if (response.data && response.data.length === 0) {
         notifyError("No Se Encuentran Datos en ese Día");

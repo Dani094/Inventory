@@ -65,10 +65,11 @@
               <th class="px-6 py-4">Proveedor</th>
               <th class="px-6 py-4">Nombre</th>
               <th class="px-6 py-4">Cantidad</th>
-              <th class="px-6 py-4">Total Compra</th>
               <th class="px-6 py-4">Precio Unidad Compra</th>
               <th class="px-6 py-4">Precio Unidad Venta</th>
-              <th class="px-6 py-4">Total Gramos</th>
+              <th class="px-6 py-4">Total Compra</th>
+              <th class="px-6 py-4">Total venta</th>
+              <th class="px-6 py-4">Gramos</th>
               <th class="px-6 py-4">Estado</th>
               <th class="">Opciones</th>
             </tr>
@@ -110,7 +111,7 @@
                 </span>
               </td>
               <td class="px-6 py-5 font-bold text-[#1a2332]">
-                $ {{ Number(row.CantGrams).toLocaleString()}}
+                Gr {{ Number(row.CantGrams).toLocaleString()}}
               </td>
               <td class="px-6 py-5">
                 <span :class="getStateBadge(row.State)" class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-sm border">
@@ -123,7 +124,7 @@
                     <span class="material-icons text-lg">edit</span>
                   </button>
                   <button @click="openExit(row)" class="p-2 hover:bg-orange-50 text-orange-600 rounded-xl transition-colors">
-                    <span class="material-icons text-lg">logout</span>
+                    <span class="material-icons text-lg">sell</span>
                   </button>
                   <button @click="deleteItem(row)" class="p-2 hover:bg-red-50 text-red-600 rounded-xl transition-colors">
                     <span class="material-icons text-lg">delete</span>
@@ -189,8 +190,8 @@
             <input v-model="supplier" placeholder="Proveedor" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="name" placeholder="Nombre" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="units" placeholder="Unidades" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="price" placeholder="Precio" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="serial" placeholder="Serial" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input v-model="priceBuy" placeholder="Precio" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input v-model="priceSale" placeholder="Precio" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="expirationDate" placeholder="Fecha de Vencimiento" type="date" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
           </div>
           <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl">ACTUALIZAR</button>
@@ -215,6 +216,11 @@
             <input v-model="unitsExit" placeholder="Cantidad" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
             <input v-model="discount" placeholder="Descuento" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
           </div>
+          <div class="text-left">
+          <h4 class="text-xl font-black text-[#1a2332]">
+            $ {{ Math.max(0, (unitsExit * priceExit) - discount).toLocaleString('es-CO') }}
+          </h4>
+        </div>
           <button type="submit" class="w-full bg-orange-600 text-white font-bold py-3 rounded-2xl">CONFIRMAR</button>
         </form>
       </div>
@@ -277,15 +283,18 @@ const filteredRows = computed(() => {
 
 // Funciones de Botones
 function openEdit(row) {
+    console.log(row);
+
   index.value = row._id;
   goInfo(row);
   showModalEdit.value = true;
 }
 
 function openExit(row) {
+  console.log(row);
+  
   index.value = row._id;
-  goInfo2(row);
-  cleanForm();
+  goInfo2(row);  
   showModalExits.value = true;
 }
 
@@ -342,7 +351,7 @@ async function InventoryPost() {
 
 async function InventoryPut() {
   loading.value = true;
-  await storeInventory.PutInventory(index.value, supplier.value, name.value, serial.value, units.value, price.value, expirationDate.value, user.value);
+  await storeInventory.PutInventory(index.value, supplier.value, name.value, units.value, priceBuy.value, priceSale.value, cantGrams.value, expirationDate.value, user.value);
   showModalEdit.value = false;
   InventoryGet();
   loading.value = false;
@@ -368,7 +377,6 @@ async function ExitsPost() {
       IdProduct: index.value,
       NumBill: null,
       Name: nameExit.value,
-      Serial: serialExit.value,
       Units: parseFloat(unitsExit.value),
       Price:  parseFloat(priceExit.value),
       Discount: parseFloat(discount.value),
@@ -396,13 +404,23 @@ async function deleteItem(data) {
 }
 
 function goInfo(data) {
-  supplier.value = data.Supplier; name.value = data.Name; serial.value = data.Serial;
-  units.value = data.Units; price.value = data.Price; state.value = data.State;
+  supplier.value = data.Supplier; 
+  name.value = data.Name; 
+  serial.value = data.Serial;
+  units.value = data.Units; 
+  priceBuy.value = data.PriceBuy;   // Corregido
+  priceSale.value = data.PriceSale; // Corregido
+  cantGrams.value = data.CantGrams; // Añadido
+  // Formatea la fecha a YYYY-MM-DD para que el input tipo date la reconozca
+  expirationDate.value = data.ExpirationDate ? data.ExpirationDate.slice(0, 10) : ""; 
+  state.value = data.State;
 }
 
 function goInfo2(data) {
-  nameExit.value = data.Name; serialExit.value = data.Serial;
-  units2.value = data.Units; priceExit.value = data.Price;
+  nameExit.value = data.Name; 
+  serialExit.value = data.Serial;
+  units2.value = data.Units; 
+  priceExit.value = data.PriceSale; // Usamos el precio de venta para la salida
 }
 
 function cleanForm() {
