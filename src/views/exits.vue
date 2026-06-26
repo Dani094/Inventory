@@ -20,8 +20,28 @@
           <span class="material-icons text-orange-600">logout</span>
         </div>
         <div>
-          <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Items Retirados</p>
+          <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Cantidad de ventas</p>
           <h3 class="text-2xl font-black text-[#1a2332]">{{ TotalUnits?.toLocaleString() }}</h3>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+        <div class="bg-violet-50 p-4 rounded-2xl">
+          <span class="material-icons text-violet-600">calendar_month</span>
+        </div>
+        <div>
+          <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Cantidad de ventas hoy</p>
+          <h3 class="text-2xl font-black text-[#1a2332]">{{ cantSalesToday?.toLocaleString() }}</h3>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+        <div class="bg-green-50 p-4 rounded-2xl">
+          <span class="material-icons text-green-600">point_of_sale</span>
+        </div>
+        <div>
+          <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Valor vendido hoy </p>
+          <h3 class="text-2xl font-black text-[#1a2332]">{{ salesToday?.toLocaleString() }}</h3>
         </div>
       </div>
     </div>
@@ -67,7 +87,7 @@
               <td class="px-6 py-5 text-center font-black text-orange-600">{{ row.Units }}</td>
               <td class="px-6 py-5">
                 <div class="flex flex-col">
-                  <span class="font-bold text-[#1a2332]">$ {{ (row.Price * row.Units).toLocaleString() }}</span>
+                  <span class="font-bold text-[#1a2332]">$ {{ (row.Total).toLocaleString() }}</span>
                   <span v-if="row.Discount > 0" class="text-[10px] text-red-500 font-bold">- ${{ row.Discount.toLocaleString() }} Desc.</span>
                 </div>
               </td>
@@ -160,6 +180,9 @@ let discount = ref("");
 let user = ref(storeLogin.Email);
 let TotalUnits = ref(0);
 let rows = ref([]);
+let salesToday = ref(0);
+let salesMonth = ref(0);
+let cantSalesToday = ref(0);
 
 /**
  * Obtiene el historial de salidas desde el servidor
@@ -167,13 +190,29 @@ let rows = ref([]);
 async function ExitsGet() {
   try {
     const res = await storeExits.GetExits(storeLogin.Email);
-    if (res && res.status < 299) {
+    if (res && res.status < 299) {     
+
+       
       rows.value = res.data || [];
-      TotalUnits.value = rows.value.reduce((total, row) => total + (Number(row.Units) || 0), 0);
+      TotalUnits.value = rows.value.length;
     }
   } catch (error) {
     console.error("Error al obtener salidas:", error);
     rows.value = [];
+  }
+}
+
+async function getDashboard() {
+  try {
+    const res = await storeExits.getDashboard(storeLogin.Email);
+    if (res && res.status < 299) {
+
+    salesToday.value = res.data.statistics.dineroHoy || 0;
+    salesMonth.value = res.data.statistics.dineroMes || 0;
+    cantSalesToday.value = res.data.statistics.cantidadHoy || 0;
+    }
+  } catch (error) {
+    console.error("Error al obtener datos del dashboard:", error);
   }
 }
 
@@ -225,16 +264,15 @@ async function ExitsPut() {
  */
 async function deleteItem(data) {
   sweetDelete(data, async () => {
-    try {
 
-      console.log(data);
-      
+    
+    try {
       // 1. Intentar devolver el stock al inventario
       if (data.IdProduct) {
         try {
           // Usamos el multiplicador -1 para sumar las unidades de vuelta
           const unitsToReturn = Number(data.Units);
-          console.log(unitsToReturn);
+  
           
 
           await storeInventory.PutUnits(
@@ -243,7 +281,6 @@ async function deleteItem(data) {
             unitsToReturn, 
             "Disponible"
           );
-          console.log("Stock devuelto exitosamente");
         } catch (invError) {
           console.error("Error al devolver stock, procediendo con la eliminación:", invError);
           // No bloqueamos el borrado si falla la devolución de stock
@@ -254,10 +291,11 @@ async function deleteItem(data) {
 
       // 2. Borrar el registro de salida
       const res = await storeExits.DeleteExits(data._id);
-      
+
       // 3. Refrescar datos de la vista
       if (res) {
-        await ExitsGet(); 
+
+        await ExitsGet(), await getDashboard(); 
         
         // Actualizar el store de inventario en segundo plano para mantener consistencia
         if (storeInventory.GetInventory) {
@@ -269,6 +307,7 @@ async function deleteItem(data) {
       console.error("Error crítico en deleteItem:", error);
     }
   });
+ 
 }
 
 /**
@@ -298,6 +337,7 @@ const filteredRows = computed(() => {
 // Carga inicial de datos
 onMounted(() => {
   ExitsGet();
+  getDashboard();
 });
 </script>
 

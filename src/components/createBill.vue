@@ -449,7 +449,7 @@ function getNumBill() {
 
 function goInfoBill() {
     const data = dataGoInfo.value
-    console.log(data);
+
       numBill.value = data.numFactura;
       nameSeller.value = data.vendedor;
       nameCustomer.value = data.cliente;
@@ -462,7 +462,7 @@ function goInfoBill() {
       numCustomer.value = data.number;
       datePayBill.value = data.datePay.slice(0,10)
       MethodPay.value = data.MethodPay
-      console.log(MethodPay.value);
+  
 
 
 }
@@ -518,7 +518,6 @@ const postExist = async () => {
 };
 
 async function putInfoExist() { 
-  console.log( "list", listProduct.value );
   listProduct.value.forEach(async (product) => {
     idProductExist.value = product.Id
       const bill = {

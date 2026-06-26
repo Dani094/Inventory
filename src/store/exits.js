@@ -16,6 +16,18 @@ export const exitStore = defineStore("exitStore", () => {
       notifyError("No fue posible obtener las Ventas");
     }
   }
+
+   async function getDashboard(User) {
+    try {
+      return await requestAxios.get(`/exits/getDashboard/${User}`, {
+    
+      });
+    } catch (error) {
+      notifyError("No fue posible obtener las Ventas");
+    }
+  }
+
+
   async function PostExits(data) {
     try {
       return ( await requestAxios.post("/exits/post", data,
@@ -54,10 +66,10 @@ export const exitStore = defineStore("exitStore", () => {
   
   async function DeleteExits(id) {
     try {
-      return (
-        await requestAxios.delete(`/exits/delete/${id}`),
+      
+      const res =  await requestAxios.delete(`/exits/delete/${id}`,);
         notifySuccess("Salida Eliminada Correctamente")
-      );
+      return res;
     } catch (error) {
       console.error(error);
       return error;
@@ -69,14 +81,7 @@ export const exitStore = defineStore("exitStore", () => {
   // get for date 
   async function GetForDate(fecha,User) {
     try {
-      const response = await requestAxios.get(
-        `/exits/getFechas/${fecha}/${User}`,
-        {
-          headers: {
-            token: useToken.token,
-          },
-        }
-      );
+      const response = await requestAxios.get(`/exits/getFechas/${fecha}/${User}`,);
       if (response.data && response.data.length === 0) {
         notifyError("No Se Encuentran datos en esa Fecha");
       } else {
@@ -112,6 +117,7 @@ export const exitStore = defineStore("exitStore", () => {
     DeleteExits,
     GetForDate,
     GetForDay,
+    getDashboard,
 
   };
 },

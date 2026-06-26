@@ -35,14 +35,14 @@
         class="bg-white rounded-[2rem] p-2 shadow-sm hover:shadow-md transition-all border-none"
       />
       <CardInfo 
-        :num="spent" 
-        :title="'Productos Agotados'" 
+        :num="estimatedExits" 
+        :title="'Valor Potencial de Venta'" 
         :newRoute="'/inventory'"
         class="bg-white rounded-[2rem] p-2 shadow-sm hover:shadow-md transition-all border-none" 
       />
       <CardInfo 
-        :num="expiration" 
-        :title="'Productos Vencidos'" 
+        :num="estimatedProfit" 
+        :title="'margen de ganancia'" 
         :newRoute="'/inventory'" 
         class="bg-white rounded-[2rem] p-2 shadow-sm hover:shadow-md transition-all border-none"
       />
@@ -56,7 +56,7 @@
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div class="lg:col-span-7 bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50">
-          <h3 class="font-bold text-gray-800 mb-6 text-center uppercase text-xs tracking-widest text-gray-400">Inventario Mensual</h3>
+          <h3 class="font-bold text-gray-800 mb-6 text-center uppercase text-xs tracking-widest ">Inventario Mensual</h3>
           <ChartUse :chartInventory="true" :title="'Inventario'" :newType="'bar'" chartId="chart1" class="h-[400px]"/>
         </div>
 
@@ -66,12 +66,12 @@
         </div>
 
         <div class="lg:col-span-7 bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50">
-          <h3 class="font-bold text-gray-800 mb-6 text-center uppercase text-xs tracking-widest text-gray-400">Ventas Mensual</h3>
+          <h3 class="font-bold text-gray-800 mb-6 text-center uppercase text-xs tracking-widest ">Ventas Mensual</h3>
           <ChartUse :chartExits="true" :title="'Salidas'" :newType="'line'" chartId="chart2" class="h-[350px]" />
         </div>
 
         <div class="lg:col-span-5 bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 flex flex-col justify-center">
-          <h3 class="font-bold text-gray-800 mb-6 text-center uppercase text-xs tracking-widest text-gray-400">Frecuencia por Categoría</h3>
+          <h3 class="font-bold text-gray-800 mb-6 text-center uppercase text-xs tracking-widest ">Frecuencia por Categoría</h3>
           <ChartUse :chartExits="true" :newType="'polarArea'" chartId="chart4" class="h-[350px]"/>
         </div>
       </div>
@@ -96,32 +96,18 @@ const storeLogin = LoginStore();
 
 let TotalUnits = ref(0);
 let TotalUnits2 = ref(0);
-let spent = ref(0);
-let expiration = ref(0);
+let estimatedProfit = ref(0);
+let estimatedExits = ref(0);
 
 async function InventoryGet() {
   const res = await storeInventory.GetInventory(storeLogin.Email);
   if (res && res.status < 299) {
     // Reiniciamos valores para evitar acumulaciones si se vuelve a llamar
     TotalUnits.value = 0;
-    spent.value = 0;
-    expiration.value = 0;
 
-    res.data.forEach(item => {
-      TotalUnits.value += item.SellingPrice;
-      
-      if (item.State === "Agotado") {
-        spent.value += 1;
-      }
-
-      const expirationDate = item.ExpirationDate;
-      if (expirationDate && expirationDate !== "NA") {
-        const expDate = new Date(expirationDate);
-        if (expDate < new Date()) {
-          expiration.value += 1;
-        }
-      }
-    });
+    estimatedProfit.value = res.data.statistics.estimatedProfit
+    TotalUnits.value = res.data.statistics.inventoryValue;
+    estimatedExits.value = res.data.statistics.estimatedExits;
   }
 }
 

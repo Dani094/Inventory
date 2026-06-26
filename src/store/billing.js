@@ -17,7 +17,7 @@ export const billStore = defineStore("billStore", () => {
     }
   }
   async function Filter(filter) {
-    console.log(filter);
+
     try {
       return await requestAxios.get(`/billing/${filter}`, {
     
@@ -29,7 +29,7 @@ export const billStore = defineStore("billStore", () => {
 
   // Function add, update and delete inventory
   async function NewBill(data) {
-    console.log(data);
+  
     try {
       return (
         await requestAxios.post( "/billing/post", data,

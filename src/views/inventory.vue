@@ -28,19 +28,41 @@
     </div>
 
 <!-- --------------------------------------------------------------------------------------
-      TOTAL UNITS
+      cards info
 -------------------------------------------------------------------------------------- -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
       <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
         <div class="bg-blue-50 p-4 rounded-2xl">
           <span class="material-icons text-blue-600">inventory_2</span>
         </div>
         <div>
-          <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Total Unidades</p>
+          <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Total de productos</p>
           <h3 class="text-2xl font-black text-[#1a2332]">{{ TotalUnits?.toLocaleString() }}</h3>
         </div>
       </div>
+
+      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+        <div class="bg-blue-50 p-4 rounded-2xl">
+          <span class="material-icons text-blue-600">running_with_errors</span>
+        </div>
+        <div>
+          <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Productos vencidos</p>
+          <h3 class="text-2xl font-black text-[#1a2332]">{{ expiredProducts?.toLocaleString() }}</h3>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+        <div class="bg-blue-50 p-4 rounded-2xl">
+          <span class="material-icons text-blue-600">money</span>
+        </div>
+        <div>
+          <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Productos agotados</p>
+          <h3 class="text-2xl font-black text-[#1a2332]">{{ outOfStockProducts?.toLocaleString() }}</h3>
+        </div>
+      </div>
     </div>
+
+
 
 <!-- --------------------------------------------------------------------------------------
       TABLE
@@ -59,66 +81,66 @@
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
+        <table class="w-full border-collapse">
           <thead>
-            <tr class="bg-gray-50/50 text-[12px] font-bold uppercase tracking-wide text-center text-black px-6 py-4">
-              <th class="px-6 py-4">Proveedor</th>
-              <th class="px-6 py-4">Nombre</th>
-              <th class="px-6 py-4">Cantidad</th>
-              <th class="px-6 py-4">Precio Unidad Compra</th>
-              <th class="px-6 py-4">Precio Unidad Venta</th>
-              <th class="px-6 py-4">Total Compra</th>
-              <th class="px-6 py-4">Total venta</th>
-              <th class="px-6 py-4">Gramos</th>
-              <th class="px-6 py-4">Estado</th>
-              <th class="">Opciones</th>
+            <tr class="bg-gray-50/50 text-[11px] font-bold uppercase tracking-wide text-center text-black">
+              <th class="px-4 py-4">Proveedor</th>
+              <th class="px-4 py-4">Nombre</th>
+              <th class="px-4 py-4">Cantidad</th>
+              <th class="px-4 py-4">Precio Unidad Compra</th>
+              <th class="px-4 py-4">Precio Unidad Venta</th>
+              <th class="px-4 py-4">Total Compra</th>
+              <th class="px-4 py-4">Total venta</th>
+              <th class="px-4 py-4">Gramos</th>
+              <th class="px-4 py-4">Estado</th>
+              <th class="px-4 py-4">Opciones</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-50">
-            <tr v-for="row in filteredRows" :key="row._id" class="hover:bg-gray-50/50 transition-colors group">
-              <td class="px-6 py-5">
+            <tr v-for="row in filteredRows" :key="row._id" class="hover:bg-gray-50/50 transition-colors group text-center">
+              <td class="px-1  py-4">
                 <div class="flex flex-col">
-                  <span class="font-bold text-black uppercase">{{ row.Supplier }}</span>
-                  <span class="text-[11px] text-gray-400 italic">Vence: {{ row.ExpirationDate ? row.ExpirationDate.slice(0, 10) : 'N/A' }}</span>
+                  <span class="font-bold text-[11px] text-black uppercase">{{ row.Supplier }}</span>
+                  <span class="text-[10px] text-gray-400 italic">Vence: {{ row.ExpirationDate ? row.ExpirationDate.slice(0, 10) : 'N/A' }}</span>
                 </div>
               </td>
-              <td class="px-6 py-5">
-                <div class="flex flex-col text-sm text-gray-600">
+              <td class="px-1  py-4">
+                <div class="flex flex-col text-[12px] text-gray-600">
                   <span class="font-medium text-gray-700">{{ row.Name }}</span>
                   <span class="text-[10px] font-mono text-gray-400 uppercase tracking-tighter">{{ row.Serial || 'Sin Serial' }}</span>
                 </div>
               </td>
-              <td class="px-6 py-5">
-                <div class="flex items-center gap-2">
+              <td class="px-1  py-4">
+                <div class="flex items-center justify-center gap-2">
                   <div :class="getStockColor(row.Units)" class="w-2.5 h-2.5 rounded-full"></div>
-                  <span class="font-bold text-[#1a2332] text-lg">{{ row.Units.toLocaleString() }}</span>
+                  <span class="font-bold text-[#1a2332] text-[12px]">{{ row.Units.toLocaleString() }}</span>
                 </div>
               </td>
-              <td class="px-6 py-5 font-bold text-[#1a2332]">
+              <td class="px-1  py-4 font-bold text-[#1a2332]">
                 $ {{ Number(row.PriceBuy).toLocaleString()}}
               </td>
-              <td class="px-6 py-5 font-bold text-[#1a2332]">
+              <td class="px-1  py-4 font-bold text-[#1a2332]">
                 $ {{ Number(row.PriceSale).toLocaleString()}}
               </td>
-              <td class="px-6 py-5">
-                <span class="font-black text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl text-xs">
+              <td class="px-1  py-4 ">
+                <span class="font-black text-orange-500 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
                   $ {{ (row.PriceBuy * row.Units).toLocaleString() }}
                 </span>
               </td>
-              <td class="px-6 py-5">
-                <span class="font-black text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl text-xs">
+              <td class="px-1  py-4">
+                <span class="font-black text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
                   $ {{ (row.PriceSale * row.Units).toLocaleString() }}
                 </span>
               </td>
-              <td class="px-6 py-5 font-bold text-[#1a2332]">
+              <td class="px-1  py-4 font-bold text-[#1a2332]">
                 Gr {{ Number(row.CantGrams).toLocaleString()}}
               </td>
-              <td class="px-6 py-5">
+              <td class="py-4">
                 <span :class="getStateBadge(row.State)" class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-sm border">
                   {{ row.State }}
                 </span>
               </td>
-              <td class="px-6 py-5">
+              <td class="px-1  py-4">
                 <div class="flex justify-center items-center gap-2">
                   <button @click="openEdit(row)" class="p-2 hover:bg-blue-50 text-blue-600 rounded-xl transition-colors">
                     <span class="material-icons text-lg">edit</span>
@@ -210,11 +232,14 @@
         </div>
         <form @submit.prevent="ExitsPost" class="p-8 space-y-4">
           <div class="p-3 bg-orange-50 rounded-xl text-orange-700 text-xs font-bold mb-10">{{ nameExit }}</div>
-          <div class="grid grid-cols-2 gap-1 ">
+          <div class="grid grid-cols-3 gap-1 ">
             <label class="" for="">Cantidad:</label>
             <label class="" for="">Descuento:</label>
+            <label class="" for="">Descripción:</label>
             <input v-model="unitsExit" placeholder="Cantidad" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
             <input v-model="discount" placeholder="Descuento" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
+            
+            <input v-model="description" placeholder="Descripción" type="text" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
           </div>
           <div class="text-left">
           <h4 class="text-xl font-black text-[#1a2332]">
@@ -259,7 +284,6 @@ let cantGrams= ref();
 let expirationDate = ref();
 let state = ref("Disponible");
 let user = ref(storeLogin.Email);
-let TotalUnits = ref(0);
 let copias = ref("");
 let crearCopias = ref(0);
 
@@ -270,9 +294,11 @@ let units2 = ref(0);
 let unitsExit = ref(0);
 let priceExit = ref(0);
 let discount = ref(0);
-
+let description = ref("");
 let rows = ref([]);
-
+let TotalUnits = ref(0);
+let expiredProducts = ref(0);
+let outOfStockProducts = ref(0);
 const filteredRows = computed(() => {
   if (!filter.value) return rows.value;
   return rows.value.filter(r => 
@@ -283,7 +309,7 @@ const filteredRows = computed(() => {
 
 // Funciones de Botones
 function openEdit(row) {
-    console.log(row);
+
 
   index.value = row._id;
   goInfo(row);
@@ -291,8 +317,7 @@ function openEdit(row) {
 }
 
 function openExit(row) {
-  console.log(row);
-  
+
   index.value = row._id;
   goInfo2(row);  
   showModalExits.value = true;
@@ -304,13 +329,20 @@ const getStateBadge = (s) => s === 'Disponible'
   ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
   : 'bg-rose-50 text-rose-700 border-rose-100';
 
+
+  
 // Lógica de API
 async function InventoryGet() {
   const res = await storeInventory.GetInventory(storeLogin.Email);
   if (res?.status < 299) {
-    rows.value = res.data;
-    TotalUnits.value = rows.value.reduce((t, r) => t + r.Units, 0);
-  }
+
+    rows.value = res.data.products;
+
+    TotalUnits.value = res.data.statistics.totalProducts;
+    expiredProducts.value = res.data.statistics.expiredProducts;
+    outOfStockProducts.value = res.data.statistics.outOfStockProducts;
+
+      }
 }
 
 async function InventoryPost() {
@@ -351,6 +383,7 @@ async function InventoryPost() {
 
 async function InventoryPut() {
   loading.value = true;
+  
   await storeInventory.PutInventory(index.value, supplier.value, name.value, units.value, priceBuy.value, priceSale.value, cantGrams.value, expirationDate.value, user.value);
   showModalEdit.value = false;
   InventoryGet();
@@ -379,6 +412,7 @@ async function ExitsPost() {
       Name: nameExit.value,
       Units: parseFloat(unitsExit.value),
       Price:  parseFloat(priceExit.value),
+      description: description.value,
       Discount: parseFloat(discount.value),
       UserEmail: user.value,
     });
@@ -435,6 +469,7 @@ function cleanForm() {
   crearCopias.value = null;
   unitsExit.value = 0;
   discount.value = 0;
+  description.value = "";
 }
 
 onMounted(() => InventoryGet());

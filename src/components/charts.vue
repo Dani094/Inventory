@@ -59,6 +59,8 @@ async function GetInventory() {
     }
   } catch (error) {}
 }
+
+
 async function GetExits() {
   const res = await storeExits.GetForDate(fechaFormateada, storeLogin.Email);
   try {

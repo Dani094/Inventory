@@ -65,14 +65,14 @@ const ticketColors = computed(() => {
       config.bgColor = "bg-blue-50";
       signo.value = "$";
       break;
-    case "Productos Agotados":
-      config.icon = "fa-solid fa-triangle-exclamation";
+    case "Valor Potencial de Venta":
+      config.icon = "fa-solid fa-tags";
       config.iconColor = "text-rose-600";
       config.bgColor = "bg-rose-50";
       signo.value = "#";
       break;
-    case "Productos Vencidos":
-      config.icon = "fa-solid fa-clock-rotate-left";
+    case "margen de ganancia":
+      config.icon = "fa-solid fa-money-bill-trend-up";
       config.iconColor = "text-amber-600";
       config.bgColor = "bg-amber-50";
       signo.value = "#";

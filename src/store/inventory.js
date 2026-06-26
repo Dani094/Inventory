@@ -61,15 +61,16 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     cantGrams,
     expirationDate,
     user
-  ) {
+  ) { console.log(id, supplier, name, units, priceBuy, priceSale, cantGrams, expirationDate, user);
+  
     try {
       return (
         await requestAxios.put(`/inventory/put/${id}`,       {
             Supplier: supplier,
             Name: name,
             Units: units,
-            SellingPrice: priceBuy, 
-            PurchasePrice: priceSale,
+            PriceBuy: priceBuy, 
+            PriceSale: priceSale,
             CantGrams:cantGrams,
             ExpirationDate: expirationDate,
             UserUpdate: user,
@@ -96,7 +97,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
 
   // Funciones para manejar las salidas de inventario
   async function PutUnits(id, units2) {
-    console.log(id, units2);
+
     try {
       return (
         await requestAxios.put(`/inventory/putUnits/${id}`, {
