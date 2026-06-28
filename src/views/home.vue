@@ -55,25 +55,75 @@
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div class="lg:col-span-7 bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50">
-          <h3 class="font-bold text-gray-800 mb-6 text-center uppercase text-xs tracking-widest ">Inventario Mensual</h3>
-          <ChartUse :chartInventory="true" :title="'Inventario'" :newType="'bar'" chartId="chart1" class="h-[400px]"/>
+
+      <div class="lg:col-span-6 bg-[#1a2332] p-12 rounded-[2.5rem] shadow-xl text-white flex flex-col justify-start">
+        <h3 class="font-bold mb-6 opacity-80 text-center uppercase text-[10px] tracking-[2px]">
+          Productos más vendidos
+        </h3>
+        
+        <div class="flex flex-col gap-4 overflow-y-auto max-h-[350px] pr-2 custom-scroll">
+          
+          <p v-if="topProducts.length === 0" class="text-sm text-gray-400 text-center py-4">
+            No hay datos de ventas disponibles
+          </p>
+
+          <div 
+            v-for="(product, index) in topProducts" 
+            :key="index" 
+            class="flex flex-col gap-1 border-b border-gray-700/50 pb-3 last:border-none"
+          >
+            <div class="flex justify-between items-center text-sm">
+              <div class="flex items-center gap-2">
+                <span :class="{
+                  'text-amber-400 font-bold': index === 0,
+                  'text-slate-300 font-bold': index === 1,
+                  'text-amber-600 font-bold': index === 2,
+                  'text-gray-500': index > 2
+                }">
+                  #{{ index + 1 }}
+                </span>
+                <span class="font-medium truncate max-w-[180px]">
+                  {{ product.Name || product.Nombre }}
+                </span>
+              </div>
+              
+              <span class="font-bold text-green-400">
+                {{ product.qty || product.TotalUnits }} unds
+              </span>
+            </div>
+
+            <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden mt-1">
+              <div 
+                class="bg-green-500 h-full rounded-full"
+                :style="{ width: `${(product.TotalUnits / topProducts[0].qty) * 100}%` }"
+              ></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+        <div class="lg:col-span-6 bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-50 flex flex-col justify-center content-center ">
+        <h3 class="font-bold text-gray-800 mb-6 text-center uppercase text-xs tracking-widest ">Frecuencia por Categoría</h3>
+        <ChartUse :chartExits="true" :newType="'polarArea'" chartId="chart4" class="h-[400px]"/>
         </div>
 
-        <div class="lg:col-span-5 bg-[#1a2332] p-8 rounded-[2.5rem] shadow-xl text-white flex flex-col justify-center">
+         <div class="lg:col-span-5 bg-white p-4 rounded-[2.5rem] shadow-xl text-gray-800 flex flex-col justify-center items-center">
           <h3 class="font-bold mb-6 opacity-80 text-center uppercase text-[10px] tracking-[2px]">Distribución de Stock</h3>
-          <ChartUse :chartInventory="true" :newType="'pie'" chartId="chart3" class="h-[350px] flex justify-center items-center"/>
+          <ChartUse :chartInventory="true" :newType="'pie'" chartId="chart3" class="h-[450px] flex justify-center items-center"/>
         </div>
 
-        <div class="lg:col-span-7 bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50">
-          <h3 class="font-bold text-gray-800 mb-6 text-center uppercase text-xs tracking-widest ">Ventas Mensual</h3>
-          <ChartUse :chartExits="true" :title="'Salidas'" :newType="'line'" chartId="chart2" class="h-[350px]" />
+        <div class="lg:col-span-7 bg-[#1a2332] p-4 rounded-[2.5rem] shadow-sm border border-gray-50">
+          <h3 class="font-bold text-white mb-6 text-center uppercase text-xs tracking-widest ">Ventas Mensual</h3>
+          <ChartUse :chartExits="true" :title="'Ventas'" :newType="'bar'" chartId="chart2" class="h-[450px] " />
+        </div>
+   
+        <div class="lg:col-span-8 bg-white p-4 rounded-[2.5rem] shadow-sm border border-gray-50">
+          <h3 class="font-bold text-gray-800 mb-2 text-center uppercase text-xs tracking-widest ">Inventario Mensual</h3>
+          <ChartUse :chartInventory="true" :title="'Inventario'" :newType="'line'" chartId="chart1" />
         </div>
 
-        <div class="lg:col-span-5 bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-50 flex flex-col justify-center">
-          <h3 class="font-bold text-gray-800 mb-6 text-center uppercase text-xs tracking-widest ">Frecuencia por Categoría</h3>
-          <ChartUse :chartExits="true" :newType="'polarArea'" chartId="chart4" class="h-[350px]"/>
-        </div>
+        
+    
       </div>
     </div>
 
@@ -93,6 +143,8 @@ import { LoginStore } from "../store/login.js";
 const storeInventory = inventoryStore();
 const storeExits = exitStore();
 const storeLogin = LoginStore();
+
+const topProducts = ref([]);
 
 let TotalUnits = ref(0);
 let TotalUnits2 = ref(0);
@@ -118,9 +170,26 @@ async function ExitsGet() {
   }
 }
 
+async function getDashboard() {
+  try {
+    const res = await storeExits.getDashboard(storeLogin.Email);
+    if (res && res.status < 299) {
+     console.log(res.data);
+     
+    topProducts.value = res.data.statistics.topProducts || [];
+
+    const valor = res.data.statistics.dineroHoy || 0;
+    console.log("Valor de dineroHoy:", valor);
+    }
+  } catch (error) {
+    console.error("Error al obtener datos del dashboard:", error);
+  }
+}
+
 onMounted(() => {
   InventoryGet();
   ExitsGet();
+  getDashboard()
 });
 </script>
 
@@ -128,5 +197,20 @@ onMounted(() => {
 /* Animación suave al cargar las secciones */
 .grid > div {
   transition: all 0.3s ease;
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
 }
 </style>
