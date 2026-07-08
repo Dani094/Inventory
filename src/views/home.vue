@@ -114,12 +114,12 @@
 
         <div class="lg:col-span-7 bg-[#1a2332] p-4 rounded-[2.5rem] shadow-sm border border-gray-50">
           <h3 class="font-bold text-white mb-6 text-center uppercase text-xs tracking-widest ">Ventas Mensual</h3>
-          <ChartUse :chartExits="true" :title="'Ventas'" :newType="'bar'" chartId="chart2" class="h-[450px] " />
+          <ChartUse :chartExits="true" :title="'Ventas'" :newType="'line'" chartId="chart2" class="h-[450px] " />
         </div>
    
         <div class="lg:col-span-8 bg-white p-4 rounded-[2.5rem] shadow-sm border border-gray-50">
           <h3 class="font-bold text-gray-800 mb-2 text-center uppercase text-xs tracking-widest ">Inventario Mensual</h3>
-          <ChartUse :chartInventory="true" :title="'Inventario'" :newType="'line'" chartId="chart1" />
+          <ChartUse :chartInventory="true" :title="'Inventario'" :newType="'bar'" chartId="chart1" />
         </div>
 
         

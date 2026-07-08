@@ -67,6 +67,7 @@
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Producto</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Cant.</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Total</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Tipo de pago</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Acciones</th>
             </tr>
           </thead>
@@ -85,11 +86,17 @@
                 </div>
               </td>
               <td class="px-6 py-5 text-center font-black text-orange-600">{{ row.Units }}</td>
+              
               <td class="px-6 py-5">
                 <div class="flex flex-col">
                   <span class="font-bold text-[#1a2332]">$ {{ (row.Total).toLocaleString() }}</span>
                   <span v-if="row.Discount > 0" class="text-[10px] text-red-500 font-bold">- ${{ row.Discount.toLocaleString() }} Desc.</span>
                 </div>
+              </td>
+              <td class="px-6 py-5">
+                <span class="font-black text-purple-700 bg-purple-50 px-3 py-1.5 rounded-xl text-xs">
+                  {{ row.methodPayment || 'N/A' }}
+                </span> 
               </td>
               <td class="px-6 py-5">
                 <div class="flex justify-center items-center gap-2">
@@ -194,6 +201,7 @@ async function ExitsGet() {
 
        
       rows.value = res.data || [];
+      console.log("Salidas obtenidas:", rows.value);
       TotalUnits.value = rows.value.length;
     }
   } catch (error) {

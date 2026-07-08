@@ -82,12 +82,23 @@
                   <span class="font-bold text-[#1a2332]">{{ row.Units }}</span>
                 </div>
               </td>
-              <td class="px-6 py-5 font-bold text-[#1a2332]">
+              <td v-if="row.Type == 'Salida'" class="px-6 py-5 font-bold text-[#1a2332]">
                 $ {{ row.Price?.toLocaleString() || 'N/A' }}
               </td>
-              <td class="px-6 py-5">
+
+          
+              <td v-else class="px-6 py-5 font-bold text-[#1a2332]">
+                $ {{ row.PriceBuy?.toLocaleString() || 'N/A' }}  
+              </td>
+
+              <td v-if="row.Type !== 'Salida'" class="px-6 py-5">
                 <span class="font-black text-purple-700 bg-purple-50 px-3 py-1.5 rounded-xl text-xs">
-                  $ {{ (row.Price * row.Units)?.toLocaleString() || 'N/A' }}
+                  $ {{ (row.PriceBuy * row.Units)?.toLocaleString() || 'N/A' }}
+                </span>
+              </td>
+              <td v-else class="px-6 py-5">
+                <span class="font-black text-purple-700 bg-purple-50 px-3 py-1.5 rounded-xl text-xs">
+                  $ {{ (row.Price * row.Units)?.toLocaleString() || 'N/A' }}  
                 </span>
               </td>
               <td class="px-6 py-5">
@@ -110,11 +121,11 @@
 import { ref, onMounted, computed } from "vue";
 import Report from "@/components/descargarExcel.vue";
 import { inventoryStore } from "@/store/inventory.js";
-import { exitStore } from "@/store/exits.js";
+import { historyStore } from "@/store/history.js";
 import { LoginStore } from "../store/login.js";
 
 const storeInventory = inventoryStore();
-const storeExits = exitStore();
+const storeHistory = historyStore();
 const storeLogin = LoginStore();
 
 // Estados de la Interfaz
@@ -129,25 +140,33 @@ let rows = ref([]);
 async function getHistory() {
   try {
     // Obtener salidas
-    const exitsRes = await storeExits.GetExits(storeLogin.Email);
-    const exits = exitsRes?.data?.map(e => ({
+    const historyRes = await storeHistory.Gethistory(storeLogin.Email);
+    const history = historyRes?.data?.map(e => ({
       ...e,
       Type: "Salida"
     })) || [];
 
+    console.log("hisro ", history);
+    
+
     // Obtener inventario (todos los productos del inventario)
     const inventoryRes = await storeInventory.GetInventory(storeLogin.Email);
-    const inventory = inventoryRes?.data?.map(i => ({
+    console.log(inventoryRes);
+    const inventory = inventoryRes?.data?.products?.map(i => ({
       ...i,
       Type: "Entrada"
-    })) || [];
+    } )) || [];
+
 
     // Combinar y ordenar por fecha más reciente
-    rows.value = [...exits, ...inventory].sort((a, b) => {
+    rows.value = [...history, ...inventory].sort((a, b) => {
       const dateA = new Date(a.createdAt || a.updatedAt || 0);
       const dateB = new Date(b.createdAt || b.updatedAt || 0);
       return dateB - dateA;
     });
+
+    console.log("ross ", rows.value);
+    
 
     TotalMovements.value = rows.value.length;
   } catch (error) {
@@ -192,7 +211,7 @@ const filteredRows = computed(() => {
 
 // Carga inicial de datos
 onMounted(() => {
-//   getHistory();
+  getHistory();
 });
 </script>
 

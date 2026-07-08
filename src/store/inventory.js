@@ -51,6 +51,29 @@ export const inventoryStore = defineStore("inventoryStore", () => {
       );
     }
   }
+
+    async function PutStockInventory(id, units, user) {
+    console.log(id, units, user); 
+    try {
+      return (
+        await requestAxios.put(`/inventory/addStock/${id}`,
+          {
+            id: id,
+            IncomingUnits: units,
+            UserUpdate: user,
+          },
+        ),
+        notifySuccess("Agregado correctamente")
+      );
+    } catch (error) {
+      console.log(error);
+      notifyError(
+        "No fue posible agregar correctamente"
+      );
+    }
+  }
+  
+
   async function PutInventory(
     id,
     supplier,
@@ -149,6 +172,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     GetInventory,
     PostInventory,
     PutInventory,
+    PutStockInventory,
     DeleteInventory,
     PutUnits,
     GetForDate,

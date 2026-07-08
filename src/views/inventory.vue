@@ -142,6 +142,9 @@
               </td>
               <td class="px-1  py-4">
                 <div class="flex justify-center items-center gap-2">
+                  <button @click="inputStock(row)" class="p-2 hover:bg-green-50 text-green-600 rounded-xl transition-colors">
+                    <span class="material-icons text-lg">add</span>
+                  </button>
                   <button @click="openEdit(row)" class="p-2 hover:bg-blue-50 text-blue-600 rounded-xl transition-colors">
                     <span class="material-icons text-lg">edit</span>
                   </button>
@@ -181,9 +184,9 @@
             <div class="flex flex-col bg-gray-50 rounded-2xl p-2 justify-center">
               <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider">Fecha de Vencimiento</span>
               <input 
-                v-model="expirationDate" 
-                type="date" 
-                class="bg-transparent border-none text-sm text-gray-600 p-0 focus:ring-0 w-full"
+              v-model="expirationDate" 
+              type="date" 
+              class="bg-transparent border-none text-sm text-gray-600 p-0 focus:ring-0 w-full"
               >
             </div>            
             <select v-model="copias" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500">
@@ -192,6 +195,7 @@
               <option value="Sí">Sí</option>
             </select>
             <input v-if="copias === 'Sí'" v-model="crearCopias" placeholder="Cantidad de copias" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm" min="1">
+            <textarea v-model="description" placeholder="Descripción" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">informacion del producto</textarea>
           </div>
           <button type="submit" class="w-full bg-[#1a2332] text-white font-bold py-3 rounded-2xl">GUARDAR</button>
         </form>
@@ -212,14 +216,43 @@
             <input v-model="supplier" placeholder="Proveedor" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="name" placeholder="Nombre" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="units" placeholder="Unidades" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="priceBuy" placeholder="Precio" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="priceSale" placeholder="Precio" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input v-model="priceBuy" placeholder="Precio de Compra" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input v-model="priceSale" placeholder="Precio de Venta" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="expirationDate" placeholder="Fecha de Vencimiento" type="date" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <textarea v-model="description" placeholder="Descripción" class="bg-gray-50 rounded-2xl p-3 border-none text-sm"></textarea>
           </div>
           <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl">ACTUALIZAR</button>
         </form>
       </div>
     </div>
+
+<!-- --------------------------------------------------------------------------------------
+      MODAL add stock
+-------------------------------------------------------------------------------------- -->    
+
+    <div v-if="showModalInputStock" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalInputStock = false"></div>
+      <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
+        <div class="bg-orange-600 p-6 text-white flex justify-between">
+          <h3 class="font-black uppercase tracking-tight">Registrar Entrada</h3>
+          <button @click="showModalInputStock = false"><span class="material-icons">close</span></button>
+        </div>
+        <form @submit.prevent="StockPut" class="p-8 space-y-4">
+          <div class="p-3 bg-orange-50 rounded-xl text-orange-700 text-xs font-bold mb-10">{{ nameProduct }}</div>
+          <div class="grid grid-cols-2 gap-1 ">
+            <label class="" for="">Cantidad:</label>
+            <label class="" for="">Descripción:</label>
+            <input v-model="unitsStock" placeholder="Cantidad" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">            
+            <input v-model="description" placeholder="Descripción" type="text" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
+          </div>
+          <div class="text-left bg-orange-600/10 p-3 rounded-xl text-orange-700 text-xs font-bold mb-10">
+            <p>Stock Actual: {{ units2 + unitsStock }}</p>
+        </div>
+          <button type="submit" class="w-full bg-orange-600 text-white font-bold py-3 rounded-2xl">CONFIRMAR</button>
+        </form>
+      </div>
+    </div>
+
 <!-- --------------------------------------------------------------------------------------
       MODAL Exits
 -------------------------------------------------------------------------------------- -->
@@ -241,8 +274,10 @@
             
             <input v-model="description" placeholder="Descripción" type="text" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
           </div>
-          <div class="text-left">
-          <h4 class="text-xl font-black text-[#1a2332]">
+          <div class="text-left bg-orange-600/10 p-3 rounded-xl text-orange-700 text-xs font-bold mb-10">
+            <p>Stock Actual: {{ units2 - unitsExit }}</p>
+            <p>Precio Unitario: $ {{ priceExit }}</p>
+          <h4 class="text-xl font-black ">
             $ {{ Math.max(0, (unitsExit * priceExit) - discount).toLocaleString('es-CO') }}
           </h4>
         </div>
@@ -269,6 +304,7 @@ const storeExits = exitStore();
 let showModal = ref(false);
 let showModalEdit = ref(false);
 let showModalExits = ref(false);
+let showModalInputStock = ref(false);
 let loading = ref(false);
 let filter = ref("");
 
@@ -299,6 +335,12 @@ let rows = ref([]);
 let TotalUnits = ref(0);
 let expiredProducts = ref(0);
 let outOfStockProducts = ref(0);
+
+
+let nameProduct = ref("");
+let serialProduct = ref("");
+let unitsStock = ref(0);
+
 const filteredRows = computed(() => {
   if (!filter.value) return rows.value;
   return rows.value.filter(r => 
@@ -321,6 +363,12 @@ function openExit(row) {
   index.value = row._id;
   goInfo2(row);  
   showModalExits.value = true;
+}
+
+function inputStock(row) {
+  index.value = row._id;
+  goInfo3(row);
+  showModalInputStock.value = true;
 }
 
 const getStockColor = (u) => u <= 0 ? 'bg-rose-500 animate-pulse' : (u < 10 ? 'bg-amber-500' : 'bg-emerald-500');
@@ -391,6 +439,16 @@ async function InventoryPut() {
 }
 
 
+async function StockPut() {
+  loading.value = true;
+  console.log(1);
+  
+  await storeInventory.PutStockInventory(index.value,  unitsStock.value,  user.value)
+  showModalInputStock.value = false;
+  InventoryGet();
+  loading.value = false;
+}
+
 
 async function ExitsPost() {
   // 1. Convertimos todo a números reales para evitar errores de cálculo
@@ -456,6 +514,14 @@ function goInfo2(data) {
   units2.value = data.Units; 
   priceExit.value = data.PriceSale; // Usamos el precio de venta para la salida
 }
+
+function goInfo3(data) {
+  nameProduct.value = data.Name; 
+  serialProduct.value = data.Serial;
+  units2.value = data.Units; 
+  priceExit.value = data.PriceBuy; // Usamos el precio de compra para la entrada
+}
+
 
 function cleanForm() {
   supplier.value = "";
