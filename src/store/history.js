@@ -9,7 +9,7 @@ export const historyStore = defineStore("historyStore", () => {
   // Function Get inventory
   async function Gethistory(User) {
     try {
-      return await requestAxios.get(`/exits/get/${User}`, {
+      return await requestAxios.get(`/history/get/${User}`, {
     
       });
     } catch (error) {

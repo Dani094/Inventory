@@ -91,7 +91,6 @@
               <th class="px-4 py-4">Precio Unidad Venta</th>
               <th class="px-4 py-4">Total Compra</th>
               <th class="px-4 py-4">Total venta</th>
-              <th class="px-4 py-4">Gramos</th>
               <th class="px-4 py-4">Estado</th>
               <th class="px-4 py-4">Opciones</th>
             </tr>
@@ -113,7 +112,7 @@
               <td class="px-1  py-4">
                 <div class="flex items-center justify-center gap-2">
                   <div :class="getStockColor(row.Units)" class="w-2.5 h-2.5 rounded-full"></div>
-                  <span class="font-bold text-[#1a2332] text-[12px]">{{ row.Units.toLocaleString() }}</span>
+                  <span class="font-bold text-[#1a2332] text-[12px]">{{ row.Units.toLocaleString() }} {{ row.unit_measurement || 'unidades' }}</span>
                 </div>
               </td>
               <td class="px-1  py-4 font-bold text-[#1a2332]">
@@ -131,9 +130,6 @@
                 <span class="font-black text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
                   $ {{ (row.PriceSale * row.Units).toLocaleString() }}
                 </span>
-              </td>
-              <td class="px-1  py-4 font-bold text-[#1a2332]">
-                Gr {{ Number(row.CantGrams).toLocaleString()}}
               </td>
               <td class="py-4">
                 <span :class="getStateBadge(row.State)" class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-sm border">
@@ -176,11 +172,21 @@
         <form @submit.prevent="InventoryPost" class="p-8 space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <input v-model="supplier" placeholder="Proveedor" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input v-model="serial" placeholder="Serial" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="name" placeholder="Nombre" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="units" placeholder="Unidades" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+              <select v-model="unit_measurement" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500" >
+              <option value="" disabled>Seleccione una unidad...</option>
+              <option 
+                v-for="opcion in opcionesUnidad" 
+                :key="opcion.value" 
+                :value="opcion.value"
+              >
+                {{ opcion.label }}
+              </option>
+            </select>
+             <input v-model.number="units" placeholder="Unidades" type="number" step="any" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input  v-model="priceBuy" placeholder="Precio Unitario de Compra" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="priceSale" placeholder="Precio Unitario de Venta" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="cantGrams" placeholder="Cantidad en Gramos" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <div class="flex flex-col bg-gray-50 rounded-2xl p-2 justify-center">
               <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider">Fecha de Vencimiento</span>
               <input 
@@ -214,10 +220,12 @@
         <form @submit.prevent="InventoryPut" class="p-8 space-y-4">
           <div class="grid grid-cols-2 gap-4">
             <input v-model="supplier" placeholder="Proveedor" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input v-model="serial" placeholder="Serial" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="name" placeholder="Nombre" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="units" placeholder="Unidades" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="priceBuy" placeholder="Precio de Compra" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="priceSale" placeholder="Precio de Venta" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input v-model="unit_measurement" placeholder="Unidad de Medida" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="expirationDate" placeholder="Fecha de Vencimiento" type="date" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <textarea v-model="description" placeholder="Descripción" class="bg-gray-50 rounded-2xl p-3 border-none text-sm"></textarea>
           </div>
@@ -242,8 +250,8 @@
           <div class="grid grid-cols-2 gap-1 ">
             <label class="" for="">Cantidad:</label>
             <label class="" for="">Descripción:</label>
-            <input v-model="unitsStock" placeholder="Cantidad" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">            
-            <input v-model="description" placeholder="Descripción" type="text" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
+            <input step="any" v-model.number="unitsStock" placeholder="Cantidad" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">            
+            <input  v-model="description" placeholder="Descripción" type="text" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
           </div>
           <div class="text-left bg-orange-600/10 p-3 rounded-xl text-orange-700 text-xs font-bold mb-10">
             <p>Stock Actual: {{ units2 + unitsStock }}</p>
@@ -269,10 +277,10 @@
             <label class="" for="">Cantidad:</label>
             <label class="" for="">Descuento:</label>
             <label class="" for="">Descripción:</label>
-            <input v-model="unitsExit" placeholder="Cantidad" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
-            <input v-model="discount" placeholder="Descuento" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
+            <input step="any" v-model.number="unitsExit" placeholder="Cantidad" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
+            <input step="any" v-model.number="discount" placeholder="Descuento" type="number" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
             
-            <input v-model="description" placeholder="Descripción" type="text" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
+            <input v-model="descriptionExit" placeholder="Descripción" type="text" class="bg-gray-100 rounded-2xl p-3 border-none text-sm">
           </div>
           <div class="text-left bg-orange-600/10 p-3 rounded-xl text-orange-700 text-xs font-bold mb-10">
             <p>Stock Actual: {{ units2 - unitsExit }}</p>
@@ -289,7 +297,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import Report from "@/components/descargarExcel.vue";
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
@@ -316,12 +324,14 @@ let serial = ref("");
 let units = ref();
 let priceBuy = ref();
 let priceSale= ref();
-let cantGrams= ref();
 let expirationDate = ref();
+let description = ref("");
 let state = ref("Disponible");
 let user = ref(storeLogin.Email);
 let copias = ref("");
 let crearCopias = ref(0);
+let unit_measurement = ref("");
+let measurement_type = ref("");
 
 // Variables Salidas
 let nameExit = ref("");
@@ -330,7 +340,7 @@ let units2 = ref(0);
 let unitsExit = ref(0);
 let priceExit = ref(0);
 let discount = ref(0);
-let description = ref("");
+let descriptionExit = ref("");
 let rows = ref([]);
 let TotalUnits = ref(0);
 let expiredProducts = ref(0);
@@ -340,6 +350,46 @@ let outOfStockProducts = ref(0);
 let nameProduct = ref("");
 let serialProduct = ref("");
 let unitsStock = ref(0);
+
+
+const opcionesUnidad = ref([
+  { label: 'Unidades (und)', value: 'und', tipo: 'unidad' },
+  { label: 'Kilogramos (kg)', value: 'kg', tipo: 'peso' },
+  { label: 'Gramos (g)', value: 'g', tipo: 'peso' },
+  { label: 'Litros (l)', value: 'lt', tipo: 'volumen' },
+  { label: 'Mililitros (ml)', value: 'ml', tipo: 'volumen' }
+]);
+
+
+const unidadSeleccionada = ref('und');
+const cantidad = ref(1);
+
+// 3. Propiedad computada para saber si permite decimales o solo enteros
+const esTipoUnidad = computed(() => {
+  const opcionActual = opcionesUnidad.find(op => op.value === unidadSeleccionada.value);
+  return opcionActual ? opcionActual.tipo === 'unidad' : false;
+});
+
+
+const getMeasurementType = (unit) => {
+  const map = {
+    kg: 'peso',
+    g: 'peso',
+    l: 'volumen',
+    ml: 'volumen',
+    und: 'unidad',
+    uni: 'unidad'
+  };
+  return map[unit] || 'unidad';
+};
+
+// Escuchamos el cambio en form.unit y actualizamos form.measurement_type automáticamente
+watch(
+  () => unit_measurement.value,
+  (newUnit) => {
+    measurement_type.value = getMeasurementType(newUnit);
+  }
+);
 
 const filteredRows = computed(() => {
   if (!filter.value) return rows.value;
@@ -394,9 +444,10 @@ async function InventoryGet() {
 }
 
 async function InventoryPost() {
-  loading.value = true;
-  await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, cantGrams.value, expirationDate.value, user.value);
+
   
+  loading.value = true;
+  await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value,  expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value);   
   if (crearCopias.value >= 1) {
     const itemToDuplicate = {
       Supplier: supplier.value,
@@ -404,9 +455,12 @@ async function InventoryPost() {
       Units: units.value,
       PriceBuy: priceBuy.value,
       PriceSale: priceSale.value,
-      CantGrams: cantGrams.value,
+      unit_measurement: unit_measurement.value,
+      measurement_type: measurement_type.value,
       ExpirationDate: expirationDate.value,
       UserEmail: user.value,
+      Serial: serial.value,
+      Description: description.value
     };
     for (let i = 0; i < crearCopias.value; i++) {
       const duplicatedItem = {
@@ -418,7 +472,6 @@ async function InventoryPost() {
         duplicatedItem.Units,
         duplicatedItem.PriceBuy,
         duplicatedItem.PriceSale,
-        duplicatedItem.CantGrams,
         duplicatedItem.ExpirationDate,
         duplicatedItem.UserEmail
       );
@@ -432,7 +485,7 @@ async function InventoryPost() {
 async function InventoryPut() {
   loading.value = true;
   
-  await storeInventory.PutInventory(index.value, supplier.value, name.value, units.value, priceBuy.value, priceSale.value, cantGrams.value, expirationDate.value, user.value);
+  await storeInventory.PutInventory(index.value, supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, measurement_type.value , serial.value);
   showModalEdit.value = false;
   InventoryGet();
   loading.value = false;
@@ -470,7 +523,7 @@ async function ExitsPost() {
       Name: nameExit.value,
       Units: parseFloat(unitsExit.value),
       Price:  parseFloat(priceExit.value),
-      description: description.value,
+      description: descriptionExit.value,
       Discount: parseFloat(discount.value),
       UserEmail: user.value,
     });
@@ -502,16 +555,19 @@ function goInfo(data) {
   units.value = data.Units; 
   priceBuy.value = data.PriceBuy;   // Corregido
   priceSale.value = data.PriceSale; // Corregido
-  cantGrams.value = data.CantGrams; // Añadido
   // Formatea la fecha a YYYY-MM-DD para que el input tipo date la reconozca
   expirationDate.value = data.ExpirationDate ? data.ExpirationDate.slice(0, 10) : ""; 
   state.value = data.State;
+  description.value = data.description;
+  unit_measurement.value = data.unit_measurement; 
+  serial.value = data.Serial;
 }
 
 function goInfo2(data) {
   nameExit.value = data.Name; 
   serialExit.value = data.Serial;
   units2.value = data.Units; 
+  descriptionExit.value = data.description;
   priceExit.value = data.PriceSale; // Usamos el precio de venta para la salida
 }
 
@@ -529,13 +585,13 @@ function cleanForm() {
   units.value = null;
   priceBuy.value = null;
   priceSale.value = null;
-  cantGrams.value= null;
   expirationDate.value = null;
   copias.value = "";
   crearCopias.value = null;
   unitsExit.value = 0;
   discount.value = 0;
   description.value = "";
+  serial.value = "";
 }
 
 onMounted(() => InventoryGet());

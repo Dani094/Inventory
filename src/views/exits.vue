@@ -136,15 +136,15 @@
             </div>
             <div class="space-y-1">
               <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Cant. Vendida</label>
-              <input v-model="units2" type="number" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
+              <input step="any" v-model.number="units2" type="number" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
             </div>
             <div class="space-y-1">
               <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Precio Unit.</label>
-              <input v-model="priceExit" type="number" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
+              <input step="any" v-model.number="priceExit" type="number" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
             </div>
             <div class="col-span-2 space-y-1">
               <label class="text-[10px] font-black uppercase text-gray-400 ml-2">Descuento Aplicado</label>
-              <input v-model="discount" type="number" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
+              <input step="any" v-model.number="discount" type="number" class="w-full bg-gray-50 rounded-2xl p-3 text-sm focus:ring-2 focus:ring-blue-500/20 border-none">
             </div>
           </div>
 

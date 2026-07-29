@@ -23,10 +23,15 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     units,
     priceBuy,
     priceSale,
-    cantGrams,
     expirationDate,
-    user
+    user,
+    unit_measurement,
+    measurement_type,
+    description, 
+    Serial
   ) {
+    console.log(supplier, name, units, priceBuy, priceSale, expirationDate, unit_measurement, measurement_type, user, description, Serial);
+
     try {
       return (
         await requestAxios.post(
@@ -37,9 +42,12 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             Units: units,
             PriceBuy: priceBuy,
             PriceSale: priceSale,
-            CantGrams: cantGrams,
             ExpirationDate: expirationDate,
             UserEmail: user,
+            unit_measurement: unit_measurement,
+            measurement_type: measurement_type,
+            description: description,
+            Serial: Serial
           },
         ),
         notifySuccess("Agregado correctamente")
@@ -83,8 +91,11 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     priceSale,
     cantGrams,
     expirationDate,
-    user
-  ) { console.log(id, supplier, name, units, priceBuy, priceSale, cantGrams, expirationDate, user);
+    user,
+    unit_measurement,
+    measurement_type,
+    description
+  ) { console.log(id, supplier, name, units, priceBuy, priceSale, cantGrams, expirationDate, user, unit_measurement, measurement_type, description);
   
     try {
       return (

@@ -51,13 +51,12 @@
         <table class="w-full text-left border-collapse">
           <thead>
             <tr class="bg-gray-50/50">
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Fecha / Tipo</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Fecha </th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Tipo</th> 
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Producto</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Serial</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Cantidad</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Precio Unit.</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Total</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Usuario</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Stock</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Descripción</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-50">
@@ -65,44 +64,33 @@
               <td class="px-6 py-5">
                 <div class="flex flex-col">
                   <span class="font-bold text-[#1a2332]">{{ row.createdAt?.slice(0, 10) }}</span>
-                  <span :class="getTypeBadge(row.Type)" class="text-[10px] font-bold uppercase tracking-tighter inline-w-max px-2 py-1 rounded-lg">
-                    {{ row.Type }}
-                  </span>
                 </div>
+              </td>
+              <td class="px-6 py-5">
+                <span :class="getTypeBadge(row.Type)" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                  {{ row.Type }}
+                </span>
               </td>
               <td class="px-6 py-5">
                 <span class="font-bold text-[#1a2332] uppercase">{{ row.Name }}</span>
               </td>
               <td class="px-6 py-5">
-                <span class="text-[10px] font-mono text-gray-400 uppercase tracking-tighter">{{ row.Serial || 'Sin Serial' }}</span>
+                <span class="text-[10px] font-mono text-gray-400 uppercase tracking-tighter">{{ row.serial || 'Sin Serial' }}</span>
               </td>
               <td class="px-6 py-5 text-center">
-                <div class="flex items-center justify-center gap-2">
+              <div class="flex flex-col items-center justify-center">
+                <div class="flex items-center gap-2">
                   <div :class="getQuantityColor(row.Type)" class="w-2.5 h-2.5 rounded-full"></div>
                   <span class="font-bold text-[#1a2332]">{{ row.Units }}</span>
                 </div>
-              </td>
-              <td v-if="row.Type == 'Salida'" class="px-6 py-5 font-bold text-[#1a2332]">
-                $ {{ row.Price?.toLocaleString() || 'N/A' }}
-              </td>
-
-          
-              <td v-else class="px-6 py-5 font-bold text-[#1a2332]">
-                $ {{ row.PriceBuy?.toLocaleString() || 'N/A' }}  
-              </td>
-
-              <td v-if="row.Type !== 'Salida'" class="px-6 py-5">
-                <span class="font-black text-purple-700 bg-purple-50 px-3 py-1.5 rounded-xl text-xs">
-                  $ {{ (row.PriceBuy * row.Units)?.toLocaleString() || 'N/A' }}
+                <!-- Detalle del cambio de stock -->
+                <span class="text-[10px] text-gray-400 font-mono mt-0.5">
+                  ({{ row.previousStock }} → {{ row.newStock }})
                 </span>
-              </td>
-              <td v-else class="px-6 py-5">
-                <span class="font-black text-purple-700 bg-purple-50 px-3 py-1.5 rounded-xl text-xs">
-                  $ {{ (row.Price * row.Units)?.toLocaleString() || 'N/A' }}  
-                </span>
-              </td>
-              <td class="px-6 py-5">
-                <span class="text-gray-600 text-xs font-medium">{{ row.UserEmail || row.UserUpdate || 'Sistema' }}</span>
+              </div>
+            </td>
+            <td  class="px-6 py-5">
+                <span class="text-gray-600 text-xs font-medium">{{ row.description }}</span>
               </td>
             </tr>
             <tr v-if="filteredRows.length === 0" class="hover:bg-gray-50/50">
@@ -120,11 +108,9 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import Report from "@/components/descargarExcel.vue";
-import { inventoryStore } from "@/store/inventory.js";
 import { historyStore } from "@/store/history.js";
 import { LoginStore } from "../store/login.js";
 
-const storeInventory = inventoryStore();
 const storeHistory = historyStore();
 const storeLogin = LoginStore();
 
@@ -135,42 +121,25 @@ let TotalMovements = ref(0);
 let rows = ref([]);
 
 /**
- * Obtiene el historial combinado de inventario y salidas
+ * Obtiene el historial real desde la base de datos (History collection)
  */
 async function getHistory() {
   try {
-    // Obtener salidas
+    // Consultamos únicamente el historial completo (Entradas y Salidas)
     const historyRes = await storeHistory.Gethistory(storeLogin.Email);
-    const history = historyRes?.data?.map(e => ({
-      ...e,
-      Type: "Salida"
-    })) || [];
+    console.log(historyRes);
+    const historyData = historyRes?.data || [];
 
-    console.log("hisro ", history);
-    
-
-    // Obtener inventario (todos los productos del inventario)
-    const inventoryRes = await storeInventory.GetInventory(storeLogin.Email);
-    console.log(inventoryRes);
-    const inventory = inventoryRes?.data?.products?.map(i => ({
-      ...i,
-      Type: "Entrada"
-    } )) || [];
-
-
-    // Combinar y ordenar por fecha más reciente
-    rows.value = [...history, ...inventory].sort((a, b) => {
-      const dateA = new Date(a.createdAt || a.updatedAt || 0);
-      const dateB = new Date(b.createdAt || b.updatedAt || 0);
+    // Formateamos y ordenamos por fecha más reciente
+    rows.value = historyData.sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0);
+      const dateB = new Date(b.createdAt || 0);
       return dateB - dateA;
     });
 
-    console.log("ross ", rows.value);
-    
-
     TotalMovements.value = rows.value.length;
   } catch (error) {
-    console.error("Error al obtener historial:", error);
+    console.error("Error al obtener el historial:", error);
     rows.value = [];
   }
 }
