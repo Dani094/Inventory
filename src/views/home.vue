@@ -166,7 +166,7 @@ async function InventoryGet() {
 async function ExitsGet() {
   const res = await storeExits.GetExits(storeLogin.Email);
   if (res && res.status < 299) {
-    TotalUnits2.value = res.data.reduce((acc, curr) => acc + curr.Total, 0);
+    TotalUnits2.value = res.data.Exist.reduce((acc, curr) => acc + curr.Total, 0);
   }
 }
 

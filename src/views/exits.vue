@@ -15,7 +15,7 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+      <div class="bg-white p-6 rounded-[1rem] border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="bg-orange-50 p-4 rounded-2xl">
           <span class="material-icons text-orange-600">logout</span>
         </div>
@@ -25,7 +25,7 @@
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+      <div class="bg-white p-6 rounded-[1rem] border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="bg-violet-50 p-4 rounded-2xl">
           <span class="material-icons text-violet-600">calendar_month</span>
         </div>
@@ -35,7 +35,7 @@
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+      <div class="bg-white p-6 rounded-[1rem] border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="bg-green-50 p-4 rounded-2xl">
           <span class="material-icons text-green-600">point_of_sale</span>
         </div>
@@ -46,15 +46,15 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-[1rem] border border-gray-200 shadow-sm overflow-hidden">
       <div class="p-6 border-b border-gray-50">
         <div class="relative w-full md:w-80">
           <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</span>
           <input 
             v-model="filter"
             type="text" 
-            placeholder="Buscar salida..."
-            class="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500/20 border border-transparent focus:border-orange-500 transition-all text-sm"
+            placeholder="Buscar Venta..."
+            class="w-full pl-12 pr-4 py-3 bg-gray-100 rounded-[10px] outline-none focus:ring-2 focus:ring-orange-500/20 border border-transparent focus:border-orange-500 transition-all text-sm"
           >
         </div>
       </div>
@@ -112,8 +112,55 @@
           </tbody>
         </table>
       </div>
+       <div class="p-4 px-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-gray-500">
+        
+        <!-- Selector de cantidad por página e indicador -->
+        <div class="flex items-center gap-3">
+          <span>Mostrar:</span>
+          <select 
+            v-model="itemsPerPage" 
+            @change="currentPage = 1"
+            class="bg-gray-50 border border-gray-200 rounded-xl px-2 py-1 outline-none text-gray-700 font-bold focus:border-blue-500 cursor-pointer"
+          >
+            <option :value="4">4</option>
+            <option :value="10">10</option>
+            <option :value="25">25</option>
+            <option :value="50">50</option>
+          </select>
+          <span>
+            Mostrando {{ (currentPage - 1) * itemsPerPage + (rows.length ? 1 : 0) }} - 
+            {{ Math.min(currentPage * itemsPerPage, totalRecords) }} 
+            de {{ totalRecords }} registros
+          </span>
+        </div>
+
+        <!-- Botones de Navegación -->
+        <div class="flex items-center gap-2">
+          <button 
+            @click="prevPage" 
+            :disabled="currentPage === 1"
+            class="flex items-center justify-center p-2 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
+          >
+            <span class="material-icons text-base">chevron_left</span>
+          </button>
+
+          <span class="px-3 font-bold text-[#1a2332]">
+            Página {{ currentPage }} de {{ totalPages }}
+          </span>
+
+          <button 
+            @click="nextPage" 
+            :disabled="currentPage >= totalPages"
+            class="flex items-center justify-center p-2 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
+          >
+            <span class="material-icons text-base">chevron_right</span>
+          </button>
+        </div>
+
+      </div>
     </div>
 
+    <!-- modal edit -->
     <div v-if="showModalEdit" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalEdit = false"></div>
       <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
@@ -160,7 +207,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed,watch } from "vue";
 import Report from "@/components/descargarExcel.vue";
 import { exitStore } from "@/store/exits.js";
 import { LoginStore } from "../store/login.js";
@@ -186,23 +233,45 @@ let priceExit = ref();
 let discount = ref("");
 let user = ref(storeLogin.Email);
 let TotalUnits = ref(0);
-let rows = ref([]);
+
 let salesToday = ref(0);
 let salesMonth = ref(0);
 let cantSalesToday = ref(0);
+
+
+
+// variables paginacion 
+let rows = ref([]);
+const currentPage = ref(1)
+const itemsPerPage = ref(4)
+const totalPages = ref(1)
+const totalRecords = ref(0)
+
+
+const filteredRows = computed(() => rows.value);
+
 
 /**
  * Obtiene el historial de salidas desde el servidor
  */
 async function ExitsGet() {
   try {
-    const res = await storeExits.GetExits(storeLogin.Email);
-    if (res && res.status < 299) {     
+    const res = await storeExits.GetExits(storeLogin.Email, {
+      page: currentPage.value,
+      limit: itemsPerPage.value,
+      search: filter.value
+    });
 
-       
-      rows.value = res.data || [];
+    if (res && res.status < 299) {
+      // Extraemos los arreglos según la estructura entregada por el backend
+      rows.value = res.data?.exits || [];
+      
       console.log("Salidas obtenidas:", rows.value);
-      TotalUnits.value = rows.value.length;
+      if (res.data?.pagination) {
+        totalPages.value = res.data.pagination.totalPages || 1;
+        totalRecords.value = res.data.pagination.totalRecords || 0;
+        TotalUnits.value = res.data.pagination.totalRecords || 0;
+      }
     }
   } catch (error) {
     console.error("Error al obtener salidas:", error);
@@ -210,14 +279,46 @@ async function ExitsGet() {
   }
 }
 
+
+// 3. Métodos para cambiar de página Navegación de páginas
+function nextPage() {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+    ExitsGet();
+  }
+}
+
+function prevPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    ExitsGet();
+  }
+}
+
+// Observadores de cambios (Búsqueda y límite de ítems)
+watch(itemsPerPage, () => {
+  currentPage.value = 1;
+  ExitsGet();
+});
+
+let searchTimeout = null;
+watch(filter, () => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    currentPage.value = 1;
+    ExitsGet();
+  }, 300); // Debounce para evitar peticiones en cada pulsación
+});
+
+
+
 async function getDashboard() {
   try {
     const res = await storeExits.getDashboard(storeLogin.Email);
     if (res && res.status < 299) {
-
-    salesToday.value = res.data.statistics.dineroHoy || 0;
-    salesMonth.value = res.data.statistics.dineroMes || 0;
-    cantSalesToday.value = res.data.statistics.cantidadHoy || 0;
+      salesToday.value = res.data.statistics?.dineroHoy || 0;
+      salesMonth.value = res.data.statistics?.dineroMes || 0;
+      cantSalesToday.value = res.data.statistics?.cantidadHoy || 0;
     }
   } catch (error) {
     console.error("Error al obtener datos del dashboard:", error);
@@ -332,15 +433,15 @@ function cleanForm() {
 /**
  * Filtro de búsqueda en tiempo real para la tabla
  */
-const filteredRows = computed(() => {
-  if (!filter.value) return rows.value;
-  const search = filter.value.toLowerCase();
-  return rows.value.filter(row => 
-    row.Name?.toLowerCase().includes(search) ||
-    row.NumBill?.toString().includes(search) ||
-    row.Serial?.toLowerCase().includes(search)
-  );
-});
+// const filteredRows = computed(() => {
+//   if (!filter.value) return rows.value;
+//   const search = filter.value.toLowerCase();
+//   return rows.value.filter(row => 
+//     row.Name?.toLowerCase().includes(search) ||
+//     row.NumBill?.toString().includes(search) ||
+//     row.Serial?.toLowerCase().includes(search)
+//   );
+// });
 
 // Carga inicial de datos
 onMounted(() => {

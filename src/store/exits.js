@@ -7,11 +7,9 @@ export const exitStore = defineStore("exitStore", () => {
   const useToken = LoginStore();
 
   // Function Get inventory
-  async function GetExits(User) {
+  async function GetExits(User, params) {
     try {
-      return await requestAxios.get(`/exits/get/${User}`, {
-    
-      });
+      return await requestAxios.get(`/exits/get/${User}`, {params});
     } catch (error) {
       notifyError("No fue posible obtener las Ventas");
     }

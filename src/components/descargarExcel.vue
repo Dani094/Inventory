@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="rounded-xl bg-[#04162d] text-white p-3 flex text-xl" @click="showModal = true, clean()">
+    <button class="rounded-[8px] bg-[#04162d] text-white p-3 flex text-xl" @click="showModal = true, clean()">
       <span class="material-icons"> download </span>
       <!-- <i class="fa-solid fa-file-excel"></i> -->
     </button>

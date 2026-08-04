@@ -15,7 +15,7 @@ import Sidebar from "@/components/sidebar.vue"
 
 <style>
 body{
-  background-color: #E7E8F3;
+  background-color: rgb(15 23 42 / var(--tw-bg-opacity));;
 }
 .inventTable tr th {
   position: sticky;

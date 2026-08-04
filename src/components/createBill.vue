@@ -548,15 +548,16 @@ function goInfoExits(i) {
 async function getProduct() {
   const res = await storeInventory.GetInventory(storeLogin.Email);
   resProduct.value = res;
+  console.log(resProduct.value.data)
   if (res.status < 299) {
     const uniqueNames = new Set();
-    for (let i in res.data) {
-      const name = res.data[i].Name;
+    for (let i in res.data.products) {
+      const name = res.data.products[i].Name;
       if (!uniqueNames.has(name)) {
         uniqueNames.add(name);
-        let object = { label: name, value: res.data[i]._id };
-        let object1 = { label: res.data[i].Serial, value: res.data[i]._id };
-        let object2 = { label: res.data[i].Price, value: res.data[i]._id };
+        let object = { label: name, value: res.data.products[i]._id };
+        let object1 = { label: res.data.products[i].Serial, value: res.data.products[i]._id };
+        let object2 = { label: res.data.products[i].Price, value: res.data.products[i]._id };
         getProductName.value.push(object);
         getProductId.value.push(object1);
       }
@@ -566,7 +567,7 @@ async function getProduct() {
 
 // obtiene los valores del producto con el serial o el id 
   function getValues() {
-  resProduct.value.data.forEach((producto) => {
+  resProduct.value.data.products.forEach((producto) => {
     const idProducto = producto._id;
     const serial = producto.Serial
     if ( editProduct.value === false) {

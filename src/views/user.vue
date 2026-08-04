@@ -94,13 +94,13 @@
         </div>
       </section>
 
-      <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
+      <!-- <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
         <h3 class="text-[#04162d] font-bold text-lg mb-6 flex items-center gap-2">
            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
            Soporte Técnico
         </h3>
         <footerUs />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

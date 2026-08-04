@@ -6,12 +6,11 @@ import { LoginStore } from "./login.js";
 export const inventoryStore = defineStore("inventoryStore", () => {
   const useToken = LoginStore();
 
-  // Function Get inventory
-  async function GetInventory(User) {
-    try {
-      return await requestAxios.get(`/inventory/get/${User}`, {
 
-      });
+  // Function Get inventory
+  async function GetInventory(User,params) {
+    try {
+      return await requestAxios.get(`/inventory/get/${User}`, {params});
     } catch (error) {
       notifyError("No fue posible obtener el Inventario");
     }
@@ -28,9 +27,11 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     unit_measurement,
     measurement_type,
     description, 
-    Serial
+    Serial,
+    minStock,
+    categoryId
   ) {
-    console.log(supplier, name, units, priceBuy, priceSale, expirationDate, unit_measurement, measurement_type, user, description, Serial);
+    console.log(supplier, name, units, priceBuy, priceSale, expirationDate, unit_measurement, measurement_type, user, description, Serial, minStock, categoryId);
 
     try {
       return (
@@ -47,7 +48,9 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             unit_measurement: unit_measurement,
             measurement_type: measurement_type,
             description: description,
-            Serial: Serial
+            Serial: Serial,
+            minStock: minStock,
+            category_id: categoryId
           },
         ),
         notifySuccess("Agregado correctamente")
@@ -82,6 +85,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   }
   
 
+
   async function PutInventory(
     id,
     supplier,
@@ -89,13 +93,14 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     units,
     priceBuy, 
     priceSale,
-    cantGrams,
     expirationDate,
     user,
     unit_measurement,
     measurement_type,
-    description
-  ) { console.log(id, supplier, name, units, priceBuy, priceSale, cantGrams, expirationDate, user, unit_measurement, measurement_type, description);
+    description,
+    serial,
+    minStock
+  ) { console.log(id, supplier, name, units, priceBuy, priceSale,  expirationDate, user, unit_measurement, measurement_type, description, serial,minStock );
   
     try {
       return (
@@ -105,9 +110,13 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             Units: units,
             PriceBuy: priceBuy, 
             PriceSale: priceSale,
-            CantGrams:cantGrams,
             ExpirationDate: expirationDate,
             UserUpdate: user,
+            unit_measurement: unit_measurement,
+            measurement_type: measurement_type,
+            description: description,
+            Serial: serial,
+            minStock: minStock
           },
         ),
         notifySuccess("Inventario Actualizado Correctamente")

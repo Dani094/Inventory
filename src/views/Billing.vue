@@ -127,7 +127,7 @@
       <div v-if="showBill == 3" class="w-full max-w-4xl min-h-[80vh] bg-white rounded-3xl overflow-hidden shadow-2xl">
         <bill :dataBill="arrayBill" />
       </div>
-      <div v-else class="w-full max-w-2xl bg-white rounded-3xl p-2 shadow-2xl">
+      <div v-else class=" max-w-2xl bg-white rounded-3xl p-2 shadow-2xl">
         <createbill :title="modalTitle" :ind="index" :value="valEditCrea" :dataEdit="arrayEdit" />
       </div>
     </q-dialog>

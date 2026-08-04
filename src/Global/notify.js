@@ -21,7 +21,8 @@ export const notifySuccess = (msg, position = "top") => {
 };
 
 export const sweetDelete = (data, onDelete) => {
-  const name = data.Name ? data.Name : "La Factura "+data.numFactura;
+  const name = data.Name || data.name 
+
   Swal.fire({
     title: `¿Seguro que quieres eliminar ${name}  ?`,
     text: "¡No podrás revertir esto!",

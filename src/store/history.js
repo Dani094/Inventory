@@ -7,10 +7,10 @@ export const historyStore = defineStore("historyStore", () => {
   const useToken = LoginStore();
 
   // Function Get inventory
-  async function Gethistory(User) {
+  async function Gethistory(User, params) {
     try {
       return await requestAxios.get(`/history/get/${User}`, {
-    
+        params
       });
     } catch (error) {
       notifyError("No fue posible obtener las Ventas");

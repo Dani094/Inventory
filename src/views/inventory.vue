@@ -19,10 +19,11 @@
         <Report :inventory="true" />
         <button 
           @click="(showModal = true), cleanForm()"
-          class="bg-[#1a2332] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#40d124] transition-all shadow-sm active:scale-95"
-        >
+          class="flex items-center gap-2 px-5 py-3 bg-green-600 text-white font-bold rounded-[10px] shadow-sm hover:bg-green-700 transition-all text-sm cursor-pointer"
+               >
+            <span class="material-icons text-base ">add</span>
           Agregar
-          <span class="material-icons text-base text-green-600">add</span>
+          
         </button>
       </div>
     </div>
@@ -31,7 +32,7 @@
       cards info
 -------------------------------------------------------------------------------------- -->
     <div class="grid grid-cols-2 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+      <div class="bg-white p-6 rounded-[1rem] border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="bg-blue-50 p-4 rounded-2xl">
           <span class="material-icons text-blue-600">inventory_2</span>
         </div>
@@ -41,7 +42,7 @@
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+      <div class="bg-white p-6 rounded-[1rem] border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="bg-blue-50 p-4 rounded-2xl">
           <span class="material-icons text-blue-600">running_with_errors</span>
         </div>
@@ -51,7 +52,7 @@
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-[2rem] border border-gray-100 shadow-sm flex items-center gap-4">
+      <div class="bg-white p-6 rounded-[1rem] border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="bg-blue-50 p-4 rounded-2xl">
           <span class="material-icons text-blue-600">money</span>
         </div>
@@ -67,7 +68,7 @@
 <!-- --------------------------------------------------------------------------------------
       TABLE
 -------------------------------------------------------------------------------------- -->
-    <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-[1rem] border border-gray-200 shadow-sm overflow-hidden">
 
       <div class="p-6 border-b border-gray-50 flex flex-col md:flex-row justify-between gap-4">
         <div class="relative w-full md:w-80">
@@ -76,14 +77,14 @@
             v-model="filter"
             type="text" 
             placeholder="Buscar"
-            class="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500/20 border border-transparent focus:border-blue-500 transition-all text-sm"
+            class="w-full pl-12 pr-4 py-3 bg-gray-100 rounded-[10px] outline-none focus:ring-2 focus:ring-blue-500/20 border border-transparent focus:border-blue-500 transition-all text-sm"
           ></div>
       </div>
 
       <div class="overflow-x-auto">
         <table class="w-full border-collapse">
           <thead>
-            <tr class="bg-gray-50/50 text-[11px] font-bold uppercase tracking-wide text-center text-black">
+            <tr class="bg-gray-50/50 text-[10px] font-bold uppercase tracking-wider text-center text-gray-400">
               <th class="px-4 py-4">Proveedor</th>
               <th class="px-4 py-4">Nombre</th>
               <th class="px-4 py-4">Cantidad</th>
@@ -91,6 +92,7 @@
               <th class="px-4 py-4">Precio Unidad Venta</th>
               <th class="px-4 py-4">Total Compra</th>
               <th class="px-4 py-4">Total venta</th>
+              <th class="px-4 py-4">category</th>
               <th class="px-4 py-4">Estado</th>
               <th class="px-4 py-4">Opciones</th>
             </tr>
@@ -99,14 +101,14 @@
             <tr v-for="row in filteredRows" :key="row._id" class="hover:bg-gray-50/50 transition-colors group text-center">
               <td class="px-1  py-4">
                 <div class="flex flex-col">
-                  <span class="font-bold text-[11px] text-black uppercase">{{ row.Supplier }}</span>
-                  <span class="text-[10px] text-gray-400 italic">Vence: {{ row.ExpirationDate ? row.ExpirationDate.slice(0, 10) : 'N/A' }}</span>
+                  <span class="font-bold text-[11px] text-black uppercase"> {{ row.Supplier?.Name || 'Sin porveedor' }}</span>
+                  <span class="text-[12px] text-gray-400 italic">Vence: {{ row.ExpirationDate ? row.ExpirationDate.slice(0, 10) : 'N/A' }}</span>
                 </div>
               </td>
               <td class="px-1  py-4">
                 <div class="flex flex-col text-[12px] text-gray-600">
                   <span class="font-medium text-gray-700">{{ row.Name }}</span>
-                  <span class="text-[10px] font-mono text-gray-400 uppercase tracking-tighter">{{ row.Serial || 'Sin Serial' }}</span>
+                  <span class="text-[12px] font-mono text-gray-400 uppercase tracking-tighter">{{ row.Serial || 'Sin Serial' }}</span>
                 </div>
               </td>
               <td class="px-1  py-4">
@@ -122,13 +124,18 @@
                 $ {{ Number(row.PriceSale).toLocaleString()}}
               </td>
               <td class="px-1  py-4 ">
-                <span class="font-black text-orange-500 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
+                <span class=" text-orange-500 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
                   $ {{ (row.PriceBuy * row.Units).toLocaleString() }}
                 </span>
               </td>
               <td class="px-1  py-4">
-                <span class="font-black text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
+                <span class=" text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
                   $ {{ (row.PriceSale * row.Units).toLocaleString() }}
+                </span>
+              </td>
+              <td class="px-1  py-4">
+                <span class="text-[12px] text-gray-600 font-bold">
+                  {{ row.category_id?.name || 'Sin categoría' }}
                 </span>
               </td>
               <td class="py-4">
@@ -156,6 +163,52 @@
           </tbody>
         </table>
       </div>
+      <div class="p-4 px-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-gray-500">
+        
+        <!-- Selector de cantidad por página e indicador -->
+        <div class="flex items-center gap-3">
+          <span>Mostrar:</span>
+          <select 
+            v-model="itemsPerPage" 
+            @change="currentPage = 1"
+            class="bg-gray-50 border border-gray-200 rounded-xl px-2 py-1 outline-none text-gray-700 font-bold focus:border-blue-500 cursor-pointer"
+          >
+            <option :value="4">4</option>
+            <option :value="10">10</option>
+            <option :value="25">25</option>
+            <option :value="50">50</option>
+          </select>
+          <span>
+            Mostrando {{ (currentPage - 1) * itemsPerPage + (rows.length ? 1 : 0) }} - 
+            {{ Math.min(currentPage * itemsPerPage, totalRecords) }} 
+            de {{ totalRecords }} registros
+          </span>
+        </div>
+
+        <!-- Botones de Navegación -->
+        <div class="flex items-center gap-2">
+          <button 
+            @click="prevPage" 
+            :disabled="currentPage === 1"
+            class="flex items-center justify-center p-2 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
+          >
+            <span class="material-icons text-base">chevron_left</span>
+          </button>
+
+          <span class="px-3 font-bold text-[#1a2332]">
+            Página {{ currentPage }} de {{ totalPages }}
+          </span>
+
+          <button 
+            @click="nextPage" 
+            :disabled="currentPage >= totalPages"
+            class="flex items-center justify-center p-2 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
+          >
+            <span class="material-icons text-base">chevron_right</span>
+          </button>
+        </div>
+
+      </div>
     </div>
 
 
@@ -171,9 +224,10 @@
         </div>
         <form @submit.prevent="InventoryPost" class="p-8 space-y-4">
           <div class="grid grid-cols-2 gap-4">
-            <input v-model="supplier" placeholder="Proveedor" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="serial" placeholder="Serial" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="name" placeholder="Nombre" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input  v-model.number="minStock" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm" placeholder="Stock mínimo">
+            <input v-model.number="units" placeholder="Unidades" type="number" step="any" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
               <select v-model="unit_measurement" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500" >
               <option value="" disabled>Seleccione una unidad...</option>
               <option 
@@ -184,9 +238,45 @@
                 {{ opcion.label }}
               </option>
             </select>
-             <input v-model.number="units" placeholder="Unidades" type="number" step="any" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+               <!-- SELECT DE CATEGORÍA -->
+           
             <input  v-model="priceBuy" placeholder="Precio Unitario de Compra" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="priceSale" placeholder="Precio Unitario de Venta" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            
+                      
+            <select v-model="copias" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500">
+              <option value="" disabled>¿Copias?</option>
+              <option value="No">No</option>
+              <option value="Sí">Sí</option>
+            </select>
+            
+            <input v-if="copias === 'Sí'" v-model="crearCopias" placeholder="Cantidad de copias" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm" min="1">
+             <select 
+              v-model="categoryId" 
+              class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500 cursor-pointer focus:ring-2 focus:ring-blue-500/20 outline-none"
+            >
+              <option value="" disabled>Seleccione una categoría...</option>
+              <option 
+                v-for="cat in categories" 
+                :key="cat._id" 
+                :value="cat._id"
+              >
+                {{ cat.name }} <!-- O cat.nombre -->
+              </option>
+            </select>
+               <select 
+              v-model="supplier" 
+              class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500 cursor-pointer focus:ring-2 focus:ring-blue-500/20 outline-none"
+            >
+              <option value="" disabled>Seleccione un proveedor...</option>
+              <option 
+                v-for="item in suppliersList" 
+                :key="item._id" 
+                :value="item._id" 
+              >
+                {{ item.Name }} <!-- O item.company_name, dependiendo de cómo lo llame tu backend -->
+              </option>
+            </select>
             <div class="flex flex-col bg-gray-50 rounded-2xl p-2 justify-center">
               <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider">Fecha de Vencimiento</span>
               <input 
@@ -194,13 +284,7 @@
               type="date" 
               class="bg-transparent border-none text-sm text-gray-600 p-0 focus:ring-0 w-full"
               >
-            </div>            
-            <select v-model="copias" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500">
-              <option value="" disabled>¿Copias?</option>
-              <option value="No">No</option>
-              <option value="Sí">Sí</option>
-            </select>
-            <input v-if="copias === 'Sí'" v-model="crearCopias" placeholder="Cantidad de copias" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm" min="1">
+            </div>  
             <textarea v-model="description" placeholder="Descripción" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">informacion del producto</textarea>
           </div>
           <button type="submit" class="w-full bg-[#1a2332] text-white font-bold py-3 rounded-2xl">GUARDAR</button>
@@ -219,13 +303,48 @@
         </div>
         <form @submit.prevent="InventoryPut" class="p-8 space-y-4">
           <div class="grid grid-cols-2 gap-4">
-            <input v-model="supplier" placeholder="Proveedor" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="serial" placeholder="Serial" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="name" placeholder="Nombre" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="units" placeholder="Unidades" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <input v-model="priceBuy" placeholder="Precio de Compra" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <input v-model="minStock" placeholder="stock minimo" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+             <select 
+              v-model="categoryId" 
+              class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500 cursor-pointer focus:ring-2 focus:ring-blue-500/20 outline-none"
+            >
+              <option value="" disabled>Seleccione una categoría...</option>
+              <option 
+                v-for="cat in categories" 
+                :key="cat._id" 
+                :value="cat._id"
+              >
+                {{ cat.name }} <!-- O cat.nombre -->
+              </option>
+            </select>
+               <select 
+              v-model="supplier" 
+              class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500 cursor-pointer focus:ring-2 focus:ring-blue-500/20 outline-none"
+            >
+              <option value="" disabled>Seleccione un proveedor...</option>
+              <option 
+                v-for="item in suppliersList" 
+                :key="item._id" 
+                :value="item._id" 
+              >
+                {{ item.Name }} <!-- O item.company_name, dependiendo de cómo lo llame tu backend -->
+              </option>
+            </select>
             <input v-model="priceSale" placeholder="Precio de Venta" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="unit_measurement" placeholder="Unidad de Medida" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            <select v-model="unit_measurement" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500" >
+              <option value="" disabled>Seleccione una unidad...</option>
+              <option 
+                v-for="opcion in opcionesUnidad" 
+                :key="opcion.value" 
+                :value="opcion.value"
+              >
+                {{ opcion.label }}
+              </option>
+            </select>
             <input v-model="expirationDate" placeholder="Fecha de Vencimiento" type="date" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
             <textarea v-model="description" placeholder="Descripción" class="bg-gray-50 rounded-2xl p-3 border-none text-sm"></textarea>
           </div>
@@ -302,11 +421,16 @@ import Report from "@/components/descargarExcel.vue";
 import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
 import { exitStore } from "../store/exits.js";
+import { categoryStore } from "../store/category.js";
+import { supplierStore } from "../store/supplier.js";
 import { sweetDelete } from "@/Global/notify";
 
+// stores
 const storeInventory = inventoryStore();
 const storeLogin = LoginStore();
 const storeExits = exitStore();
+const storeCategory = categoryStore();
+const storeSupplier = supplierStore();
 
 // Visibilidad de Modales
 let showModal = ref(false);
@@ -316,14 +440,19 @@ let showModalInputStock = ref(false);
 let loading = ref(false);
 let filter = ref("");
 
+// Listas reactivas para selects
+const categories = ref([]);
+const suppliersList = ref([]);
+
 // Variables de Formulario
 let index = ref();
 let supplier = ref("");
+let categoryId = ref("");
 let name = ref("");
 let serial = ref("");
 let units = ref();
 let priceBuy = ref();
-let priceSale= ref();
+let priceSale = ref();
 let expirationDate = ref();
 let description = ref("");
 let state = ref("Disponible");
@@ -332,6 +461,7 @@ let copias = ref("");
 let crearCopias = ref(0);
 let unit_measurement = ref("");
 let measurement_type = ref("");
+let minStock = ref(0);
 
 // Variables Salidas
 let nameExit = ref("");
@@ -346,30 +476,24 @@ let TotalUnits = ref(0);
 let expiredProducts = ref(0);
 let outOfStockProducts = ref(0);
 
-
+// Variables Entrada de Stock
 let nameProduct = ref("");
 let serialProduct = ref("");
 let unitsStock = ref(0);
 
+// Variables paginación
+const currentPage = ref(1);
+const itemsPerPage = ref(4);
+const totalPages = ref(1);
+const totalRecords = ref(0);
 
 const opcionesUnidad = ref([
   { label: 'Unidades (und)', value: 'und', tipo: 'unidad' },
   { label: 'Kilogramos (kg)', value: 'kg', tipo: 'peso' },
   { label: 'Gramos (g)', value: 'g', tipo: 'peso' },
-  { label: 'Litros (l)', value: 'lt', tipo: 'volumen' },
+  { label: 'Litros (l)', value: 'l', tipo: 'volumen' },
   { label: 'Mililitros (ml)', value: 'ml', tipo: 'volumen' }
 ]);
-
-
-const unidadSeleccionada = ref('und');
-const cantidad = ref(1);
-
-// 3. Propiedad computada para saber si permite decimales o solo enteros
-const esTipoUnidad = computed(() => {
-  const opcionActual = opcionesUnidad.find(op => op.value === unidadSeleccionada.value);
-  return opcionActual ? opcionActual.tipo === 'unidad' : false;
-});
-
 
 const getMeasurementType = (unit) => {
   const map = {
@@ -383,7 +507,6 @@ const getMeasurementType = (unit) => {
   return map[unit] || 'unidad';
 };
 
-// Escuchamos el cambio en form.unit y actualizamos form.measurement_type automáticamente
 watch(
   () => unit_measurement.value,
   (newUnit) => {
@@ -391,25 +514,16 @@ watch(
   }
 );
 
-const filteredRows = computed(() => {
-  if (!filter.value) return rows.value;
-  return rows.value.filter(r => 
-    r.Name.toLowerCase().includes(filter.value.toLowerCase()) ||
-    r.Supplier.toLowerCase().includes(filter.value.toLowerCase())
-  );
-});
+const filteredRows = computed(() => rows.value);
 
-// Funciones de Botones
+// Funciones de Modales
 function openEdit(row) {
-
-
   index.value = row._id;
   goInfo(row);
   showModalEdit.value = true;
 }
 
 function openExit(row) {
-
   index.value = row._id;
   goInfo2(row);  
   showModalExits.value = true;
@@ -427,54 +541,99 @@ const getStateBadge = (s) => s === 'Disponible'
   ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
   : 'bg-rose-50 text-rose-700 border-rose-100';
 
-
-  
-// Lógica de API
+// API: Obtener Inventario con paginación
 async function InventoryGet() {
-  const res = await storeInventory.GetInventory(storeLogin.Email);
-  if (res?.status < 299) {
+  try {
+    const res = await storeInventory.GetInventory(storeLogin.Email, {
+      page: currentPage.value,
+      limit: itemsPerPage.value,
+      search: filter.value
+    });
+    console.log("Respuesta de inventario:", res.data);
+    if (res?.status < 299) {
+      rows.value = res.data.products;
+     
+      
+      TotalUnits.value = res.data.statistics.totalProducts;
+      expiredProducts.value = res.data.statistics.expiredProducts;
+      outOfStockProducts.value = res.data.statistics.outOfStockProducts;
 
-    rows.value = res.data.products;
-
-    TotalUnits.value = res.data.statistics.totalProducts;
-    expiredProducts.value = res.data.statistics.expiredProducts;
-    outOfStockProducts.value = res.data.statistics.outOfStockProducts;
-
+      if (res.data.pagination) {
+        totalPages.value = res.data.pagination.totalPages;
+        totalRecords.value = res.data.pagination.totalRecords;
       }
+    }
+  } catch (error) {
+    console.error("Error al obtener inventario:", error);
+  }
 }
 
-async function InventoryPost() {
+// API: Obtener Categorías reactivas
+async function getCategories() {
+  try {
+    const res = await storeCategory.GetCategories(storeLogin.Email, {});
+    categories.value = res.data?.categories || [];
+  } catch (error) {
+    console.error("Error al obtener las categorías:", error);
+    categories.value = [];
+  }
+}
 
-  
+// API: Obtener Proveedores reactivos
+async function getSuppliers() {
+  try {
+    const res = await storeSupplier.GetSuppliers(storeLogin.Email);
+    suppliersList.value = res.data?.suppliers || [];
+  } catch (error) {
+    console.error("Error al obtener los proveedores:", error);
+    suppliersList.value = [];
+  }
+}
+
+// Carga inicial en paralelo optimizada
+onMounted(async () => {
   loading.value = true;
-  await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value,  expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value);   
+  await Promise.all([
+    InventoryGet(),
+    getCategories(),
+    getSuppliers()
+  ]);
+  loading.value = false;
+});
+
+// Paginación y Watchers
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+
+watch([currentPage, itemsPerPage], () => {
+  InventoryGet();
+});
+
+let filterTimeout;
+watch(filter, () => {
+  clearTimeout(filterTimeout);
+  filterTimeout = setTimeout(() => {
+    currentPage.value = 1;
+    InventoryGet();
+  }, 300);
+});
+
+async function InventoryPost() {
+  loading.value = true;
+  await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value, minStock.value, categoryId.value); 
+  
   if (crearCopias.value >= 1) {
-    const itemToDuplicate = {
-      Supplier: supplier.value,
-      Name: name.value,
-      Units: units.value,
-      PriceBuy: priceBuy.value,
-      PriceSale: priceSale.value,
-      unit_measurement: unit_measurement.value,
-      measurement_type: measurement_type.value,
-      ExpirationDate: expirationDate.value,
-      UserEmail: user.value,
-      Serial: serial.value,
-      Description: description.value
-    };
     for (let i = 0; i < crearCopias.value; i++) {
-      const duplicatedItem = {
-        ...itemToDuplicate,
-      };
-      await storeInventory.PostInventory(
-        duplicatedItem.Supplier,
-        duplicatedItem.Name,
-        duplicatedItem.Units,
-        duplicatedItem.PriceBuy,
-        duplicatedItem.PriceSale,
-        duplicatedItem.ExpirationDate,
-        duplicatedItem.UserEmail
-      );
+      await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value, minStock.value, categoryId.value);
     }
   }
   showModal.value = false;
@@ -484,31 +643,24 @@ async function InventoryPost() {
 
 async function InventoryPut() {
   loading.value = true;
-  
-  await storeInventory.PutInventory(index.value, supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, measurement_type.value , serial.value);
+  await storeInventory.PutInventory(index.value, supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, measurement_type.value, serial.value, minStock.value);
   showModalEdit.value = false;
   InventoryGet();
   loading.value = false;
 }
 
-
 async function StockPut() {
   loading.value = true;
-  console.log(1);
-  
-  await storeInventory.PutStockInventory(index.value,  unitsStock.value,  user.value)
+  await storeInventory.PutStockInventory(index.value, unitsStock.value, user.value);
   showModalInputStock.value = false;
   InventoryGet();
   loading.value = false;
 }
 
-
 async function ExitsPost() {
-  // 1. Convertimos todo a números reales para evitar errores de cálculo
   const cantSalida = Number(unitsExit.value);
-    const stockActual = Number(units2.value);
+  const stockActual = Number(units2.value);
 
-  // 2. Validación de seguridad
   if (cantSalida <= 0 || cantSalida > stockActual) {
     alert("Cantidad no válida o stock insuficiente");
     return;
@@ -516,21 +668,19 @@ async function ExitsPost() {
 
   loading.value = true;
   try {
-    // 3. Registramos la salida
-    const resExit = await storeExits.PostExits({
+    await storeExits.PostExits({
       IdProduct: index.value,
       NumBill: null,
       Name: nameExit.value,
       Units: parseFloat(unitsExit.value),
-      Price:  parseFloat(priceExit.value),
+      Price: parseFloat(priceExit.value),
       description: descriptionExit.value,
       Discount: parseFloat(discount.value),
       UserEmail: user.value,
+      Serial: serialExit.value,
     });
-    await storeInventory.PutUnits(
-      index.value,-cantSalida, 
-    );
-    showModalExits.value = false;    
+    await storeInventory.PutUnits(index.value, -cantSalida);
+    showModalExits.value = false;     
     await InventoryGet(); 
     cleanForm();
   } catch (error) {
@@ -549,35 +699,36 @@ async function deleteItem(data) {
 }
 
 function goInfo(data) {
-  supplier.value = data.Supplier; 
+  console.log(data);
+  
+  supplier.value = typeof data.Supplier === 'object' ? data.Supplier?._id : data.Supplier; 
+  categoryId.value = typeof data.category_id === 'object' ? data.category_id?._id : data.category_id;
   name.value = data.Name; 
   serial.value = data.Serial;
   units.value = data.Units; 
-  priceBuy.value = data.PriceBuy;   // Corregido
-  priceSale.value = data.PriceSale; // Corregido
-  // Formatea la fecha a YYYY-MM-DD para que el input tipo date la reconozca
+  priceBuy.value = data.PriceBuy; 
+  priceSale.value = data.PriceSale; 
   expirationDate.value = data.ExpirationDate ? data.ExpirationDate.slice(0, 10) : ""; 
   state.value = data.State;
   description.value = data.description;
   unit_measurement.value = data.unit_measurement; 
-  serial.value = data.Serial;
+  minStock.value = data.MinStock
+;
 }
 
 function goInfo2(data) {
   nameExit.value = data.Name; 
   serialExit.value = data.Serial;
   units2.value = data.Units; 
-  descriptionExit.value = data.description;
-  priceExit.value = data.PriceSale; // Usamos el precio de venta para la salida
+  priceExit.value = data.PriceSale; 
 }
 
 function goInfo3(data) {
   nameProduct.value = data.Name; 
   serialProduct.value = data.Serial;
   units2.value = data.Units; 
-  priceExit.value = data.PriceBuy; // Usamos el precio de compra para la entrada
+  priceExit.value = data.PriceBuy; 
 }
-
 
 function cleanForm() {
   supplier.value = "";
@@ -592,9 +743,10 @@ function cleanForm() {
   discount.value = 0;
   description.value = "";
   serial.value = "";
+  descriptionExit.value = "";
+  unit_measurement.value = "";
+  minStock.value = null;
 }
-
-onMounted(() => InventoryGet());
 </script>
 
 <!-- <style scoped>
