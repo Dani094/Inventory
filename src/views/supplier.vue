@@ -223,7 +223,7 @@ const filter = ref("");
 const totalSuppliers = ref(0);
 const suppliers = ref([]);
 
-
+let loading = ref(false);
 let showModal = ref(false);
 let isEditing = ref(false);
 
@@ -343,7 +343,7 @@ async function editSupplier() {
   showModal.value = false;
   isEditing.value = false;
   cleanForm();
-  getCategories();
+  getSuppliers();
   loading.value = false;
 };
 
@@ -351,8 +351,8 @@ async function editSupplier() {
 
 const deleteSupplier = async (data) => {
    sweetDelete(data, async () => {
-    await storeInventory.DeleteInventory(data._id);
-    InventoryGet();
+    await storeSupplier.DeleteSupplier(data._id);
+    getSuppliers();
    })
 };
 

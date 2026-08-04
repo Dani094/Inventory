@@ -40,11 +40,11 @@
           <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Total de productos</p>
           <h3 class="text-2xl font-black text-[#1a2332]">{{ TotalUnits?.toLocaleString() }}</h3>
         </div>
-      </div>
+      </div> 
 
       <div class="bg-white p-6 rounded-[1rem] border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="bg-blue-50 p-4 rounded-2xl">
-          <span class="material-icons text-blue-600">running_with_errors</span>
+          <span class="material-icons text-red-600">running_with_errors</span>
         </div>
         <div>
           <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Productos vencidos</p>
@@ -54,7 +54,7 @@
 
       <div class="bg-white p-6 rounded-[1rem] border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="bg-blue-50 p-4 rounded-2xl">
-          <span class="material-icons text-blue-600">money</span>
+          <span class="material-icons text-yellow-600">money</span>
         </div>
         <div>
           <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Productos agotados</p>
@@ -215,83 +215,191 @@
 <!-- --------------------------------------------------------------------------------------
       MODAL ADD
 -------------------------------------------------------------------------------------- -->
-    <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModal = false"></div>
-      <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
-        <div class="bg-[#1a2332] p-6 text-white flex justify-between text-xl">
-          <h3 class="font-black uppercase tracking-tight text-center">agregar producto</h3>
-          <button @click="showModal = false"><span class="material-icons">close</span></button>
-        </div>
-        <form @submit.prevent="InventoryPost" class="p-8 space-y-4">
-          <div class="grid grid-cols-2 gap-4">
-            <input v-model="serial" placeholder="Serial" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="name" placeholder="Nombre" type="text" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input  v-model.number="minStock" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm" placeholder="Stock mínimo">
-            <input v-model.number="units" placeholder="Unidades" type="number" step="any" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-              <select v-model="unit_measurement" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500" >
-              <option value="" disabled>Seleccione una unidad...</option>
-              <option 
-                v-for="opcion in opcionesUnidad" 
-                :key="opcion.value" 
-                :value="opcion.value"
-              >
+  <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="closeModal"></div>
+    <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
+      <div class="bg-[#1a2332] p-6 text-white flex justify-between text-xl items-center">
+        <h3 class="font-black uppercase tracking-tight text-center">Agregar producto</h3>
+        <button @click="showModal = false" class="hover:text-purple-400 transition-colors">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+
+      <form @submit.prevent="InventoryPost" novalidate class="p-8 space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          
+          <!-- Serial -->
+          <div>
+            <input 
+              v-model="serial" 
+              @input="errors.serial = ''"
+              placeholder="Serial *" 
+              type="text" 
+              :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border', errors.serial ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
+            >
+            <p v-if="errors.serial" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.serial }}</p>
+          </div>
+
+          <!-- Nombre -->
+          <div>
+            <input 
+              v-model="name" 
+              @input="errors.name = ''"
+              placeholder="Nombre *" 
+              type="text" 
+              :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border', errors.name ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
+            >
+            <p v-if="errors.name" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.name }}</p>
+          </div>
+
+          <!-- Stock Mínimo -->
+          <div>
+            <input 
+              v-model.number="minStock" 
+              @input="errors.minStock = ''"
+              type="number" 
+              placeholder="Stock mínimo *" 
+              :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border', errors.minStock ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
+            >
+            <p v-if="errors.minStock" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.minStock }}</p>
+          </div>
+
+          <!-- Unidades -->
+          <div>
+            <input 
+              v-model.number="units" 
+              @input="errors.units = ''"
+              placeholder="Unidades *" 
+              type="number" 
+              step="any" 
+              :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border', errors.units ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
+            >
+            <p v-if="errors.units" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.units }}</p>
+          </div>
+
+          <!-- Unidad de Medida -->
+          <div>
+            <select 
+              v-model="unit_measurement" 
+              @change="errors.unit_measurement = ''"
+              :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border text-gray-600', errors.unit_measurement ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
+            >
+              <option value="" disabled>Unidad de medida *</option>
+              <option v-for="opcion in opcionesUnidad" :key="opcion.value" :value="opcion.value">
                 {{ opcion.label }}
               </option>
             </select>
-               <!-- SELECT DE CATEGORÍA -->
-           
-            <input  v-model="priceBuy" placeholder="Precio Unitario de Compra" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            <input v-model="priceSale" placeholder="Precio Unitario de Venta" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
-            
-                      
-            <select v-model="copias" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500">
+            <p v-if="errors.unit_measurement" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.unit_measurement }}</p>
+          </div>
+
+          <!-- Categoría -->
+          <div>
+            <select 
+              v-model="categoryId" 
+              @change="errors.categoryId = ''"
+              :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border text-gray-600 cursor-pointer', errors.categoryId ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
+            >
+              <option value="" disabled>Seleccione categoría *</option>
+              <option v-for="cat in categories" :key="cat._id" :value="cat._id">
+                {{ cat.name }}
+              </option>
+            </select>
+            <p v-if="errors.categoryId" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.categoryId }}</p>
+          </div>
+
+          <!-- Precio Compra -->
+          <div>
+            <input 
+              v-model.number="priceBuy" 
+              @input="errors.priceBuy = ''"
+              placeholder="Precio Compra *" 
+              type="number" 
+              :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border', errors.priceBuy ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
+            >
+            <p v-if="errors.priceBuy" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.priceBuy }}</p>
+          </div>
+
+          <!-- Precio Venta -->
+          <div>
+            <input 
+              v-model.number="priceSale" 
+              @input="errors.priceSale = ''"
+              placeholder="Precio Venta *" 
+              type="number" 
+              :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border', errors.priceSale ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
+            >
+            <p v-if="errors.priceSale" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.priceSale }}</p>
+          </div>
+
+          <!-- Copias -->
+          <div>
+            <select v-model="copias" @change="errors.crearCopias = ''" class="w-full bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-600 outline-none">
               <option value="" disabled>¿Copias?</option>
               <option value="No">No</option>
               <option value="Sí">Sí</option>
             </select>
-            
-            <input v-if="copias === 'Sí'" v-model="crearCopias" placeholder="Cantidad de copias" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm" min="1">
-             <select 
-              v-model="categoryId" 
-              class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500 cursor-pointer focus:ring-2 focus:ring-blue-500/20 outline-none"
+          </div>
+
+          <!-- Cantidad Copias (Condicional) -->
+          <div v-if="copias === 'Sí'">
+            <input 
+              v-model.number="crearCopias" 
+              @input="errors.crearCopias = ''"
+              placeholder="Cantidad de copias *" 
+              type="number" 
+              min="1"
+              :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border', errors.crearCopias ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
             >
-              <option value="" disabled>Seleccione una categoría...</option>
-              <option 
-                v-for="cat in categories" 
-                :key="cat._id" 
-                :value="cat._id"
-              >
-                {{ cat.name }} <!-- O cat.nombre -->
-              </option>
-            </select>
-               <select 
+            <p v-if="errors.crearCopias" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.crearCopias }}</p>
+          </div>
+
+          <!-- Proveedor -->
+          <div>
+            <select 
               v-model="supplier" 
-              class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500 cursor-pointer focus:ring-2 focus:ring-blue-500/20 outline-none"
+              @change="errors.supplier = ''"
+              :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border text-gray-600 cursor-pointer', errors.supplier ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
             >
-              <option value="" disabled>Seleccione un proveedor...</option>
-              <option 
-                v-for="item in suppliersList" 
-                :key="item._id" 
-                :value="item._id" 
-              >
-                {{ item.Name }} <!-- O item.company_name, dependiendo de cómo lo llame tu backend -->
+              <option value="" disabled>Seleccione proveedor *</option>
+              <option v-for="item in suppliersList" :key="item._id" :value="item._id">
+                {{ item.Name }}
               </option>
             </select>
-            <div class="flex flex-col bg-gray-50 rounded-2xl p-2 justify-center">
-              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider">Fecha de Vencimiento</span>
-              <input 
+            <p v-if="errors.supplier" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.supplier }}</p>
+          </div>
+
+          <!-- Fecha Vencimiento -->
+          <div class="flex flex-col bg-gray-50 rounded-2xl p-2 justify-center border border-transparent">
+            <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider">Fecha de Vencimiento</span>
+            <input 
               v-model="expirationDate" 
               type="date" 
-              class="bg-transparent border-none text-sm text-gray-600 p-0 focus:ring-0 w-full"
-              >
-            </div>  
-            <textarea v-model="description" placeholder="Descripción" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">informacion del producto</textarea>
+              class="bg-transparent border-none text-sm text-gray-600 p-0 focus:ring-0 w-full outline-none"
+            >
+          </div>  
+
+          <!-- Descripción -->
+          <div class="col-span-2">
+            <textarea 
+              v-model="description" 
+              placeholder="Descripción del producto..." 
+              class="w-full bg-gray-50 rounded-2xl p-3 border-none text-sm outline-none resize-none h-20"
+            ></textarea>
           </div>
-          <button type="submit" class="w-full bg-[#1a2332] text-white font-bold py-3 rounded-2xl">GUARDAR</button>
-        </form>
-      </div>
+
+        </div>
+
+        <button 
+          type="submit" 
+          :disabled="loading"
+          class="w-full bg-[#1a2332] text-white font-bold py-3 rounded-2xl hover:bg-purple-600 transition-colors disabled:opacity-50 mt-4 cursor-pointer"
+        >
+          {{ loading ? 'GUARDANDO...' : 'GUARDAR' }}
+        </button>
+      </form>
     </div>
-<!-- --------------------------------------------------------------------------------------
+  </div>
+  <!-- --------------------------------------------------------------------------------------
       MODAL EDIT
 -------------------------------------------------------------------------------------- -->
     <div v-if="showModalEdit" class="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -470,6 +578,7 @@ let units2 = ref(0);
 let unitsExit = ref(0);
 let priceExit = ref(0);
 let discount = ref(0);
+let unit_measurementExit = ref("");
 let descriptionExit = ref("");
 let rows = ref([]);
 let TotalUnits = ref(0);
@@ -486,6 +595,53 @@ const currentPage = ref(1);
 const itemsPerPage = ref(4);
 const totalPages = ref(1);
 const totalRecords = ref(0);
+
+
+// Estado de Errores
+const errors = ref({});
+
+
+/**
+ * Valida todos los campos antes de realizar el POST
+ */
+function validateForm() {
+  const errs = {};
+
+  if (!serial.value || !serial.value.trim()) errs.serial = 'Requerido';
+  if (!name.value || !name.value.trim()) errs.name = 'Requerido';
+  
+  if (minStock.value === null || minStock.value < 0) {
+    errs.minStock = 'Mínimo 0';
+  }
+  
+  if (!units.value || units.value <= 0) {
+    errs.units = 'Debe ser mayor a 0';
+  }
+
+  if (!unit_measurement.value) errs.unit_measurement = 'Seleccione una opción';
+  if (!categoryId.value) errs.categoryId = 'Seleccione categoría';
+  if (!supplier.value) errs.supplier = 'Seleccione proveedor';
+
+  if (!priceBuy.value || priceBuy.value <= 0) {
+    errs.priceBuy = 'Precio inválido';
+  }
+
+  if (!priceSale.value || priceSale.value <= 0) {
+    errs.priceSale = 'Precio inválido';
+  } else if (priceSale.value < priceBuy.value) {
+    errs.priceSale = 'No debe ser menor a compra';
+  }
+
+  if (copias.value === 'Sí' && (!crearCopias.value || crearCopias.value < 1)) {
+    errs.crearCopias = 'Mínimo 1 copia';
+  }
+
+  errors.value = errs;
+  return Object.keys(errs).length === 0;
+}
+
+
+
 
 const opcionesUnidad = ref([
   { label: 'Unidades (und)', value: 'und', tipo: 'unidad' },
@@ -549,7 +705,6 @@ async function InventoryGet() {
       limit: itemsPerPage.value,
       search: filter.value
     });
-    console.log("Respuesta de inventario:", res.data);
     if (res?.status < 299) {
       rows.value = res.data.products;
      
@@ -628,6 +783,8 @@ watch(filter, () => {
 });
 
 async function InventoryPost() {
+  if (!validateForm()) return;
+
   loading.value = true;
   await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value, minStock.value, categoryId.value); 
   
@@ -637,11 +794,13 @@ async function InventoryPost() {
     }
   }
   showModal.value = false;
+  errors.value = {};
   InventoryGet();
   loading.value = false;
 }
 
 async function InventoryPut() {
+  console.log("Actualizando serial con ID:", serial.value);
   loading.value = true;
   await storeInventory.PutInventory(index.value, supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, measurement_type.value, serial.value, minStock.value);
   showModalEdit.value = false;
@@ -678,6 +837,7 @@ async function ExitsPost() {
       Discount: parseFloat(discount.value),
       UserEmail: user.value,
       Serial: serialExit.value,
+      unit_measurement: unit_measurementExit.value
     });
     await storeInventory.PutUnits(index.value, -cantSalida);
     showModalExits.value = false;     
@@ -717,10 +877,12 @@ function goInfo(data) {
 }
 
 function goInfo2(data) {
+  console.log(data);
   nameExit.value = data.Name; 
   serialExit.value = data.Serial;
   units2.value = data.Units; 
-  priceExit.value = data.PriceSale; 
+  priceExit.value = data.PriceSale;
+   unit_measurementExit.value = data.unit_measurement; 
 }
 
 function goInfo3(data) {

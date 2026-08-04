@@ -6,7 +6,7 @@
           <div class="w-2 h-8 bg-purple-600 rounded-full"></div>
           HISTORIAL
         </h1>
-        <p class="text-gray-400 text-sm mt-1 ml-4 italic">Registro completo de movimientos de inventario y salidas</p>
+        <p class="text-gray-400 text-sm mt-1 ml-4 italic">Registro completo de movimientos de inventario </p>
       </div>
 
       <div class="flex items-center gap-3">

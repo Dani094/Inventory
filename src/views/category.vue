@@ -11,9 +11,8 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <!-- Modal / Botón para crear categoría -->
         <button 
-          @click="(showModal = true)"
+          @click="openCreate"
           class="flex items-center gap-2 px-5 py-3 bg-purple-600 text-white font-bold rounded-[10px] shadow-sm hover:bg-purple-700 transition-all text-sm cursor-pointer"
         >
           <span class="material-icons text-lg">add</span>
@@ -30,7 +29,7 @@
         </div>
         <div>
           <p class="text-[10px] uppercase tracking-widest font-bold text-gray-400">Total Categorías</p>
-          <h3 class="text-2xl font-black text-[#1a2332]">{{ totalCategories?.toLocaleString() }}</h3>
+          <h3 class="text-2xl font-black text-[#1a2332]">{{ totalCategories.toLocaleString() }}</h3>
         </div>
       </div>
     </div>
@@ -55,40 +54,35 @@
             <tr class="bg-gray-50/50">
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Nombre</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Descripción</th> 
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Productos Asociados</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Estado</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Acciones</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-50">
-            <tr v-for="category in filteredCategories" :key="category._id" class="hover:bg-gray-50/50 transition-colors text-sm">
+            <tr v-for="row in rows" :key="row._id" class="hover:bg-gray-50/50 transition-colors text-sm">
               <td class="px-6 py-5">
-                <span class="font-bold text-[#1a2332] uppercase">{{ category.name }}</span>
+                <span class="font-bold text-[#1a2332] uppercase">{{ row.name || row.Name }}</span>
               </td>
               <td class="px-6 py-5">
-                <span class="text-gray-600 text-xs font-medium">{{ category.description || 'Sin descripción' }}</span>
+                <span class="text-gray-600 text-xs font-medium">{{ row.description || row.Description || 'Sin descripción' }}</span>
               </td>
+
               <td class="px-6 py-5 text-center">
-                <span class="font-bold text-[#1a2332] bg-gray-100 px-3 py-1 rounded-full text-xs">
-                  {{ category.productCount || 0 }}
-                </span>
-              </td>
-              <td class="px-6 py-5 text-center">
-                <span :class="getStatusBadge(category.state)" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                  {{ category.state ? 'true' : 'false' }}
+                <span :class="getStatusBadge(row.state ?? row.State ?? true)" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                  {{ (row.state ?? row.State ?? true) ? 'Activo' : 'Inactivo' }}
                 </span>
               </td>
               <td class="px-6 py-5 text-center">
                 <div class="flex items-center justify-center gap-2">
                   <button 
-                    @click="openEdit(category)"
+                    @click="openEdit(row)"
                     class="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all"
                     title="Editar"
                   >
                     <span class="material-icons text-lg">edit</span>
                   </button>
                   <button 
-                    @click="deleteCategory(category)"
+                    @click="deleteCategory(row)"
                     class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
                     title="Eliminar"
                   >
@@ -98,88 +92,90 @@
               </td>
             </tr>
 
-            <tr v-if="filteredCategories.length === 0" class="hover:bg-gray-50/50">
-              <td colspan="5" class="px-6 py-8 text-center text-gray-400 font-medium">
+            <tr v-if="rows.length === 0" class="hover:bg-gray-50/50">
+              <td colspan="4" class="px-6 py-8 text-center text-gray-400 font-medium">
                 No se encontraron categorías registradas
               </td>
             </tr>
           </tbody>
-      
         </table>
-         <div class="p-4 px-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-gray-500">
-        
-        <!-- Selector de cantidad por página e indicador -->
-        <div class="flex items-center gap-3">
-          <span>Mostrar:</span>
-          <select 
-            v-model="itemsPerPage" 
-            @change="currentPage = 1"
-            class="bg-gray-50 border border-gray-200 rounded-xl px-2 py-1 outline-none text-gray-700 font-bold focus:border-blue-500 cursor-pointer"
-          >
-            <option :value="4">4</option>
-            <option :value="10">10</option>
-            <option :value="25">25</option>
-            <option :value="50">50</option>
-          </select>
-          <span>
-            Mostrando {{ (currentPage - 1) * itemsPerPage + (rows.length ? 1 : 0) }} - 
-            {{ Math.min(currentPage * itemsPerPage, totalRecords) }} 
-            de {{ totalRecords }} registros
-          </span>
+
+        <!-- Paginador -->
+        <div class="p-4 px-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-gray-500">
+          <div class="flex items-center gap-3">
+            <span>Mostrar:</span>
+            <select 
+              v-model="itemsPerPage" 
+              @change="currentPage = 1"
+              class="bg-gray-50 border border-gray-200 rounded-xl px-2 py-1 outline-none text-gray-700 font-bold focus:border-purple-500 cursor-pointer"
+            >
+              <option :value="4">4</option>
+              <option :value="10">10</option>
+              <option :value="25">25</option>
+              <option :value="50">50</option>
+            </select>
+            <span>
+              Mostrando {{ totalRecords ? (currentPage - 1) * itemsPerPage + 1 : 0 }} - 
+              {{ Math.min(currentPage * itemsPerPage, totalRecords) }} 
+              de {{ totalRecords }} registros
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button 
+              @click="prevPage" 
+              :disabled="currentPage === 1"
+              class="flex items-center justify-center p-2 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
+            >
+              <span class="material-icons text-base">chevron_left</span>
+            </button>
+
+            <span class="px-3 font-bold text-[#1a2332]">
+              Página {{ currentPage }} de {{ totalPages }}
+            </span>
+
+            <button 
+              @click="nextPage" 
+              :disabled="currentPage >= totalPages"
+              class="flex items-center justify-center p-2 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
+            >
+              <span class="material-icons text-base">chevron_right</span>
+            </button>
+          </div>
         </div>
-
-        <!-- Botones de Navegación -->
-        <div class="flex items-center gap-2">
-          <button 
-            @click="prevPage" 
-            :disabled="currentPage === 1"
-            class="flex items-center justify-center p-2 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
-          >
-            <span class="material-icons text-base">chevron_left</span>
-          </button>
-
-          <span class="px-3 font-bold text-[#1a2332]">
-            Página {{ currentPage }} de {{ totalPages }}
-          </span>
-
-          <button 
-            @click="nextPage" 
-            :disabled="currentPage >= totalPages"
-            class="flex items-center justify-center p-2 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
-          >
-            <span class="material-icons text-base">chevron_right</span>
-          </button>
-        </div>
-
-      </div>
       </div>
     </div>
 
-    <!-- Modal para crear/editar categoría -->
-     <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModal = false"></div>
-      <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
-        <div class="bg-[#1a2332] p-6 text-white flex justify-between text-xl">
-          <h3 v-if="!isEditing" class="font-black uppercase tracking-tight text-center">agregar Categoria</h3>
-          <h3 v-else class="font-black uppercase tracking-tight text-center">Editar Categoria</h3>
-          <button @click="showModal = false"><span class="material-icons">close</span></button>
+    <!-- Modal para crear/editar -->
+    <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="closeModal"></div>
+      <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden">
+        <div class="bg-[#1a2332] p-6 text-white flex justify-between text-xl items-center">
+          <h3 class="font-black uppercase tracking-tight">{{ isEditing ? 'Editar Categoría' : 'Agregar Categoría' }}</h3>
+          <button @click="closeModal" class="hover:text-purple-400 transition-colors"><span class="material-icons">close</span></button>
         </div>
-        <form  @submit.prevent="handleSubmit" class="p-8 space-y-4 ">
-            
-          <div class="grid grid-cols-1 gap-6 mb-6">
-            <input v-model="name" placeholder="Nombre de la categoría" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
-            <input v-model="description" placeholder="Descripción de la categoría" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
+        <form @submit.prevent="handleSubmit" class="p-8 space-y-4">
+          <div class="grid grid-cols-1 gap-4">
+            <div>
+              <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Nombre</label>
+              <input v-model="name" required placeholder="Nombre de la categoría" type="text" class="w-full bg-gray-100 rounded-[10px] p-3 outline-none focus:ring-2 focus:ring-purple-500/20 text-sm">
+            </div>
+            <div>
+              <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Descripción</label>
+              <input v-model="description" placeholder="Descripción de la categoría" type="text" class="w-full bg-gray-100 rounded-[10px] p-3 outline-none focus:ring-2 focus:ring-purple-500/20 text-sm">
+            </div>
           </div>
-          <button type="submit" class="w-full bg-[#1a2332] text-white font-bold py-3 rounded-[10px]">GUARDAR</button>
+          <button type="submit" :disabled="loading" class="w-full bg-[#1a2332] text-white font-bold py-3 rounded-[10px] hover:bg-purple-600 transition-colors disabled:opacity-50">
+            {{ loading ? 'GUARDANDO...' : 'GUARDAR' }}
+          </button>
         </form>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { categoryStore } from "@/store/category.js";
 import { LoginStore } from "@/store/login.js";
 import { sweetDelete } from "@/Global/notify";
@@ -187,106 +183,89 @@ import { sweetDelete } from "@/Global/notify";
 const storeCategory = categoryStore();
 const storeLogin = LoginStore();
 
-let user = ref(storeLogin.Email);
-let showModal = ref(false);
-let loading = ref(false);
-let isEditing = ref(false);
+const user = ref(storeLogin.Email);
+const showModal = ref(false);
+const loading = ref(false);
+const isEditing = ref(false);
 
-// variables para crear/editar categoría
-let name = ref("");
-let description = ref("");
-let index = ref(null);
+const name = ref("");
+const description = ref("");
+const index = ref(null);
 
-// Estados de la Interfaz
 const filter = ref("");
 const totalCategories = ref(0);
-const categories = ref([]);
 
-// Paginación
 const currentPage = ref(1);
 const itemsPerPage = ref(4);
-const totalPages = ref(1)
-const totalRecords = ref(0)
-
-let rows = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return categories.value.slice(start, end);
-});
+const totalPages = ref(1);
+const totalRecords = ref(0);
 
 
-/**
- * Obtiene la lista de categorías registradas desde el Store
- */
+const rows = ref([]);
+
 async function getCategories() {
+  loading.value = true;
   try {
-    const res = await storeCategory.GetCategories(storeLogin.Email,{
+    const res = await storeCategory.GetCategories(storeLogin.Email, {
       page: currentPage.value,
       limit: itemsPerPage.value,
       search: filter.value
     });
 
-    const data = res.data?.categories || [];
-    console.log(data);
-    
-
-    categories.value = data
-
-    totalCategories.value = categories.value.length
-
-    if (res.data.pagination) {
+    if (res?.status < 299) {
+      rows.value = res.data?.categories || [];
+      if (res.data.pagination) {
         totalPages.value = res.data.pagination.totalPages;
         totalRecords.value = res.data.pagination.totalRecords;
+        totalCategories.value = res.data.pagination.totalRecords; // Métrica global correcta
       }
+    }
   } catch (error) {
     console.error("Error al obtener las categorías:", error);
-    categories.value = [];
+    rows.value = [];
+  } finally {
+    loading.value = false;
   }
 }
 
-// 3. Métodos para cambiar de página
+// Controladores de Paginación
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
-    currentPage.value++;
+    currentPage.value++; // El watcher activará getCategories()
   }
 };
 
 const prevPage = () => {
   if (currentPage.value > 1) {
-    currentPage.value--;
+    currentPage.value--; // El watcher activará getCategories()
   }
 };
 
-// 4. Volver a consultar al backend cuando cambie la página o el tamaño de página
+// Reaccionar a cambios en la página actual o límite por página
 watch([currentPage, itemsPerPage], () => {
   getCategories();
 });
 
-// 5. Al escribir en la búsqueda, reseteamos a la página 1 y consultamos con 'debounce' implícito o directo
 let filterTimeout;
 watch(filter, () => {
   clearTimeout(filterTimeout);
   filterTimeout = setTimeout(() => {
-    currentPage.value = 1;
+    currentPage.value = 1; // Reiniciar a la primera página
     getCategories();
-  }, 300); // Espera 300ms después de escribir para no saturar la API
+  }, 300);
 });
 
-
-
 async function handleSubmit() {
-  console.log(isEditing.value);
   if (isEditing.value) {
     await editCategory();
   } else {
-    console.log("Creando categoría...");
     await categoryPost();
   }
 }
 
-
 async function categoryPost() {
   try {
+    loading.value = true;
     const payload = {
       name: name.value,
       description: description.value,
@@ -294,79 +273,59 @@ async function categoryPost() {
     };
 
     const res = await storeCategory.CreateCategory(payload);
-
     if (res?.status === 200 || res?.status === 201) {
-      showModal.value = false;
-      getCategories(); // Actualiza la lista de categorías
-    } else {
-      alert("Error al crear la categoría");
+      closeModal();
+      getCategories();
     }
   } catch (error) {
     console.error("Error al crear la categoría:", error);
+  } finally {
+    loading.value = false;
   }
-  cleanForm();
 }
 
-
-/**
- * Retorna el estilo de badge de estado
- */
-const getStatusBadge = (state) => {
-  return state 
-    ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
-    : "bg-orange-50 text-orange-700 border border-orange-100";
-};
-
-/**
- * Filtra las categorías según el campo de búsqueda
- */
-const filteredCategories = computed(() => {
-  return categories.value.filter(cat => {
-    return !filter.value || 
-      cat.name?.toLowerCase().includes(filter.value.toLowerCase()) ||
-      cat.description?.toLowerCase().includes(filter.value.toLowerCase());
-  });
-});
-
-// Handlers para acciones
-
 async function editCategory() {
+  try {
     loading.value = true;
-    const res = await storeCategory.UpdateCategory(index.value, {
-    name: name.value,
-    description: description.value,
-    UserUpdate: user.value
-  });
-  showModal.value = false;
-  isEditing.value = false;
-  cleanForm();
-  getCategories();
-  loading.value = false;
-};
-
+    await storeCategory.UpdateCategory(index.value, {
+      name: name.value,
+      description: description.value,
+      UserUpdate: user.value
+    });
+    closeModal();
+    getCategories();
+  } catch (error) {
+    console.error("Error al actualizar categoría:", error);
+  } finally {
+    loading.value = false;
+  }
+}
 
 const deleteCategory = async (data) => {
-   sweetDelete(data, async () => {
-    await storeInventory.DeleteInventory(data._id);
+  sweetDelete(data, async () => {
+    // Corregido: llamar al store de categorías
+    await storeCategory.DeleteCategory(data._id);
     getCategories();
-   })
+  });
 };
+
+function openCreate() {
+  cleanForm();
+  showModal.value = true;
+}
 
 function openEdit(row) {
   index.value = row._id;
   isEditing.value = true;
-  goInfo(row);
+  name.value = row.name || row.Name || "";
+  description.value = row.description || row.Description || "";
   showModal.value = true;
 }
 
-
-function goInfo(data) {
-  console.log(data);
-  name.value = data.name;
-  description.value = data.description;
+function closeModal() {
+  showModal.value = false;
+  cleanForm();
 }
-
-
 
 function cleanForm() {
   name.value = "";
@@ -375,18 +334,13 @@ function cleanForm() {
   index.value = null;
 }
 
-// Carga inicial
+const getStatusBadge = (state) => {
+  return state 
+    ? "bg-emerald-50 text-emerald-700 border border-emerald-100"
+    : "bg-orange-50 text-orange-700 border border-orange-100";
+};
+
 onMounted(() => {
   getCategories();
 });
 </script>
-
-<style scoped>
-.overflow-x-auto::-webkit-scrollbar {
-  height: 6px;
-}
-.overflow-x-auto::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 10px;
-}
-</style>

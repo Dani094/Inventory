@@ -7,10 +7,10 @@ export const categoryStore = defineStore("categoryStore", () => {
   const useToken = LoginStore();
 
   // Function Get inventory
-  async function GetCategories(User) {
+  async function GetCategories(User,params) {
     try {
       return await requestAxios.get(`/category/get/${User}`, {
-    
+        params
       });
     } catch (error) {
       notifyError("No fue posible obtener las categorías, intente nuevamente");

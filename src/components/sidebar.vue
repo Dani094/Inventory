@@ -75,6 +75,15 @@
       </div>
     </div>
 
+     <!-- Historial -->
+      <router-link to="/history" v-slot="{ isActive }">
+        <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'text-gray-400 hover:bg-[#252f41] hover:text-gray-200']" 
+            class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
+          <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">history</span>
+          <span class="font-medium text-sm">Historial de inventario</span>
+        </div>
+      </router-link>
+
       <!-- Ventas -->
       <router-link to="/exits" v-slot="{ isActive }">
         <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'text-gray-400 hover:bg-[#252f41] hover:text-gray-200']" 
@@ -90,15 +99,6 @@
             class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
           <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">payments</span>
           <span class="font-medium text-sm">Facturación</span>
-        </div>
-      </router-link>
-
-      <!-- Historial -->
-      <router-link to="/history" v-slot="{ isActive }">
-        <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'text-gray-400 hover:bg-[#252f41] hover:text-gray-200']" 
-            class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
-          <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">history</span>
-          <span class="font-medium text-sm">Historial</span>
         </div>
       </router-link>
 

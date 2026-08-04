@@ -26,10 +26,29 @@ export const supplierStore = defineStore("supplierStore", () => {
     }
   }
  
+  async function UpdateSupplier(id, data) {
+    try {
+      return await requestAxios.put(`/supplier/put/${id}`, data, {
+      });
+    } catch (error) {
+      notifyError("No fue posible actualizar el proveedor, intente nuevamente");
+    }
+  }
+
+  async function DeleteSupplier(id) {
+    try {
+      return await requestAxios.delete(`/supplier/delete/${id}`, {
+      });
+    } catch (error) {
+      notifyError("No fue posible eliminar el proveedor, intente nuevamente");
+    }
+  }
 
   return {
     GetSuppliers,
     CreateSupplier,
+    UpdateSupplier,
+    DeleteSupplier
 
 
   };

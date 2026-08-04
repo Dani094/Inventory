@@ -85,8 +85,7 @@
                   <span class="text-[10px] text-gray-400">{{ row.Serial || 'Sin Serial' }}</span>
                 </div>
               </td>
-              <td class="px-6 py-5 text-center font-black text-orange-600">{{ row.Units }}</td>
-              
+              <td class="px-6 py-5 text-center font-black text-orange-600">{{ row.Units }} {{ row.unit_measurement }}</td>
               <td class="px-6 py-5">
                 <div class="flex flex-col">
                   <span class="font-bold text-[#1a2332]">$ {{ (row.Total).toLocaleString() }}</span>

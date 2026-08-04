@@ -100,7 +100,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     description,
     serial,
     minStock
-  ) { console.log(id, supplier, name, units, priceBuy, priceSale,  expirationDate, user, unit_measurement, measurement_type, description, serial,minStock );
+  ) { console.log(id, supplier, name, units, priceBuy, priceSale,  expirationDate, user, unit_measurement, measurement_type, description, "serial ", serial ,minStock );
   
     try {
       return (
