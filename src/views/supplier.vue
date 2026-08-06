@@ -195,9 +195,7 @@
           <div class="grid grid-cols-1 gap-6 mb-6">
             <input v-model="name" placeholder="Nombre del proveedor" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
             <input v-model="nit" placeholder="NIT o Identificación" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
-            <input v-model="contactName" placeholder="Nombre del contacto" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
             <input v-model="telephone" placeholder="Teléfono" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
-            <input v-model="email" placeholder="Correo electrónico" type="email" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
             <input v-model="town" placeholder="Ciudad o municipio" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
             <input v-model="categoryProduct" placeholder="Categoría de producto" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
           </div>
@@ -310,9 +308,7 @@ async function supplierPost() {
       Nit: nit.value,
       Name: name.value,
       state: state.value,
-      contactName: contactName.value,
       telephone: telephone.value,
-      email: email.value,
       town: town.value,
       categoryProduct: categoryProduct.value,
       UserEmail: user.value,
