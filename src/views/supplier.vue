@@ -54,7 +54,6 @@
           <thead>
             <tr class="bg-gray-50/50">
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Proveedor / Empresa</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Contacto</th> 
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Teléfono / Email</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Ciudad</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Estado</th>
@@ -74,10 +73,7 @@
                 </div>
               </td>
 
-              <!-- Nombre del asesor o persona de contacto -->
-              <td class="px-6 py-5">
-                <span class="text-gray-700 font-medium text-xs">{{ supplier.contactName || 'N/A' }}</span>
-              </td>
+
 
               <!-- Información de contacto -->
               <td class="px-6 py-5">
@@ -193,11 +189,12 @@
         <form  @submit.prevent="handleSubmit" class="p-8 space-y-4 ">
             
           <div class="grid grid-cols-1 gap-6 mb-6">
-            <input v-model="name" placeholder="Nombre del proveedor" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
-            <input v-model="nit" placeholder="NIT o Identificación" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
-            <input v-model="telephone" placeholder="Teléfono" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
-            <input v-model="town" placeholder="Ciudad o municipio" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
-            <input v-model="categoryProduct" placeholder="Categoría de producto" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
+          <input required v-model="name" placeholder="Nombre del proveedor" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm"
+           oninvalid="this.setCustomValidity('El nombre del proveedor es obligatorio')" oninput="this.setCustomValidity('')">
+            <input required v-model="nit" placeholder="NIT o Identificación" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
+            <input required v-model="telephone" placeholder="Teléfono" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
+            <input required v-model="town" placeholder="Ciudad o municipio" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
+            <input required v-model="categoryProduct" placeholder="Categoría de producto" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
           </div>
           <button type="submit" class="w-full bg-[#1a2332] text-white font-bold py-3 rounded-[10px]">GUARDAR</button>
         </form>

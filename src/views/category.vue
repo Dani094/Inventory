@@ -12,7 +12,7 @@
 
       <div class="flex items-center gap-3">
         <button 
-          @click="openCreate"
+          @click="openCreate()"
           class="flex items-center gap-2 px-5 py-3 bg-purple-600 text-white font-bold rounded-[10px] shadow-sm hover:bg-purple-700 transition-all text-sm cursor-pointer"
         >
           <span class="material-icons text-lg">add</span>
@@ -158,7 +158,9 @@
           <div class="grid grid-cols-1 gap-4">
             <div>
               <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Nombre</label>
-              <input v-model="name" required placeholder="Nombre de la categoría" type="text" class="w-full bg-gray-100 rounded-[10px] p-3 outline-none focus:ring-2 focus:ring-purple-500/20 text-sm">
+              <input v-model="name" required placeholder="Nombre de la categoría" type="text"  :class="['w-full rounded-2xl p-3 text-sm outline-none transition-all border', errors.name ? 'bg-red-50 border-red-500' : 'bg-gray-50 border-transparent focus:ring-2 focus:ring-purple-500/20']"
+            >
+            <p v-if="errors.name" class="text-red-500 text-[11px] mt-1 font-medium pl-2">{{ errors.name }}</p>
             </div>
             <div>
               <label class="text-xs font-bold text-gray-500 uppercase mb-1 block">Descripción</label>
@@ -199,9 +201,41 @@ const currentPage = ref(1);
 const itemsPerPage = ref(4);
 const totalPages = ref(1);
 const totalRecords = ref(0);
-
-
 const rows = ref([]);
+
+
+// Estado de Errores
+const errors = ref({});
+let errorTimer = null;
+
+
+
+// //  Valida todos los campos antes de realizar el entrada de stock
+function validateForm() {
+  const errs = {};
+
+  if (!name.value || !name.value.trim()) errs.name = 'Requerido';
+
+
+  // 1. Limpiamos cualquier temporizador previo si existía
+  if (errorTimer) {
+    clearTimeout(errorTimer);
+  }
+
+  // 2. Asignamos los errores encontrados
+  errors.value = errs;
+
+  const hasErrors = Object.keys(errs).length > 0;
+
+  // 3. Si hay errores, programamos la limpieza a los 3 segundos (3000 ms)
+  if (hasErrors) {
+    errorTimer = setTimeout(() => {
+      errors.value = {};
+    }, 3000);
+  }
+
+  return !hasErrors;
+}
 
 async function getCategories() {
   loading.value = true;
