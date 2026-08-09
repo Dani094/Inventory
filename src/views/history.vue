@@ -46,7 +46,8 @@
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Fecha </th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Tipo</th> 
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Producto</th>
-              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Serial</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Precio Unidad</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Precio total</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Stock</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Descripción</th>
             </tr>
@@ -67,7 +68,10 @@
                 <span class="font-bold text-[#1a2332] uppercase">{{ row.Name }}</span>
               </td>
               <td class="px-6 py-5">
-                <span class="text-[10px] font-mono text-gray-400 uppercase tracking-tighter">{{ row.serial || 'Sin Serial' }}</span>
+                <span class="text-[14px] font-mono text-gray-800 uppercase tracking-tighter">{{ row.PriceBuy  || 'Sin Precio' }}$</span>
+              </td>
+              <td class="px-6 py-5">
+                <span class="text-[14px] font-mono text-gray-800 uppercase tracking-tighter">{{ (row.PriceBuy * row.Units).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 'Sin Precio' }}$</span>
               </td>
               <td class="px-6 py-5 text-center">
               <div class="flex flex-col items-center justify-center">
@@ -76,7 +80,7 @@
                   <span class="font-bold text-[#1a2332]">{{ row.Units }}</span>
                 </div>
                 <!-- Detalle del cambio de stock -->
-                <span class="text-[10px] text-gray-400 font-mono mt-0.5">
+                <span class="text-[13px] text-gray-400 font-mono mt-0.5">
                   ({{ row.previousStock }} → {{ row.newStock }})
                 </span>
               </div>

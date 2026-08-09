@@ -31,7 +31,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     minStock,
     categoryId
   ) {
-    console.log(supplier, name, units, priceBuy, priceSale, expirationDate, unit_measurement, measurement_type, user, description, Serial, minStock, categoryId);
+    
 
     try {
       return (
@@ -63,15 +63,17 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     }
   }
 
-    async function PutStockInventory(id, units, user) {
-    console.log(id, units, user); 
+    async function PutStockInventory(id, unitsStock, priceBuy, user) {
+
+    console.log(id, unitsStock, priceBuy, user); 
     try {
       return (
         await requestAxios.put(`/inventory/addStock/${id}`,
           {
             id: id,
-            IncomingUnits: units,
+            IncomingUnits: unitsStock,
             UserUpdate: user,
+            PriceBuy: priceBuy
           },
         ),
         notifySuccess("Agregado correctamente")
@@ -116,7 +118,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             measurement_type: measurement_type,
             description: description,
             Serial: serial,
-            minStock: minStock
+            MinStock: minStock
           },
         ),
         notifySuccess("Inventario Actualizado Correctamente")

@@ -440,15 +440,15 @@
             onchange="this.setCustomValidity('')"
             >
             
-            <input required v-model="units" placeholder="Unidades" type="number"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('Anote las unidades del producto')"
+            <input required v-model="units" placeholder="Unidades" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('Anote las unidades del producto')"
             onchange="this.setCustomValidity('')"
             >
             
-            <input required v-model="priceBuy" placeholder="Precio de Compra" type="number"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El precio de compra es obligatorio')"
+            <input required  v-model="priceBuy" placeholder="Precio de Compra" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El precio de compra es obligatorio')"
             onchange="this.setCustomValidity('')"
             >
 
-            <input required v-model="minStock" placeholder="stock minimo" type="number"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El stock mínimo es obligatorio')"
+            <input required v-model="minStock" placeholder="Stock mínimo"  inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El stock mínimo es obligatorio')"
             onchange="this.setCustomValidity('')"
             >
           
@@ -483,7 +483,7 @@
             </select>
             
           </div>
-            <input v-model="priceSale" placeholder="Precio de Venta" type="number" class="bg-gray-50 rounded-2xl p-3 border-none text-sm" oninvalid="this.setCustomValidity('El precio de venta es obligatorio')" onchange="this.setCustomValidity('')">
+            <input v-model="priceSale"  placeholder="Precio de Venta" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="bg-gray-50 rounded-2xl p-3 border-none text-sm" oninvalid="this.setCustomValidity('El precio de venta es obligatorio')" onchange="this.setCustomValidity('')">
             <select required v-model="unit_measurement" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500"  
               oninvalid="this.setCustomValidity('Seleccione una unidad de medida')"
               onchange="this.setCustomValidity('')">
@@ -515,24 +515,82 @@
           <h3 class="font-black uppercase tracking-tight">Registrar Entrada</h3>
           <button @click="showModalInputStock = false"><span class="material-icons">close</span></button>
         </div>
-        <form @submit.prevent="StockPut" class="p-8 space-y-4">
-          <div class="p-3 bg-orange-50 rounded-xl text-orange-700 text-xs font-bold mb-10">{{ nameProduct }}</div>
-          <div class="grid grid-cols-2 gap-1 ">
-            <label class="" for="">Cantidad:</label>
-            <label class="" for="">Descripción:</label>
-            <input required step="any" v-model.number="unitsStock" placeholder="Cantidad" type="number" class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('cantidad requerida')"
-            onchange="this.setCustomValidity('')"
-            >
-            
-            <input  v-model="description" placeholder="Descripción" type="text" class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
-            >
-          
-          </div>
-          <div class="text-left bg-orange-600/10 p-3 rounded-xl text-orange-700 text-xs font-bold mb-10">
-            <p>Stock Actual: {{ units2 + unitsStock }} {{ unit_measurement }}</p>
-        </div>
-          <button type="submit" class="w-full bg-orange-600 text-white font-bold py-3 rounded-2xl">CONFIRMAR</button>
-        </form>
+       <form @submit.prevent="StockPut" class="p-8 space-y-5">
+  <!-- Header / Banner del producto -->
+  <div class="p-3 bg-orange-50 rounded-xl text-orange-700 text-xs font-bold">
+    {{ nameProduct }}
+  </div>
+
+  <!-- Campos en Grid ordenados -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Cantidad a Ingresar -->
+    <div class="flex flex-col gap-1">
+      <label class="text-xs font-semibold text-gray-600">Cantidad a ingresar:</label>
+      <input 
+        required 
+        step="any" 
+        v-model.number="unitsStock" 
+        placeholder="Cantidad" 
+        type="number" 
+        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20" 
+        oninvalid="this.setCustomValidity('Cantidad requerida')"
+        onchange="this.setCustomValidity('')"
+      >
+    </div>
+
+    <!-- Precio de Compra -->
+    <div class="flex flex-col gap-1">
+      <label class="text-xs font-semibold text-gray-600">Precio de compra:</label>
+      <input 
+        required  
+        v-model="priceBuy" 
+        placeholder="Precio de Compra" 
+        inputmode="decimal" 
+        pattern="[0-9]+([.,][0-9]+)?"  
+        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20" 
+        oninvalid="this.setCustomValidity('El precio de compra es obligatorio')"
+        onchange="this.setCustomValidity('')"
+      >
+    </div>
+
+    <!-- Descripción (Ocupa el ancho completo en la parte inferior) -->
+    <div class="flex flex-col gap-1 md:col-span-2">
+      <label class="text-xs font-semibold text-gray-600">Descripción / Observación:</label>
+      <input 
+        v-model="description" 
+        placeholder="Descripción opcional" 
+        type="text" 
+        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
+      >
+    </div>
+  </div>
+
+  <!-- Resumen de Stock -->
+  <div class="bg-orange-600/10 p-4 rounded-xl text-orange-800 space-y-1">
+    <div class="flex justify-between text-xs font-medium">
+      <span>Stock Previo:</span>
+      <span class="font-bold">{{ units2 || 0 }} {{ unit_measurement }}</span>
+    </div>
+    <div class="flex justify-between text-xs font-medium">
+      <span>Ingreso:</span>
+      <span class="font-bold text-green-700">+{{ unitsStock || 0 }} {{ unit_measurement }}</span>
+    </div>
+    <div class="pt-2 border-t border-orange-200/50 flex justify-between items-center">
+      <span class="text-sm font-bold">Stock Resultante:</span>
+      <h4 class="text-lg font-black text-orange-700">
+        {{ (Number(units2) || 0) + (Number(unitsStock) || 0) }} {{ unit_measurement }}
+      </h4>
+    </div>
+  </div>
+
+  <!-- Botón de Acción -->
+  <button 
+    type="submit" 
+    class="w-full bg-orange-600 hover:bg-orange-700 active:scale-[0.99] text-white font-bold py-3.5 rounded-2xl transition-all shadow-md shadow-orange-600/20"
+  >
+    CONFIRMAR INGRESO
+  </button>
+</form>
       </div>
     </div>
 
@@ -546,35 +604,102 @@
           <h3 class="font-black uppercase tracking-tight">Registrar Salida</h3>
           <button @click="showModalExits = false"><span class="material-icons">close</span></button>
         </div>
-        <form @submit.prevent="ExitsPost" class="p-8 space-y-4">
-          <div class="p-3 bg-orange-50 rounded-xl text-orange-700 text-xs font-bold mb-10">{{ nameExit }}</div>
-          <div class="grid grid-cols-2 gap-1 ">
-            <label class="" for="">Cantidad:</label>
-            <label class="" for="">Descuento:</label>
-            
-            <input required step="any" v-model.number="unitsExit" placeholder="Cantidad" type="number" class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('Cantidad requerida')"
-            onchange="this.setCustomValidity('')"
-            >
-          
-            <input step="any" v-model.number="discount" placeholder="Descuento" type="number" class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
-            >
-            <label class="" for="">Fecha de venta</label>
-            <label class="" for="">Descripción:</label>
-            <input v-model="dateExit" type="date" class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" >
-           
-            <input v-model="descriptionExit" placeholder="Descripción" type="text" class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
-            >
-           
-          </div>
-          <div class="text-left bg-orange-600/10 p-3 rounded-xl text-orange-700 text-xs font-bold mb-10">
-            <p>Stock Actual: {{ units2 - unitsExit }}</p>
-            <p>Precio Unitario: $ {{ priceExit }}</p>
-          <h4 class="text-xl font-black ">
-            $ {{ Math.max(0, (unitsExit * priceExit) - discount).toLocaleString('es-CO') }}
-          </h4>
-        </div>
-          <button type="submit" class="w-full bg-orange-600 text-white font-bold py-3 rounded-2xl">CONFIRMAR</button>
-        </form>
+       <form @submit.prevent="ExitsPost" class="p-8 space-y-5">
+  <!-- Banner del producto -->
+  <div class="p-3 bg-orange-50 rounded-xl text-orange-700 text-xs font-bold">
+    {{ nameExit }}
+  </div>
+
+  <!-- Campos en Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Cantidad -->
+    <div class="flex flex-col gap-1">
+      <label class="text-xs font-semibold text-gray-600">Cantidad:</label>
+      <input 
+        required 
+        step="any" 
+        v-model.number="unitsExit" 
+        placeholder="Cantidad" 
+        type="number" 
+        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20" 
+        oninvalid="this.setCustomValidity('Cantidad requerida')"
+        onchange="this.setCustomValidity('')"
+      >
+    </div>
+
+    <!-- Descuento -->
+    <div class="flex flex-col gap-1">
+      <label class="text-xs font-semibold text-gray-600">Descuento ($):</label>
+      <input 
+        step="any" 
+        v-model.number="discount" 
+        placeholder="Descuento" 
+        type="number" 
+        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
+      >
+    </div>
+
+    <!-- Fecha de venta -->
+    <div class="flex flex-col gap-1">
+      <label class="text-xs font-semibold text-gray-600">Fecha de venta:</label>
+      <input 
+        v-model="dateExit" 
+        type="date" 
+        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" 
+      >
+    </div>
+
+    <!-- Descripción -->
+    <div class="flex flex-col gap-1">
+      <label class="text-xs font-semibold text-gray-600">Descripción:</label>
+      <input 
+        v-model="descriptionExit" 
+        placeholder="Descripción opcional" 
+        type="text" 
+        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
+      >
+    </div>
+
+    <!-- Método de Pago (Abarca 2 columnas) -->
+    <div class="flex flex-col gap-1 md:col-span-2">
+      <label class="text-xs font-semibold text-gray-600">Método de Pago:</label>
+      <select 
+        v-model="methodPayment" 
+        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
+      >
+        <option value="Efectivo">Efectivo</option>
+        <option value="Tarjeta">Tarjeta</option>
+        <option value="Transferencia">Transferencia</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Resumen de Totales y Stock -->
+  <div class="bg-orange-600/10 p-4 rounded-xl text-orange-800 space-y-1">
+    <div class="flex justify-between text-xs font-medium">
+      <span>Stock Restante:</span>
+      <span class="font-bold">{{ units2 - (unitsExit || 0) }}</span>
+    </div>
+    <div class="flex justify-between text-xs font-medium">
+      <span>Precio Unitario:</span>
+      <span class="font-bold">$ {{ (priceExit || 0).toLocaleString('es-CO') }}</span>
+    </div>
+    <div class="pt-2 border-t border-orange-200/50 flex justify-between items-center">
+      <span class="text-sm font-bold">Total a Cobrar:</span>
+      <h4 class="text-xl font-black text-orange-700">
+        $ {{ Math.max(0, ((unitsExit || 0) * (priceExit || 0)) - (discount || 0)).toLocaleString('es-CO') }}
+      </h4>
+    </div>
+  </div>
+
+  <!-- Botón de Acción -->
+  <button 
+    type="submit" 
+    class="w-full bg-orange-600 hover:bg-orange-700 active:scale-[0.99] text-white font-bold py-3.5 rounded-2xl transition-all shadow-md shadow-orange-600/20"
+  >
+    CONFIRMAR REGISTRO
+  </button>
+</form>
       </div>
     </div>
   </div>
@@ -642,6 +767,7 @@ let TotalUnits = ref(0);
 let expiredProducts = ref(0);
 let outOfStockProducts = ref(0);
 let dateExit = ref()
+let methodPayment = ref("Efectivo");
 
 // Variables Entrada de Stock
 let nameProduct = ref("");
@@ -799,10 +925,8 @@ watch(filter, () => {
 });
 
 async function InventoryPost() {
-  
-
   loading.value = true;
-  // await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value, minStock.value, categoryId.value); 
+  await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value, minStock.value, categoryId.value); 
   
   if (crearCopias.value >= 1) {
     for (let i = 0; i < crearCopias.value; i++) {
@@ -824,9 +948,11 @@ async function InventoryPut() {
 }
 
 async function StockPut() {
+
+  console.log(priceBuy.value);
   showModalInputStock.value = true;
   loading.value = true;
-  await storeInventory.PutStockInventory(index.value, unitsStock.value, user.value);
+  await storeInventory.PutStockInventory(index.value, unitsStock.value, priceBuy.value, user.value);
   showModalInputStock.value = false;
   InventoryGet();
   loading.value = false;
@@ -855,7 +981,8 @@ async function ExitsPost() {
       UserEmail: user.value,
       Serial: serialExit.value,
       unit_measurement: unit_measurementExit.value,
-      Date: dateExit.value
+      Date: dateExit.value,
+      methodPayment: methodPayment.value
     });
     await storeInventory.PutUnits(index.value, -cantSalida);
     showModalExits.value = false;     
