@@ -31,27 +31,27 @@
         <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
           <div class="space-y-1">
             <label class="text-xs font-bold text-slate-500 ml-1 uppercase">Nombres <span class="text-rose-500">*</span></label>
-            <input type="text" v-model="name" class="input-field" placeholder="Nombre(s)">
+            <input required type="text" v-model="name" class="input-field" placeholder="Nombre(s)">
           </div>
           <div class="space-y-1">
             <label class="text-xs font-bold text-slate-500 ml-1 uppercase">Apellidos <span class="text-rose-500">*</span></label>
-            <input type="text" v-model="lastName" class="input-field" placeholder="Apellido(s)">
+            <input required type="text" v-model="lastName" class="input-field" placeholder="Apellido(s)">
           </div>
           <div class="space-y-1">
             <label class="text-xs font-bold text-slate-500 ml-1 uppercase">Documento de Identidad <span class="text-rose-500">*</span></label>
-            <input type="text" v-model="document" class="input-field" placeholder="C.C. / NIT">
+            <input required type="text" v-model="document" class="input-field" placeholder="C.C. / NIT">
           </div>
           <div class="space-y-1">
             <label class="text-xs font-bold text-slate-500 ml-1 uppercase">Teléfono de contacto <span class="text-rose-500">*</span></label>
-            <input type="text" v-model="cel" class="input-field" placeholder="Ej: 300 123 4567">
+            <input required type="text" v-model="cel" class="input-field" placeholder="Ej: 300 123 4567">
           </div>
           <div class="space-y-1">
             <label class="text-xs font-bold text-slate-500 ml-1 uppercase">Ciudad / Municipio <span class="text-rose-500">*</span></label>
-            <input type="text" v-model="municipality" class="input-field" placeholder="Ciudad">
+            <input required type="text" v-model="municipality" class="input-field" placeholder="Ciudad">
           </div>
           <div class="space-y-1">
             <label class="text-xs font-bold text-slate-500 ml-1 uppercase">Dirección de residencia <span class="text-rose-500">*</span></label>
-            <input type="text" v-model="address" class="input-field" placeholder="Calle, Carrera, Apto">
+            <input required type="text" v-model="address" class="input-field" placeholder="Calle, Carrera, Apto">
           </div>
         </div>
 
@@ -79,11 +79,11 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="space-y-2">
               <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Correo Electrónico</label>
-              <input type="email" v-model="email" class="input-dark" placeholder="correo@ejemplo.com">
+              <input required type="email" v-model="email" class="input-dark" placeholder="correo@ejemplo.com">
             </div>
             <div class="space-y-2">
               <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Contraseña</label>
-              <input type="password" v-model="password" class="input-dark" placeholder="••••••••••••">
+              <input required type="password" v-model="password" class="input-dark" placeholder="••••••••••••">
             </div>
           </div>
         </div>

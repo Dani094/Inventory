@@ -7,10 +7,10 @@ export const supplierStore = defineStore("supplierStore", () => {
   const useToken = LoginStore();
 
   // Function Get inventory
-  async function GetSuppliers(User) {
+  async function GetSuppliers(User,params) {
     try {
       return await requestAxios.get(`/supplier/get/${User}`, {
-    
+        params
       });
     } catch (error) {
       notifyError("No fue posible obtener los proveedores, intente nuevamente");

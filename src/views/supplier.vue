@@ -62,13 +62,13 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-50">
-            <tr v-for="supplier in filteredSuppliers" :key="supplier._id" class="hover:bg-gray-50/50 transition-colors text-sm">
+            <tr v-for="row in filteredRows" :key="row._id" class="hover:bg-gray-50/50 transition-colors text-sm">
               <!-- Nombre y NIT/Identificación -->
               <td class="px-6 py-5">
                 <div class="flex flex-col">
-                  <span class="font-bold text-[#1a2332] uppercase">{{ supplier.Name }}</span>
+                  <span class="font-bold text-[#1a2332] uppercase">{{ row.Name }}</span>
                   <span class="text-[12px] font-mono text-gray-400 tracking-tighter">
-                    NIT: {{ supplier.Nit || 'Sin registro' }}
+                    NIT: {{ row.Nit || 'Sin registro' }}
                   </span>
                 </div>
               </td>
@@ -78,38 +78,38 @@
               <!-- Información de contacto -->
               <td class="px-6 py-5">
                 <div class="flex flex-col">
-                  <span class="font-bold text-[#1a2332] text-xs">{{ supplier.telephone || 'Sin Teléfono' }}</span>
-                  <span class="text-[11px] text-gray-400 font-medium">{{ supplier.email || 'Sin correo' }}</span>
+                  <span class="font-bold text-[#1a2332] text-xs">{{ row.telephone || 'Sin Teléfono' }}</span>
+                  <span class="text-[11px] text-gray-400 font-medium">{{ row.email || 'Sin correo' }}</span>
                 </div>
               </td>
 
               <!-- Ubicación / Dirección -->
               <td class="px-6 py-5">
-                <span class="text-gray-600 text-xs font-medium">{{ supplier.town || 'Sin Ciudad' }}</span>
+                <span class="text-gray-600 text-xs font-medium">{{ row.town || 'Sin Ciudad' }}</span>
               </td>
 
               <td class="px-6 py-5 text-center">
-                <span :class="getStatusBadge(supplier.state)" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                  {{ supplier.state ? 'true' : 'false' }}
+                <span :class="getStatusBadge(row.state)" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                  {{ row.state ? 'true' : 'false' }}
                 </span>
               </td>
 
               <td class="px-6 py-5">
-                <span class="text-gray-600 text-xs font-medium">{{ supplier.categoryProduct || 'Sin dirección' }}</span>
+                <span class="text-gray-600 text-xs font-medium">{{ row.categoryProduct || 'Sin dirección' }}</span>
               </td>
 
               <!-- Acciones de edición y eliminación -->
               <td class="px-6 py-5 text-center">
                 <div class="flex items-center justify-center gap-2">
                   <button 
-                    @click="openEdit(supplier)"
+                    @click="openEdit(row)"
                     class="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all cursor-pointer"
                     title="Editar"
                   >
                     <span class="material-icons text-lg">edit</span>
                   </button>
                   <button 
-                    @click="deleteSupplier(supplier)"
+                    @click="deleteSupplier(row)"
                     class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all cursor-pointer"
                     title="Eliminar"
                   >
@@ -120,7 +120,7 @@
             </tr>
 
             <!-- Estado Vacío -->
-            <tr v-if="filteredSuppliers.length === 0" class="hover:bg-gray-50/50">
+            <tr v-if="rows.length === 0" class="hover:bg-gray-50/50">
               <td colspan="5" class="px-6 py-8 text-center text-gray-400 font-medium">
                 No se encontraron proveedores registrados
               </td>
@@ -205,7 +205,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { supplierStore } from "@/store/supplier.js";
 import { LoginStore } from "@/store/login.js";
 import { sweetDelete } from "@/Global/notify";
@@ -235,6 +235,8 @@ let categoryProduct = ref("");
 let index = ref(null);
 let user = ref(storeLogin.Email);
 
+
+
 const selectedSupplierId = ref(''); // <--- Aquí se guardará el ID seleccionado
 
 // Paginación
@@ -244,25 +246,34 @@ const totalPages = ref(1)
 const totalRecords = ref(0)
 
 
-let rows = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredSuppliers.value.slice(start, end);
-});
+const rows = ref([]);
 
-
+const filteredRows = computed(() => rows.value);
 /**
  * Obtiene la lista de proveedores desde la API
  */
 async function getSuppliers() {
   try {
-    const res = await storeSupplier.GetSuppliers(storeLogin.Email);
-    const data = res.data.suppliers || [];
-    console.log("Proveedores obtenidos:", data);
+    const res = await storeSupplier.GetSuppliers(storeLogin.Email,{
+      page: currentPage.value,
+      limit: itemsPerPage.value,
+      search: filter.value
+    }); 
+    
 
-    suppliers.value = data;
+    if (res?.status < 299) {
+      rows.value = res.data?.suppliers || [];
+      console.log("Respuesta de proveedores:", rows.value);
+      if (res.data.pagination) {
+        totalPages.value = res.data.pagination.totalPages;
+        totalRecords.value = res.data.pagination.totalRecords;
+        totalSuppliers.value = res.data.pagination.totalRecords; // Métrica global correcta
+      }
+    }
 
-    totalSuppliers.value = suppliers.value.length;
+
+
+    totalSuppliers.value = rows.value.length;
   } catch (error) {
     console.error("Error al obtener los proveedores:", error);
     suppliers.value = [];
@@ -271,21 +282,32 @@ async function getSuppliers() {
 
 
 
-/**
- * Filtro reactivo para búsquedas por múltiples campos (Nombre, NIT, Teléfono, Asesor)
- */
-const filteredSuppliers = computed(() => {
-  return suppliers.value.filter(sup => {
-    const searchTerm = filter.value.toLowerCase();
-    return !filter.value || 
-      sup.name?.toLowerCase().includes(searchTerm) ||
-      sup.document?.toLowerCase().includes(searchTerm) ||
-      sup.phone?.toLowerCase().includes(searchTerm) ||
-      sup.contactPerson?.toLowerCase().includes(searchTerm);
-  });
+// Controladores de Paginación
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++; // El watcher activará getSuppliers()
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--; // El watcher activará getSuppliers()
+  }
+};
+
+// Reaccionar a cambios en la página actual o límite por página
+watch([currentPage, itemsPerPage], () => {
+  getSuppliers();
 });
 
-
+let filterTimeout;
+watch(filter, () => {
+  clearTimeout(filterTimeout);
+  filterTimeout = setTimeout(() => {
+    currentPage.value = 1; // Reiniciar a la primera página
+    getSuppliers();
+  }, 300);
+});
 
 
 
@@ -329,8 +351,11 @@ async function supplierPost() {
 async function editSupplier() {
     loading.value = true;
     const res = await storeSupplier.UpdateSupplier(index.value, {
-    name: name.value,
-    description: description.value,
+    Name: name.value,
+    Nit: nit.value,
+    telephone: telephone.value,
+    town: town.value,
+     categoryProduct: categoryProduct.value,
     UserUpdate: user.value
   });
   showModal.value = false;
@@ -361,9 +386,7 @@ function goInfo(data) {
   console.log(data);
   name.value = data.Name;
   nit.value = data.Nit;
-  contactName.value = data.contactName;
   telephone.value = data.telephone;
-  email.value = data.email;
   town.value = data.town;
   categoryProduct.value = data.categoryProduct;
 }

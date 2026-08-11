@@ -4,7 +4,7 @@ import Sidebar from "@/components/sidebar.vue"
 
 <template>
   <div class="flex h-screen overflow-hidden bg-[#E7E8F3]">
-    <Sidebar/>
+    <Sidebar v-if="!$route.meta.hideSidebar"/>
     <!-- <Home /> -->
     <div class="flex-1 h-full overflow-y-auto">
       <router-view></router-view>

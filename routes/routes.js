@@ -43,6 +43,7 @@ export const routes = [
         path:"/",
         name: "Login",
         component: Login,
+        meta: { hideSidebar: true },
         beforeEnter: (to, from, next) => {
             if (checkAuth()) {
               next({ name: "Home" });
@@ -133,4 +134,8 @@ export const routes = [
         },
         beforeEnter: auth,
     },
+    {
+    path: '/:catchAll(.*)*',
+    redirect: '/login'
+  }
   ]

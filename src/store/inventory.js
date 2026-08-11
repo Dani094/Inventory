@@ -9,6 +9,8 @@ export const inventoryStore = defineStore("inventoryStore", () => {
 
   // Function Get inventory
   async function GetInventory(User,params) {
+    console.log(User, params);
+    
     try {
       return await requestAxios.get(`/inventory/get/${User}`, {params});
     } catch (error) {
