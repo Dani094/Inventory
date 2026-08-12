@@ -73,7 +73,7 @@
               <td class="px-6 py-5">
                 <span class="text-[14px] font-mono text-gray-800 uppercase tracking-tighter">{{ (row.PriceBuy * row.Units).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || 'Sin Precio' }}$</span>
               </td>
-              <td class="px-6 py-5 text-center">
+              <td class="px-2 py-5 text-center">
               <div class="flex flex-col items-center justify-center">
                 <div class="flex items-center gap-2">
                   <div :class="getQuantityColor(row.Type)" class="w-2.5 h-2.5 rounded-full"></div>
@@ -86,7 +86,7 @@
               </div>
             </td>
             <td  class="px-6 py-5">
-                <span class="text-gray-600 text-xs font-medium">{{ row.description }}</span>
+                <span class="text-gray-600 text-xs font-medium  line-clamp-2">{{ row.description }}</span>
               </td>
             </tr>
             <tr v-if="filteredRows.length === 0" class="hover:bg-gray-50/50">

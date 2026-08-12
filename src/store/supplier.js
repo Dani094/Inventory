@@ -9,7 +9,7 @@ export const supplierStore = defineStore("supplierStore", () => {
   // Function Get inventory
   async function GetSuppliers(User,params) {
     try {
-      return await requestAxios.get(`/supplier/get/${User}`, {
+      return await requestAxios.get(`/supplier/get/${encodeURIComponent(User)}`, {
         params
       });
     } catch (error) {

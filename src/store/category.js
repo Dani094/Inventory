@@ -9,7 +9,7 @@ export const categoryStore = defineStore("categoryStore", () => {
   // Function Get inventory
   async function GetCategories(User,params) {
     try {
-      return await requestAxios.get(`/category/get/${User}`, {
+      return await requestAxios.get(`/category/get/${encodeURIComponent(User)}`, {
         params
       });
     } catch (error) {

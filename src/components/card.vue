@@ -9,11 +9,11 @@
     </div>
 
     <div class="space-y-1">
-      <p class="text-[9px] sm:text-[10px] uppercase tracking-[2px] font-bold text-gray-400">
+      <p class="text-[9px] sm:text-[10px]  uppercase tracking-[2px] font-bold text-gray-400">
         {{ title }}
       </p>
-      <h2 class="font-black text-2xl sm:text-3xl text-[#1a2332] tracking-tight truncate">
-        <span class="text-xs sm:text-sm font-medium mr-1 opacity-50">{{ signo }}</span>{{ num.toLocaleString() }}
+      <h2 class="font-black text-2xl sm:text-3xl md:text-[18px] lg:text-[24px]  text-[#1a2332] tracking-tight truncate">
+        <span class="text-xs sm:text-sm  font-medium mr-1 opacity-50">{{ signo }}</span>{{ num.toLocaleString() }}
       </h2>
     </div>
 

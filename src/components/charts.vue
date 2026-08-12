@@ -1,6 +1,6 @@
 <template>
     <div>
-        <canvas :id="chartId" class="p-4 lg:p-10"></canvas> 
+        <canvas :id="chartId" ></canvas> 
     </div>
 </template>
 
@@ -99,7 +99,9 @@ async function createChart() {
   myChart = new Chart(ctx, {
     type: type.value,
     data: {
-      labels: names.value,
+      labels: names.value.map(name => 
+      name.length > 15 ? name.substring(0, 15) + '...' : name
+      ),
       datasets: [
         {
           label: props.title,
