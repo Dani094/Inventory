@@ -171,7 +171,7 @@
                     {{ index + 1 }}
                   </span>
 
-                  <span class="text-xs sm:text-sm font-medium text-slate-200 group-hover:text-white truncate" :title="product.Name || product.Nombre">
+                  <span class="text-xs sm:text-sm font-medium text-slate-200 group-hover:text-white " :title="product.Name || product.Nombre">
                     {{ product.Name || product.Nombre }}
                   </span>
                 </div>
@@ -199,30 +199,30 @@
 
         <!-- Gráficos -->
 
-            <div class="lg:col-span-6 bg-[#0f172a] p-2 sm:p-6 rounded-2xl sm:rounded-[2.5rem] shadow-sm border border-gray-800 flex flex-col justify-center items-center">
+            <div class="lg:col-span-6 bg-[#0f172a] p-2 sm:p-4 rounded-2xl sm:rounded-[2.5rem] shadow-sm border border-gray-800 flex flex-col justify-center items-center">
           <h3 class="font-bold text-white text-center uppercase text-xs tracking-widest mb-4">Ventas Mensual</h3>
-          <div class="w-full p-6 sm:p-2 lg:p-6">
+          <div class="w-full p-4 sm:p-2 lg:p-4">
             <ChartUse :chartExits="true" :title="'Ventas'" :newType="'line'" chartId="chart2" class="h-full w-full"/>
           </div>
         </div>
 
-        <div class="lg:col-span-6 bg-[#0f172a] p-2 sm:p-6 rounded-2xl sm:rounded-[2.5rem] shadow-sm border border-gray-800 flex flex-col justify-center items-center">
+        <div class="lg:col-span-6 bg-[#0f172a] p-2 sm:p-4 rounded-2xl sm:rounded-[2.5rem] shadow-sm border border-gray-800 flex flex-col justify-center items-center">
           <h3 class="font-bold text-white text-center uppercase text-xs tracking-widest mb-4">Inventario Mensual</h3>
-          <div class="w-full p-6 sm:p-2 lg:p-6">
+          <div class="w-full p-4 sm:p-2 lg:p-4">
             <ChartUse :chartInventory="true" :title="'Inventario'" :newType="'bar'" chartId="chart1" class="h-full w-full"/>
           </div>
         </div>
 
-        <div class="lg:col-span-6 bg-[#0f172a] p-2 sm:p-6 rounded-2xl sm:rounded-[2.5rem] shadow-sm border border-gray-800 flex flex-col justify-center items-center">
+        <div class="lg:col-span-6 bg-[#0f172a] p-2 sm:p-4 rounded-2xl sm:rounded-[2.5rem] shadow-sm border border-gray-800 flex flex-col justify-center items-center">
           <h3 class="font-bold text-white text-center uppercase text-xs tracking-widest mb-4">Frecuencia por Categoría</h3>
-          <div class="w-full p-6  sm:p-2 lg:p-6"> ">
+          <div class="w-full p-4  sm:p-2 lg:p-4"> ">
             <ChartUse :chartExits="true" :newType="'polarArea'" chartId="chart4" class="h-full w-full"/>
           </div>
         </div>
 
-        <div class="lg:col-span-6 bg-[#0f172a] p-2 sm:p-6 rounded-2xl sm:rounded-[2.5rem] shadow-xl text-white flex flex-col justify-center items-center">
+        <div class="lg:col-span-6 bg-[#0f172a] p-2 sm:p-4 rounded-2xl sm:rounded-[2.5rem] shadow-xl text-white flex flex-col justify-center items-center">
           <h3 class="font-bold opacity-80 text-center uppercase text-xs tracking-widest mb-4">Distribución de Stock</h3>
-          <div class="w-full p-6 sm:p-2 lg:p-6">
+          <div class="w-full p-4 sm:p-2 lg:p-4">
             <ChartUse :chartInventory="true" :newType="'pie'" chartId="chart3" class="h-full w-full m-0 p-0"/>
           </div>
         </div>
