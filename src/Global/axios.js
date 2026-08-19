@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const requestAxios = axios.create({
-  baseURL: "https://backend-inventory-wl06.onrender.com/api",
+  // baseURL: "https://backend-inventory-wl06.onrender.com/api",
+  
+  // servicio angel 
+  baseURL: "https://backend-inventory-9jz3.onrender.com/api",
   // baseURL: "http://localhost:8500/api"
 });
 
