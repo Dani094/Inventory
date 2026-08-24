@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-[1rem] border border-gray-200 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-[1rem] border border-gray-200 shadow-sm overflow-hidden mb-40 ">
       <div class="p-6 border-b border-gray-50 flex flex-col md:flex-row justify-between gap-4">
         <div class="relative w-full md:w-80">
           <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</span>
@@ -183,8 +183,6 @@ async function getHistory() {
       limit: itemsPerPage.value,
       search: filter.value
     });
-    console.log(historyRes);
-
     const historyData = historyRes.data?.history || [];
     
 

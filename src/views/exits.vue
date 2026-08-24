@@ -13,7 +13,7 @@
         <Report :exits="true" />
       </div>
     </div>
-
+    <!-- cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <div class="bg-white p-6 rounded-[1rem] border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="bg-orange-50 p-4 rounded-2xl">
@@ -45,8 +45,8 @@
         </div>
       </div>
     </div>
-
-    <div class="bg-white rounded-[1rem] border border-gray-200 shadow-sm overflow-hidden">
+    <!-- table -->
+    <div class="bg-white rounded-[1rem] border border-gray-200 shadow-sm overflow-hidden mb-40 ">
       <div class="p-6 border-b border-gray-50">
         <div class="relative w-full md:w-80">
           <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</span>
@@ -270,7 +270,6 @@ async function ExitsGet() {
     if (res && res.status < 299) {
       // Extraemos los arreglos según la estructura entregada por el backend
       rows.value = res.data?.exits || [];
-      console.log("Salidas obtenidas:", rows.value);
       if (res.data?.pagination) {
         totalPages.value = res.data.pagination.totalPages || 1;
         totalRecords.value = res.data.pagination.totalRecords || 0;

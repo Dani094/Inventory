@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full min-h-screen  bg-[#F4F7FE] lg:p-20 font-sans text-[#1e293b]">
+  <div class="w-full min-h-screen  bg-[#F4F7FE] lg:p-20 font-sans text-[#1e293b] mb-20 ">
     
     <header class="mb-10">
       <div class="flex items-center gap-2 mb-1">
@@ -16,10 +16,9 @@
           <div class="flex items-center gap-3">
             <div class="p-2 bg-indigo-50 rounded-xl text-indigo-600">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="id-card" />
-                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
-                <path d="M20 21v-2a4 4 0 0 0-3-3.87m-7 0A4 4 0 0 0 4 19v2" stroke="currentColor" stroke-width="2"/>
-              </svg>
+              <circle cx="12" cy="7" r="4" stroke-width="2"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 21v-2a4 4 0 0 0-3-3.87m-7 0A4 4 0 0 0 4 19v2"/>
+            </svg>
             </div>
             <h3 class="font-bold text-lg text-[#0F172A]">Datos del Perfil</h3>
           </div>
@@ -62,7 +61,7 @@
         </div>
       </section>
 
-      <section class="bg-[#111827] rounded-3xl p-1 shadow-2xl overflow-hidden">
+      <section class="bg-[#111827] rounded-3xl p-1 shadow-2xl overflow-hidden mb-40 ">
         <div class="p-8 text-white">
           <div class="flex items-center gap-3 mb-8">
             <div class="p-2 bg-white/10 rounded-xl">
@@ -75,7 +74,7 @@
               <p class="text-slate-400 text-xs mt-1">Credenciales de acceso al sistema</p>
             </div>
           </div>
-
+          
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="space-y-2">
               <label class="text-xs font-bold text-slate-400 uppercase tracking-widest">Correo Electrónico</label>

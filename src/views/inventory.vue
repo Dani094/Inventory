@@ -1,6 +1,6 @@
 <template>
-  <div class="lg:p-20 p-6 bg-[#f8fafc] min-h-screen">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+  <div class="lg:p-20 p-6 ">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 ">
 <!-- --------------------------------------------------------------------------------------
       TITLE
 -------------------------------------------------------------------------------------- -->
@@ -68,7 +68,7 @@
 <!-- --------------------------------------------------------------------------------------
       TABLE
 -------------------------------------------------------------------------------------- -->
-    <div class="bg-white rounded-[1rem] border border-gray-200 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-[1rem] border border-gray-200 shadow-sm overflow-hidden mb-40 ">
 
       <div class="p-6 border-b border-gray-50 flex flex-col md:flex-row justify-between gap-4">
         <div class="relative w-full md:w-80">
@@ -217,7 +217,7 @@
 -------------------------------------------------------------------------------------- -->
   <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
     <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="closeModal"></div>
-    <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
+    <div class="bg-white w-full max-w-lg  rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
       <div class="bg-[#1a2332] p-6 text-white flex justify-between text-xl items-center">
         <h3 class="font-black uppercase tracking-tight text-center">Agregar producto</h3>
         <button @click="showModal = false" class="hover:text-purple-400 transition-colors">
@@ -225,8 +225,8 @@
         </button>
       </div>
 
-      <form @submit.prevent="InventoryPost" class="p-8 space-y-4">
-      <div class="grid grid-cols-2 gap-4">
+      <form @submit.prevent="InventoryPost" class=" p-4 sm:p-8 space-y-4 overflow-y-auto">
+      <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
         
         <!-- Serial -->
         <div>
@@ -431,8 +431,8 @@
           <h3 class="font-black uppercase tracking-tight">Editar Producto</h3>
           <button @click="showModalEdit = false"><span class="material-icons">close</span></button>
         </div>
-        <form @submit.prevent="InventoryPut" class="p-8 space-y-4">
-          <div class="grid grid-cols-2 gap-4">
+        <form @submit.prevent="InventoryPut" class=" p-4 sm:p-8 space-y-4 overflow-y-auto">
+          <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
             <input  v-model="serial" placeholder="Serial" type="text"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" 
             >
             
@@ -604,14 +604,14 @@
           <h3 class="font-black uppercase tracking-tight">Registrar Salida</h3>
           <button @click="showModalExits = false"><span class="material-icons">close</span></button>
         </div>
-       <form @submit.prevent="ExitsPost" class="p-8 space-y-5">
+       <form @submit.prevent="ExitsPost" class=" p-4 sm:p-8 space-y-4 overflow-y-auto">
   <!-- Banner del producto -->
   <div class="p-3 bg-orange-50 rounded-xl text-orange-700 text-xs font-bold">
     {{ nameExit }}
   </div>
 
   <!-- Campos en Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
     <!-- Cantidad -->
     <div class="flex flex-col gap-1">
       <label class="text-xs font-semibold text-gray-600">Cantidad:</label>
@@ -949,8 +949,6 @@ async function InventoryPut() {
 }
 
 async function StockPut() {
-
-  console.log(priceBuy.value);
   showModalInputStock.value = true;
   loading.value = true;
   await storeInventory.PutStockInventory(index.value, unitsStock.value, priceBuy.value, user.value);

@@ -13,7 +13,7 @@
       <div class="flex items-center gap-3">
         <!-- Botón para crear proveedor -->
         <button 
-          @click="(showModal = true)"
+          @click="(showModal = true), cleanForm()"
           class="flex items-center gap-2 px-5 py-3 bg-purple-600 text-white font-bold rounded-[10px] shadow-sm hover:bg-purple-700 transition-all text-sm cursor-pointer"
         >
           <span class="material-icons text-lg">person_add</span>
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Métrica Principal -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 ">
       <div class="bg-white p-6 rounded-[1rem] border border-gray-200 shadow-sm flex items-center gap-4">
         <div class="bg-purple-50 p-4 rounded-2xl">
           <span class="material-icons text-purple-600">local_shipping</span>
@@ -36,7 +36,7 @@
     </div>
 
     <!-- Tabla y Buscador -->
-    <div class="bg-white rounded-[1rem] border border-gray-200 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-[1rem] border border-gray-200 shadow-sm overflow-hidden mb-40 ">
       <div class="p-6 border-b border-gray-50 flex flex-col md:flex-row justify-between gap-4">
         <div class="relative w-full md:w-80">
           <span class="material-icons absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">search</span>
@@ -103,14 +103,14 @@
                 <div class="flex items-center justify-center gap-2">
                   <button 
                     @click="openEdit(row)"
-                    class="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-xl transition-all cursor-pointer"
+                    class="p-2 hover:bg-blue-50 text-blue-600 rounded-xl transition-colors"
                     title="Editar"
                   >
                     <span class="material-icons text-lg">edit</span>
                   </button>
                   <button 
                     @click="deleteSupplier(row)"
-                    class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all cursor-pointer"
+                    class="p-2 hover:bg-red-50 text-red-600 rounded-xl transition-colors"
                     title="Eliminar"
                   >
                     <span class="material-icons text-lg">delete</span>
@@ -263,7 +263,6 @@ async function getSuppliers() {
 
     if (res?.status < 299) {
       rows.value = res.data?.suppliers || [];
-      console.log("Respuesta de proveedores:", rows.value);
       if (res.data.pagination) {
         totalPages.value = res.data.pagination.totalPages;
         totalRecords.value = res.data.pagination.totalRecords;

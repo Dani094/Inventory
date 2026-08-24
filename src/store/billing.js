@@ -44,7 +44,7 @@ export const billStore = defineStore("billStore", () => {
     }
   }
   async function PutBill(id, data) {
-    console.log(id, data);
+
     try {
       return (
         await requestAxios.put(`/billing/put/${id}`, data,
@@ -74,7 +74,6 @@ export const billStore = defineStore("billStore", () => {
 
   // Funciones para manejar las salidas de inventario
   async function SalidaPost( ) {
-    console.log(cantidadSalida);
     try {
       return (
         await requestAxios.post(`/salidas/post`,

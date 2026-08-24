@@ -548,7 +548,6 @@ function goInfoExits(i) {
 async function getProduct() {
   const res = await storeInventory.GetInventory(storeLogin.Email);
   resProduct.value = res;
-  console.log(resProduct.value.data)
   if (res.status < 299) {
     const uniqueNames = new Set();
     for (let i in res.data.products) {
@@ -626,7 +625,7 @@ const addOrUpdateProductList = () => {
 
 // Valor total a partir de los productos
 function valueTotal(descuento) {
-  console.log("tripe"); 
+
   totalPriceProduct.value = 0
   amountTotalProdut.value = 0
   totalPrice.value = 0
@@ -647,7 +646,7 @@ function valueTotal(descuento) {
     amountTotalProdut.value += parseInt(producto.Unidades);
     totalWithoutIva +=  parseInt(producto.valueTotal) 
     discountAmount.value = (totalWithoutIva * percentage) / 100; 
-    console.log(discountAmount.value, totalWithoutIva);
+
     totalPrice.value =  discountAmount.value + totalWithoutIva - descuento
   })
 }
@@ -658,7 +657,7 @@ function typeDiscount() {
   
   if (valueDiscount.value === "Porcentaje") {
     const percentage = parseInt(discount.value); 
-    console.log(percentage);
+
     fixedDiscount.value = (totalPriceProduct.value * percentage) / 100;
     valueTotal(fixedDiscount.value)
   } else if (valueDiscount.value === "valor fijo") {

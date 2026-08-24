@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden">
+    <div class="bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden mb-40 ">
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
           <thead>
@@ -66,16 +66,17 @@
                   {{ row.state == 1 ? 'Activo' : 'Inactivo' }}
                 </span>
               </td>
+              <td class="px-2 py-4 text-sm text-slate-500 text-center">{{ row.expiration_date?.slice(0 , 10) }}</td>
               <td class="px-6 py-4">
                 <div class="flex items-center gap-1">
-                  <button @click="(index = row._id), goInfo(row), (showModalEdit = true)" class="action-btn-mini hover:bg-indigo-50 hover:text-indigo-600">
-                    <span class="material-icons text-sm">edit</span>
+                  <button @click="(index = row._id), goInfo(row), (showModalEdit = true)" class="text-blue-600 rounded-xl transition-colors hover:bg-indigo-50 hover:text-indigo-600">
+                    <span class="material-icons text-lg">edit</span>
                   </button>
-                  <button @click="StateUpdate(row)" :class="row.state == 1 ? 'hover:bg-rose-50 hover:text-rose-600' : 'hover:bg-emerald-50 hover:text-emerald-600'" class="action-btn-mini text-slate-400">
-                    <span class="material-icons text-sm">{{ row.state == 1 ? 'block' : 'check_circle' }}</span>
+                  <button @click="StateUpdate(row)" :class="row.state == 1 ? 'hover:bg-rose-50 hover:text-rose-600' : 'hover:bg-emerald-50 hover:text-emerald-600'" class=" text-orange-600 rounded-xl transition-colors">
+                    <span class="material-icons text-lg">{{ row.state == 1 ? 'block' : 'check_circle' }}</span>
                   </button>
-                  <button @click="deleteItem(row)" class="action-btn-mini hover:bg-rose-50 hover:text-rose-600">
-                    <span class="material-icons text-sm">delete</span>
+                  <button @click="deleteItem(row)" class="text-red-600 rounded-xl transition-colors hover:bg-rose-50 hover:text-rose-600">
+                    <span class="material-icons text-lg">delete</span>
                   </button>
                 </div>
               </td>
@@ -97,8 +98,8 @@
           </button>
         </div>
 
-        <form @submit.prevent="showModalEdit ? UsersPut() : UsersPost()" class="p-8">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <form @submit.prevent="showModalEdit ? UsersPut() : UsersPost()" class=" p-4 sm:p-8 space-y-4 overflow-y-auto">
+          <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
             <div class="space-y-1">
               <label class="input-label">Documento</label>
               <input v-model="document" type="text" class="meridian-input" required>
@@ -127,6 +128,15 @@
               <label class="input-label">Email</label>
               <input v-model="email" type="email" class="meridian-input" required>
             </div>
+             <!-- Fecha Vencimiento -->
+        <div class="flex flex-col bg-gray-50 rounded-2xl p-2 justify-center border border-transparent">
+          <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider">Fecha de Vencimiento de mesualidad</span>
+          <input 
+            v-model="expirationDateUser" 
+            type="date" 
+            class="bg-transparent border-none text-sm text-gray-600 p-0 focus:ring-0 w-full outline-none"
+          >
+        </div>  
             <div class="space-y-1">
               <label class="input-label">Contraseña</label>
               <div class="relative">
@@ -162,9 +172,6 @@
   @apply text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1;
 }
 
-.action-btn-mini {
-  @apply p-2 rounded-lg text-slate-400 transition-all duration-200 flex items-center justify-center;
-}
 
 .action-btn-mini:hover {
   @apply shadow-sm scale-110;
@@ -200,6 +207,7 @@ const email = ref();
 const municipality = ref();
 const password = ref();
 const user = ref(storeLogin.Email);
+const expirationDateUser = ref();
 
 // Filtro computado (reemplazo del filter de q-table)
 const filter = ref("");
@@ -225,7 +233,7 @@ async function UsersGet() {
 
 async function UsersPost() {
   loading.value = true;
-  await storeUsers.PostUsers(document.value, name.value, lastName.value, cel.value, address.value, email.value, municipality.value, password.value, user.value);
+  await storeUsers.PostUsers(document.value, name.value, lastName.value, cel.value, address.value, email.value, municipality.value, password.value, expirationDateUser.value, user.value);
   showModal.value = false;
   await UsersGet();
   loading.value = false;
@@ -233,7 +241,7 @@ async function UsersPost() {
 
 async function UsersPut() {
   loading.value = true;
-  await storeUsers.PutUser(index.value, document.value, name.value, lastName.value, cel.value, address.value, email.value, municipality.value, password.value, user.value);
+  await storeUsers.PutUser(index.value, document.value, name.value, lastName.value, cel.value, address.value, email.value, municipality.value, password.value, expirationDateUser.value, user.value);
   showModalEdit.value = false;
   await UsersGet();
   loading.value = false;
@@ -255,6 +263,7 @@ async function StateUpdate(data) {
 }
 
 function goInfo(data) {
+
   document.value = data.Document;
   name.value = data.Name;
   lastName.value = data.LastName;
@@ -263,6 +272,7 @@ function goInfo(data) {
   email.value = data.Email;
   municipality.value = data.Municipio;
   password.value = data.Password;
+  expirationDateUser.value = data.expiration_date
 }
 
 function cleanForm() {
@@ -277,6 +287,7 @@ const columns = [
   { name: "tel", label: "Teléfono" },
   { name: "loc", label: "Ubicación / Email" },
   { name: "state", label: "Estado" },
+  {name: "timExpiration", label: "plazo límite"},
   { name: "options", label: "Acciones" },
 ];
 

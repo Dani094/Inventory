@@ -35,6 +35,7 @@ export const usersStore = defineStore("usersStore", () => {
     email,
     municipality,
     password,
+    expirationDateUser,
     user
   ) {
     try {
@@ -50,6 +51,7 @@ export const usersStore = defineStore("usersStore", () => {
             Email: email,
             Municipio: municipality,
             Password: password,
+            expiration_date: expirationDateUser,
             UserEmail: user,
           },
           {
@@ -75,6 +77,7 @@ export const usersStore = defineStore("usersStore", () => {
     email,
     municipality,
     password,
+    expirationDateUser,
     user
   ) {
     try {
@@ -90,6 +93,7 @@ export const usersStore = defineStore("usersStore", () => {
             Address: address,
             Email: email,
             Password: password,
+            expiration_date: expirationDateUser,
             UserUpdate: user,
           },
           {

@@ -216,7 +216,7 @@
         <div class="lg:col-span-6 bg-[#0f172a] p-2 sm:p-4 rounded-2xl sm:rounded-[2.5rem] shadow-sm border border-gray-800 flex flex-col justify-center items-center">
           <h3 class="font-bold text-white text-center uppercase text-xs tracking-widest mb-4">Frecuencia por Categoría</h3>
           <div class="w-full p-4  sm:p-2 lg:p-4"> ">
-            <ChartUse :chartExits="true" :newType="'polarArea'" chartId="chart4" class="h-full w-full"/>
+            <ChartUse :chartExits="true" :newType="'pie'" chartId="chart4" class="h-full w-full"/>
           </div>
         </div>
 
@@ -329,8 +329,6 @@ async function getDashboard() {
     if (res && res.status < 299) {
       topProducts.value = res.data.statistics.topProducts || [];
       categoriesData.value = res.data.statistics.salesByCategory || res.data.statistics.categoriesWithTopProducts || [];
-      console.log(topProducts.value);
-      
     }
   } catch (error) {
     console.error("Error al obtener datos del dashboard:", error);

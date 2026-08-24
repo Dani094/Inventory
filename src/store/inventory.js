@@ -9,8 +9,6 @@ export const inventoryStore = defineStore("inventoryStore", () => {
 
   // Function Get inventory
   async function GetInventory(User,params) {
-    console.log(User, params);
-    
     try {
       return await requestAxios.get(`/inventory/get/${User}`, {params});
     } catch (error) {
@@ -66,8 +64,6 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   }
 
     async function PutStockInventory(id, unitsStock, priceBuy, user) {
-
-    console.log(id, unitsStock, priceBuy, user); 
     try {
       return (
         await requestAxios.put(`/inventory/addStock/${id}`,
@@ -104,7 +100,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     description,
     serial,
     minStock
-  ) { console.log(id, supplier, name, units, priceBuy, priceSale,  expirationDate, user, unit_measurement, measurement_type, description, "serial ", serial ,minStock );
+  ) { 
   
     try {
       return (
