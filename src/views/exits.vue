@@ -168,7 +168,7 @@
     <!-- modal edit -->
     <div v-if="showModalEdit" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalEdit = false"></div>
-      <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
+      <div class="bg-white w-full max-w-lg rounded-[1rem] shadow-2xl z-10 overflow-hidden animate-modal">
         <div class="bg-[#1a2332] p-6 text-white flex justify-between items-center">
           <h3 class="text-xl font-black uppercase tracking-tight">Editar Registro</h3>
           <button @click="showModalEdit = false" class="hover:rotate-90 transition-transform">

@@ -87,7 +87,7 @@
     </div>
 
     <div v-if="showModal || showModalEdit" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0f172a]/40 backdrop-blur-sm">
-      <div class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div class="bg-white w-full max-w-2xl rounded-[10px] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
         <div class="bg-[#111827] p-8 text-white flex justify-between items-center">
           <div>
             <h3 class="text-xl font-bold">{{ showModalEdit ? 'Editar Cliente' : 'Nuevo Cliente' }}</h3>

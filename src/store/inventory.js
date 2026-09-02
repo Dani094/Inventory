@@ -141,6 +141,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
   // Funciones para manejar las salidas de inventario
   async function PutUnits(id, units2) {
 
+    console.log("units2", units2);
     try {
       return (
         await requestAxios.put(`/inventory/putUnits/${id}`, {

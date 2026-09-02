@@ -8,6 +8,7 @@ import Users from "@/views/users.vue";
 import History from "@/views/history.vue";
 import Categories from "@/views/category.vue";
 import Suppliers from "@/views/supplier.vue";
+import customer from "@/views/customers.vue";
 import { LoginStore } from "../src/store/login.js";
 
 const checkAuth = () => {
@@ -120,6 +121,15 @@ export const routes = [
       path:"/user",
       name:"User",
       component: User,
+      meta: {
+        rol: ["Admin", "Cliente"],
+        },
+        beforeEnter: auth,
+    },
+    {
+      path:"/customer",
+      name:"customer",
+      component: customer,
       meta: {
         rol: ["Admin", "Cliente"],
         },

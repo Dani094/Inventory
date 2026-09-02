@@ -119,6 +119,14 @@
         </div>
       </router-link>
 
+      <router-link to="/customer" v-slot="{ isActive }" >
+        <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'text-gray-400 hover:bg-[#252f41] hover:text-gray-200']" 
+             class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
+          <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">person</span>
+          <span class="font-medium text-sm">Clientes</span>
+        </div>
+      </router-link>
+
       <!-- Ajustes -->
       <router-link to="/user" v-slot="{ isActive }">
         <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'text-gray-400 hover:bg-[#252f41] hover:text-gray-200']" 
@@ -132,7 +140,7 @@
       <router-link v-if="storelogin.rol == 'Admin'" to="/users" v-slot="{ isActive }">
         <div :class="[isActive ? 'bg-[#2d3a4f] text-white' : 'text-gray-400 hover:bg-[#252f41] hover:text-gray-200']" 
              class="flex items-center gap-4 px-4 py-3 rounded-lg transition-all cursor-pointer group">
-          <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">group</span>
+          <span class="material-icons text-xl" :class="isActive ? 'text-white' : 'text-gray-500 group-hover:text-gray-300'">people</span>
           <span class="font-medium text-sm">Usuarios</span>
         </div>
       </router-link>

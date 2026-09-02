@@ -184,6 +184,8 @@ async function getHistory() {
       search: filter.value
     });
     const historyData = historyRes.data?.history || [];
+    console.log(historyData);
+    
     
 
     if (historyRes.data.pagination) {

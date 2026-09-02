@@ -180,21 +180,44 @@
        <!-- Modal para crear/editar proveedor -->
      <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModal = false"></div>
-      <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl z-10 overflow-hidden animate-modal">
+      <div class="bg-white w-full max-w-lg rounded-[10px] shadow-2xl z-10 overflow-hidden animate-modal">
         <div class="bg-[#1a2332] p-6 text-white flex justify-between text-xl">
           <h3 v-if="!isEditing" class="font-black uppercase tracking-tight text-center">agregar Proveedor</h3>
           <h3 v-else class="font-black uppercase tracking-tight text-center">Editar Proveedor</h3>
           <button @click="showModal = false"><span class="material-icons">close</span></button>
         </div>
         <form  @submit.prevent="handleSubmit" class="p-8 space-y-4 ">
-            
+            <!-- proveedor -->
           <div class="grid grid-cols-1 gap-6 mb-6">
-          <input required v-model="name" placeholder="Nombre del proveedor" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm"
+            
+           <div >
+           <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Nombre del proveedor</span>
+          <input required v-model="name" placeholder="Nombre del proveedor" type="text" class="w-full bg-gray-100 rounded-[10px] p-3 border-none text-sm"
            oninvalid="this.setCustomValidity('El nombre del proveedor es obligatorio')" oninput="this.setCustomValidity('')">
-            <input required v-model="nit" placeholder="NIT o Identificación" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
-            <input required v-model="telephone" placeholder="Teléfono" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
-            <input required v-model="town" placeholder="Ciudad o municipio" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
-            <input required v-model="categoryProduct" placeholder="Categoría de producto" type="text" class="bg-gray-100 rounded-[10px] p-3 border-none text-sm">
+            </div>
+
+           <!-- nit -->
+           <div>
+            <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">NIT o Identificación</span>
+            <input required v-model="nit" placeholder="NIT o Identificación" type="text" class="w-full bg-gray-100 rounded-[10px] p-3 border-none text-sm">
+            </div>
+
+            <!-- telefono -->
+            <div>
+            <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Teléfono</span>
+            <input required v-model="telephone" placeholder="Teléfono" type="text" class="w-full bg-gray-100 rounded-[10px] p-3 border-none text-sm">
+            </div>
+
+            <div>
+            <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Ciudad o municipio</span>
+            <input required v-model="town" placeholder="Ciudad o municipio" type="text" class="w-full bg-gray-100 rounded-[10px] p-3 border-none text-sm">
+            </div>
+
+            <div>
+             <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Categoría de producto</span>
+            <input required v-model="categoryProduct" placeholder="Categoría de producto" type="text" class="w-full bg-gray-100 rounded-[10px] p-3 border-none text-sm">
+            </div>
+            
           </div>
           <button type="submit" class="w-full bg-[#1a2332] text-white font-bold py-3 rounded-[10px]">GUARDAR</button>
         </form>
