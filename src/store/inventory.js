@@ -29,9 +29,10 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     description, 
     Serial,
     minStock,
-    categoryId
+    categoryId,
+    ivaTax
   ) {
-    
+    console.log(ivaTax)
 
     try {
       return (
@@ -50,7 +51,8 @@ export const inventoryStore = defineStore("inventoryStore", () => {
             description: description,
             Serial: Serial,
             minStock: minStock,
-            category_id: categoryId
+            category_id: categoryId,
+            iva: ivaTax
           },
         ),
         notifySuccess("Agregado correctamente")

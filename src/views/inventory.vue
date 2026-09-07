@@ -81,7 +81,7 @@
           ></div>
       </div>
 
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto p-[1px]">
         <table class="w-full border-collapse">
           <thead>
             <tr class="bg-gray-50/50 text-[10px] font-bold uppercase tracking-wider text-center text-gray-400">
@@ -136,8 +136,8 @@
                 </span>
               </td>
               <td class="px-1  py-4">
-                <span class=" text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
-                  $ {{ row.iva }}
+                <span class=" text-green-700 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
+                  {{ row.iva }}%
                 </span>
               </td>
 
@@ -463,35 +463,65 @@
 -------------------------------------------------------------------------------------- -->
     <div v-if="showModalEdit" class="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalEdit = false"></div>
-      <div class="bg-white w-full max-w-lg rounded-[1rem] shadow-2xl z-10 overflow-hidden animate-modal">
+      <div class="bg-white w-full max-w-lg rounded-[1rem] shadow-2xl z-10 pb-4 overflow-hidden animate-modal">
         <div class="bg-[#1a2332] p-6 text-white flex justify-between">
           <h3 class="font-black uppercase tracking-tight">Editar Producto</h3>
           <button @click="showModalEdit = false"><span class="material-icons">close</span></button>
         </div>
-        <form @submit.prevent="InventoryPut" class=" p-4 sm:p-2 space-y-4 overflow-y-auto">
-          <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
+        <form @submit.prevent="InventoryPut" class=" p-4 sm:p-2 space-y-4  overflow-y-auto">
+          <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4 p-6">
+          <div>
+             <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">serial *</span>
             <input  v-model="serial" placeholder="Serial" type="text"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" 
             >
+          </div>
             
+          <div>
+             <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">nombre *</span>
             <input required v-model="name" placeholder="Nombre" type="text"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El nombre es obligatorio')"
             onchange="this.setCustomValidity('')"
             >
-            
+          </div>
+
+          <div>
+             <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">unidades *</span>
             <input required v-model="units" placeholder="Unidades" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('Anote las unidades del producto')"
             onchange="this.setCustomValidity('')"
             >
-            
+          </div>
+
+          <div>
+            <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">IVA *</span>
+            <input 
+              required
+              v-model.number="ivaTax" 
+              placeholder="IVA %" 
+              type="number" 
+              min="0"
+              step="any"
+              class="w-full bg-gray-50 rounded-xl px-3 py-2 border border-gray-200 text-xs sm:text-sm text-gray-700 outline-none transition-all focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500"
+              oninvalid="this.setCustomValidity('Ingrese un porcentaje válido')"
+              oninput="this.setCustomValidity('')"
+            >
+          </div>
+
+          <div>
+              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Precio de Compra *</span>
             <input required  v-model="priceBuy" placeholder="Precio de Compra" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El precio de compra es obligatorio')"
             onchange="this.setCustomValidity('')"
             >
+          </div>
 
-            <input required v-model="minStock" placeholder="Stock mínimo"  inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El stock mínimo es obligatorio')"
-            onchange="this.setCustomValidity('')"
-            >
-          
+            <div>
+              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">stock mínimo *</span>
+              <input required v-model="minStock" placeholder="Stock mínimo"  inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El stock mínimo es obligatorio')"
+              onchange="this.setCustomValidity('')"
+              >
+            </div>
 
             <!-- CATEGORIA -->
-
+            <div>
+              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Categoría *</span>
              <select 
               v-model="categoryId" 
               class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" >
@@ -504,9 +534,10 @@
                 {{ cat.name }} <!-- O cat.nombre -->
               </option>
             </select>
-
+            </div>
             <!-- PROVEEDOR -->
-                <div>
+            <div>
+              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Proveedor *</span>
             <select 
               v-model="supplier" 
               required
@@ -518,9 +549,15 @@
                 {{ item.Name }}
               </option>
             </select>
-            
           </div>
-            <input v-model="priceSale"  placeholder="Precio de Venta" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="bg-gray-50 rounded-2xl p-3 border-none text-sm" oninvalid="this.setCustomValidity('El precio de venta es obligatorio')" onchange="this.setCustomValidity('')">
+
+            <div>
+              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Precio de Venta *</span>
+              <input v-model="priceSale"  placeholder="Precio de Venta" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="bg-gray-50 rounded-2xl p-3 border-none text-sm" oninvalid="this.setCustomValidity('El precio de venta es obligatorio')" onchange="this.setCustomValidity('')">
+            </div>
+
+            <div>
+              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Unidad de Medida *</span>
             <select required v-model="unit_measurement" class="bg-gray-50 rounded-2xl p-3 border-none text-sm text-gray-500"  
               oninvalid="this.setCustomValidity('Seleccione una unidad de medida')"
               onchange="this.setCustomValidity('')">
@@ -533,8 +570,18 @@
                 {{ opcion.label }}
               </option>
             </select>
-            <input v-model="expirationDate" placeholder="Fecha de Vencimiento" type="date" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            </div>
+
+            <div>
+              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Fecha de Vencimiento *</span>
+              <input v-model="expirationDate" placeholder="Fecha de Vencimiento" type="date" class="bg-gray-50 rounded-2xl p-3 border-none text-sm">
+            </div>
+
+          <div>
+            <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Descripción</span>
             <textarea v-model="description" placeholder="Descripción" class="bg-gray-50 rounded-2xl p-3 border-none text-sm"></textarea>
+            </div>
+
           </div>
           <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl">ACTUALIZAR</button>
         </form>
@@ -712,22 +759,28 @@
   </div>
 
   <!-- Resumen de Totales y Stock -->
-  <div class="bg-orange-600/10 p-4 rounded-xl text-orange-800 space-y-1">
-    <div class="flex justify-between text-xs font-medium">
-      <span>Stock Restante:</span>
-      <span class="font-bold">{{ units2 - (unitsExit || 0) }}</span>
-    </div>
-    <div class="flex justify-between text-xs font-medium">
-      <span>Precio Unitario:</span>
-      <span class="font-bold">$ {{ (priceExit || 0).toLocaleString('es-CO') }}</span>
-    </div>
-    <div class="pt-2 border-t border-orange-200/50 flex justify-between items-center">
-      <span class="text-sm font-bold">Total a Cobrar:</span>
-      <h4 class="text-xl font-black text-orange-700">
-        $ {{ Math.max(0, ((unitsExit || 0) * (priceExit || 0)) - (discount || 0)).toLocaleString('es-CO') }}
-      </h4>
-    </div>
+<div class="bg-orange-600/10 p-4 rounded-xl text-orange-800 space-y-1">
+  <div class="flex justify-between text-xs font-medium">
+    <span>Stock Restante:</span>
+    <span class="font-bold">{{ units2 - (unitsExit || 0) }}</span>
   </div>
+  <div class="flex justify-between text-xs font-medium">
+    <span>Precio Unitario:</span>
+    <span class="font-bold">$ {{ (priceExit || 0).toLocaleString('es-CO') }}</span>
+  </div>
+  <div class="flex justify-between text-xs font-medium">
+    <span>IVA %:</span>
+    <span class="font-bold">{{ (ivaExit || 0) }}%</span>
+     <span class="font-bold">$ {{ (((unitsExit || 0) * (priceExit || 0)) * ((ivaExit || 0) / 100)).toLocaleString('es-CO') }}</span>
+  </div>
+  
+  <div class="pt-2 border-t border-orange-200/50 flex justify-between items-center">
+    <span class="text-sm font-bold">Total a Cobrar:</span>
+    <h4 class="text-xl font-black text-orange-700">
+      $ {{ Math.max(0, (((unitsExit || 0) * (priceExit || 0)) - (discount || 0)) * (1 + ((ivaExit || 0) / 100))).toLocaleString('es-CO') }}
+    </h4>
+  </div>
+</div>
 
   <!-- Botón de Acción -->
   <button 
@@ -791,6 +844,7 @@ let measurement_type = ref("");
 let minStock = ref(0);
 let ivaTax = ref(0)
 
+
 // Variables Salidas
 let nameExit = ref("");
 let serialExit = ref("");
@@ -806,6 +860,7 @@ let expiredProducts = ref(0);
 let outOfStockProducts = ref(0);
 let dateExit = ref()
 let methodPayment = ref("Efectivo");
+let ivaExit = ref(0); 
 
 // Variables Entrada de Stock
 let nameProduct = ref("");
@@ -965,11 +1020,11 @@ watch(filter, () => {
 
 async function InventoryPost() {
   loading.value = true;
-  await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value, minStock.value, categoryId.value, ivaTax); 
+  await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value, minStock.value, categoryId.value, ivaTax.value); 
   
   if (crearCopias.value >= 1) {
     for (let i = 0; i < crearCopias.value; i++) {
-      await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value, minStock.value, categoryId.value, ivaTax);
+      await storeInventory.PostInventory(supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value, minStock.value, categoryId.value, ivaTax.value);
     }
   }
   showModal.value = false;
@@ -996,7 +1051,9 @@ async function StockPut() {
 }
 
 async function ExitsPost() {
-
+  console.log(ivaExit.value);
+  
+ 
   const cantSalida = Number(unitsExit.value);
   const stockActual = Number(units2.value);
 
@@ -1013,6 +1070,7 @@ async function ExitsPost() {
       Name: nameExit.value,
       Units: parseFloat(unitsExit.value),
       Price: parseFloat(priceExit.value),
+      iva: parseFloat(ivaExit.value),
       description: descriptionExit.value,
       Discount: parseFloat(discount.value),
       UserEmail: user.value,
@@ -1059,12 +1117,15 @@ function goInfo(data) {
 }
 
 function goInfo2(data) {
+  console.log(data);
+  
   cleanForm()
   nameExit.value = data.Name; 
   serialExit.value = data.Serial;
   units2.value = data.Units; 
   priceExit.value = data.PriceSale;
    unit_measurementExit.value = data.unit_measurement; 
+   ivaExit.value = data.iva
 }
 
 function goInfo3(data) {
