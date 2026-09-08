@@ -67,6 +67,7 @@
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Producto</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Cant.</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Total</th>
+              <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Cliente</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Fecha de venta</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400">Tipo de pago</th>
               <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-gray-400 text-center">Acciones</th>
@@ -93,6 +94,12 @@
                   <span v-if="row.Discount > 0" class="text-[10px] text-red-500 font-bold">- ${{ row.Discount.toLocaleString() }} Desc.</span>
                 </div>
               </td>
+              <td class="px-6 py-5">
+                <div class="flex flex-col">
+                  <span class="font-bold text-[#1a2332]">{{ row.customerName || 'Cliente no registrado' }}</span>
+                  <span class="text-[10px] text-gray-400">{{ row.customerDocument || 'Sin documento' }}</span>
+                </div>
+                </td>
               <td class="px-6 py-5">
                 <div class="flex flex-col">
                 <span class=" text-[#1a2332]">{{ row.Date?.slice(0, 10) }}</span>
@@ -270,6 +277,7 @@ async function ExitsGet() {
     if (res && res.status < 299) {
       // Extraemos los arreglos según la estructura entregada por el backend
       rows.value = res.data?.exits || [];
+      console.log(rows.value);
       if (res.data?.pagination) {
         totalPages.value = res.data.pagination.totalPages || 1;
         totalRecords.value = res.data.pagination.totalRecords || 0;
@@ -322,6 +330,7 @@ async function getDashboard() {
       salesToday.value = res.data.statistics?.dineroHoy || 0;
       salesMonth.value = res.data.statistics?.dineroMes || 0;
       cantSalesToday.value = res.data.statistics?.cantidadHoy || 0;
+     
     }
   } catch (error) {
     console.error("Error al obtener datos del dashboard:", error);

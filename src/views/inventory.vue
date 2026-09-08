@@ -685,7 +685,7 @@
       <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalExits = false"></div>
       <div class="bg-white w-full max-w-lg rounded-[1rem] shadow-2xl z-10 overflow-hidden animate-modal">
         <div class="bg-orange-600 p-6 text-white flex justify-between">
-          <h3 class="font-black uppercase tracking-tight">Registrar Salida</h3>
+          <h3 class="font-black uppercase tracking-tight">Registrar Venta</h3>
           <button @click="showModalExits = false"><span class="material-icons">close</span></button>
         </div>
        <form @submit.prevent="ExitsPost" class=" p-4 sm:p-8 space-y-4 overflow-y-auto">
@@ -744,8 +744,26 @@
       >
     </div>
 
-    <!-- Método de Pago (Abarca 2 columnas) -->
-    <div class="flex flex-col gap-1 md:col-span-2">
+      <!-- Cliente -->
+       <div class="flex flex-col gap-1 ">
+        <label class="text-xs font-semibold text-gray-600">Cliente:</label>
+      <select 
+        v-model="customerExit" 
+        required
+        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
+        oninvalid="this.setCustomValidity('Seleccione un cliente')"
+        onchange="this.setCustomValidity('')">
+        <option value="" disabled>Seleccione clientes *</option>
+        <option v-for="item in customersList" :key="item._id" :value="item._id">
+          {{ item.Name }}
+        </option>
+      </select>
+    </div>
+
+  
+<!-- Método de Pago -->
+  <div class="flex flex-col gap-3 md:col-span-2">
+    <div class="flex flex-col gap-1">
       <label class="text-xs font-semibold text-gray-600">Método de Pago:</label>
       <select 
         v-model="methodPayment" 
@@ -754,8 +772,51 @@
         <option value="Efectivo">Efectivo</option>
         <option value="Tarjeta">Tarjeta</option>
         <option value="Transferencia">Transferencia</option>
+        <option value="Otro">Híbrido (Mixto)</option>
       </select>
     </div>
+
+    <!-- Desglose de Pago Híbrido -->
+    <div v-if="methodPayment === 'Otro'" class="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 space-y-3">
+      <p class="text-[11px] font-bold text-orange-700 uppercase tracking-wider">Desglose de Pago Mixto</p>
+
+      <div class="grid grid-cols-2 sm:grid-cols-2 gap-3">
+        <!-- Efectivo -->
+        <div>
+          <label class="text-[11px] font-semibold text-gray-500 block mb-1">Monto en Efectivo:</label>
+          <input 
+            v-model.number="cashAmount"
+            @input="calculateHybridAmounts('cash')"
+            type="number" 
+            placeholder="$ 0"
+            class="w-full bg-white rounded-xl p-2.5 border border-gray-200 text-sm text-gray-700 outline-none focus:border-orange-500"
+          />
+        </div>
+
+        <!-- Transferencia / Tarjeta -->
+        <div>
+          <label class="text-[11px] font-semibold text-gray-500 block mb-1">Monto Transferencia / Tarjeta:</label>
+          <input 
+            v-model.number="transferAmount"
+            @input="calculateHybridAmounts('transfer')"
+            type="number" 
+            placeholder="$ 0"
+            class="w-full bg-white rounded-xl p-2.5 border border-gray-200 text-sm text-gray-700 outline-none focus:border-orange-500"
+          />
+        </div>
+      </div>
+
+      <!-- Indicador de Total Cubierto -->
+      <div class="flex justify-between items-center text-xs font-bold pt-1 border-t border-orange-100">
+        <span class="text-gray-500">Suma Total Declarada:</span>
+        <span :class="totalHybridPayment === totalSale ? 'text-emerald-600' : 'text-amber-600'">
+          ${{ totalHybridPayment.toLocaleString('es-CO') }} / ${{ totalSale.toLocaleString('es-CO') }}
+        </span>
+      </div>
+    </div>
+  </div>
+    
+  
   </div>
 
   <!-- Resumen de Totales y Stock -->
@@ -802,6 +863,7 @@ import { inventoryStore } from "@/store/inventory.js";
 import { LoginStore } from "../store/login.js";
 import { exitStore } from "../store/exits.js";
 import { categoryStore } from "../store/category.js";
+import { customerStore } from "../store/customer.js";
 import { supplierStore } from "../store/supplier.js";
 import { sweetDelete } from "@/Global/notify";
 
@@ -811,6 +873,7 @@ const storeLogin = LoginStore();
 const storeExits = exitStore();
 const storeCategory = categoryStore();
 const storeSupplier = supplierStore();
+const storeCustomer = customerStore();
 
 // Visibilidad de Modales
 let showModal = ref(false);
@@ -823,6 +886,7 @@ let filter = ref("");
 // Listas reactivas para selects
 const categories = ref([]);
 const suppliersList = ref([]);
+const customersList = ref([]);
 
 // Variables de Formulario
 let index = ref();
@@ -849,6 +913,7 @@ let ivaTax = ref(0)
 let nameExit = ref("");
 let serialExit = ref("");
 let units2 = ref(0);
+let customerExit = ref("");
 let unitsExit = ref(0);
 let priceExit = ref(0);
 let discount = ref(0);
@@ -873,9 +938,47 @@ const itemsPerPage = ref(4);
 const totalPages = ref(1);
 const totalRecords = ref(0);
 
+// Estados para el pago híbrido
+const cashAmount = ref(0);
+const transferAmount = ref(0);
+
+const totalSale = computed(() => {
+  const units = Number(unitsExit.value) || 0;
+  const price = Number(priceExit.value) || 0;
+  const disc = Number(discount.value) || 0;
+  const iva = Number(ivaExit.value) || 0;
+
+  const subtotal = (units * price) - disc;
+  const total = subtotal * (1 + (iva / 100));
+
+  return Math.max(0, Math.round(total)); // Redondeado para evitar decimales infinitos
+});
 
 
+const totalHybridPayment = computed(() => {
+  return (Number(cashAmount.value) || 0) + (Number(transferAmount.value) || 0);
+});
 
+// Función para calcular automáticamente la contraparte
+function calculateHybridAmounts(type) {
+  const total = totalSale.value;
+
+  if (type === 'cash') {
+    const cash = Number(cashAmount.value) || 0;
+    transferAmount.value = Math.max(0, total - cash);
+  } else if (type === 'transfer') {
+    const transfer = Number(transferAmount.value) || 0;
+    cashAmount.value = Math.max(0, total - transfer);
+  }
+}
+
+// 4. Sincronizar el desglose si cambia el método de pago O el total a cobrar
+watch([methodPayment, totalSale], ([newMethod, newTotal]) => {
+  if (newMethod === 'Otro') {
+    cashAmount.value = newTotal;
+    transferAmount.value = 0;
+  }
+});
 
 
 const opcionesUnidad = ref([
@@ -981,13 +1084,26 @@ async function getSuppliers() {
   }
 }
 
+// API: Obtener Clientes reactivos
+async function getCustomers() {
+  try {
+    const res = await storeCustomer.GetCustomers(storeLogin.Email);
+    customersList.value = res.data?.customers || [];
+    // Aquí puedes manejar los datos de clientes si es necesario
+  } catch (error) {
+    console.error("Error al obtener los clientes:", error);
+  }
+}
+
+
 // Carga inicial en paralelo optimizada
 onMounted(async () => {
   loading.value = true;
   await Promise.all([
     InventoryGet(),
     getCategories(),
-    getSuppliers()
+    getSuppliers(),
+    getCustomers()
   ]);
   loading.value = false;
 });
@@ -1051,7 +1167,7 @@ async function StockPut() {
 }
 
 async function ExitsPost() {
-  console.log(ivaExit.value);
+  console.log(customerExit.value);
   
  
   const cantSalida = Number(unitsExit.value);
@@ -1073,6 +1189,7 @@ async function ExitsPost() {
       iva: parseFloat(ivaExit.value),
       description: descriptionExit.value,
       Discount: parseFloat(discount.value),
+      IdCustomer: customerExit.value,
       UserEmail: user.value,
       Serial: serialExit.value,
       unit_measurement: unit_measurementExit.value,
