@@ -4,8 +4,8 @@ const requestAxios = axios.create({
   // baseURL: "https://backend-inventory-wl06.onrender.com/api",
   
   // servicio angel 
-  // baseURL: "https://backend-inventory-9jz3.onrender.com/api",
-  baseURL: "http://localhost:8500/api"
+  baseURL: "https://backend-inventory-9jz3.onrender.com/api",
+  // baseURL: "http://localhost:8500/api"
 });
 
 // --- INTERCEPTOR DE PETICIÓN (Envío automático) ---
@@ -39,12 +39,19 @@ requestAxios.interceptors.request.use(
 requestAxios.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Si el servidor responde 401 (No autorizado) o 403 (Prohibido)
+    // Verificamos si la petición que falló fue la de Login
+    const isLoginRequest = error.config?.url?.includes('/login');
+
+    // Si da 401 o 403 Y NO ES la petición de Login, entonces sí expiró el token
     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-      console.error("Sesión expirada o inválida. Redirigiendo...");
-      localStorage.clear(); // Limpiamos todo por seguridad
-      window.location.href = "/login"; 
+      if (!isLoginRequest) {
+        console.error("Sesión expirada o inválida. Redirigiendo...");
+        localStorage.clear(); // Limpiamos todo por seguridad
+        window.location.href = "/"; // O la ruta de tu login
+      }
     }
+    
+    // IMPORTANTE: Siempre relanzar el error para que lo atrape el catch de la vista/store
     return Promise.reject(error);
   }
 );

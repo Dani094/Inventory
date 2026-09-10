@@ -53,19 +53,19 @@ const ticketColors = computed(() => {
   };
 
   switch (props.title) {
-    case "Total Inventario":
+    case "Costo en insumo":
       config.icon = "fa-solid fa-boxes-stacked";
       config.iconColor = "text-emerald-600";
       config.bgColor = "bg-emerald-50";
       signo.value = "$";
       break;
-    case "Total Ventas":
+    case "Total Vendido del mes":
       config.icon = "fa-solid fa-chart-line";
       config.iconColor = "text-blue-600";
       config.bgColor = "bg-blue-50";
       signo.value = "$";
       break;
-    case "Valor Potencial de Venta":
+    case "Proyección de Venta Total":
       config.icon = "fa-solid fa-tags";
       config.iconColor = "text-rose-600";
       config.bgColor = "bg-rose-50";

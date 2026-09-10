@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:p-20 p-6 ">
+  <div class="lg:p-10 p-6 ">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 ">
 <!-- --------------------------------------------------------------------------------------
       TITLE
@@ -22,7 +22,7 @@
           class="flex items-center gap-2 px-5 py-3 bg-green-600 text-white font-bold rounded-[10px] shadow-sm hover:bg-green-700 transition-all text-sm cursor-pointer"
                >
             <span class="material-icons text-base ">add</span>
-          Agregar
+          Agregar producto
           
         </button>
       </div>
@@ -85,85 +85,108 @@
         <table class="w-full border-collapse">
           <thead>
             <tr class="bg-gray-50/50 text-[10px] font-bold uppercase tracking-wider text-center text-gray-400">
-              <th class="px-4 py-4">Proveedor</th>
+              <!-- <th class="px-4 py-4">Proveedor</th> -->
               <th class="px-4 py-4">Nombre</th>
               <th class="px-4 py-4">Cantidad</th>
-              <th class="px-4 py-4">Precio Unidad Compra</th>
+              <!-- <th class="px-4 py-4">Precio Unidad Compra</th> -->
               <th class="px-4 py-4">Precio Unidad Venta</th>
-              <th class="px-4 py-4">Total Compra</th>
+              <!-- <th class="px-4 py-4">Total Compra</th> -->
               <th class="px-4 py-4">Total venta</th>
               <th class="px-4 py-4">Iva</th>
-              <th class="px-4 py-4">categoria</th>
+              <!-- <th class="px-4 py-4">categoria</th> -->
               <th class="px-4 py-4">Estado</th>
               <th class="px-4 py-4">Opciones</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-50">
             <tr v-for="row in filteredRows" :key="row._id" class="hover:bg-gray-50/50 transition-colors group text-center">
-              <td class="px-1  py-4">
+              <!-- proveedor -->
+              <!-- <td class="px-1  py-4">
                 <div class="flex flex-col">
                   <span class="font-bold text-[11px] text-black uppercase"> {{ row.Supplier?.Name || 'Sin porveedor' }}</span>
                   <span class="text-[12px] text-gray-400 italic">Vence: {{ row.ExpirationDate ? row.ExpirationDate.slice(0, 10) : 'N/A' }}</span>
                 </div>
-              </td>
+              </td> -->
+
+              <!-- nombre -->
               <td class="px-1  py-4">
                 <div class="flex flex-col text-[12px] text-gray-600">
                   <span class="font-medium text-gray-700">{{ row.Name }}</span>
                   <span class="text-[12px] font-mono text-gray-400 uppercase tracking-tighter">{{ row.Serial || 'Sin Serial' }}</span>
                 </div>
               </td>
+
+              <!-- cantidad -->
               <td class="px-1  py-4">
                 <div class="flex items-center justify-center gap-2">
                   <div :class="getStockColor(row.Units)" class="w-2.5 h-2.5 rounded-full"></div>
                   <span class="font-bold text-[#1a2332] text-[12px]">{{ row.Units.toLocaleString() }} {{ row.unit_measurement || 'unidades' }}</span>
                 </div>
               </td>
-              <td class="px-1  py-4 font-bold text-[#1a2332]">
+
+              <!-- precio unitario de compra -->
+              <!-- <td class="px-1  py-4 font-bold text-[#1a2332]">
                 $ {{ Number(row.PriceBuy).toLocaleString()}}
-              </td>
+              </td> -->
+
+              <!-- precio unitario de venta -->
               <td class="px-1  py-4 font-bold text-[#1a2332]">
                 $ {{ Number(row.PriceSale).toLocaleString()}}
               </td>
-              
-              <td class="px-1  py-4 ">
+
+              <!-- total de compra -->
+              <!-- <td class="px-1  py-4 ">
                 <span class=" text-orange-500 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
                   $ {{ (row.PriceBuy * row.Units).toLocaleString() }}
                 </span>
-              </td>
+              </td> -->
+
+              <!-- total de venta -->
               <td class="px-1  py-4">
                 <span class=" text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
-                  $ {{ (row.PriceSale * row.Units).toLocaleString() }}
+                  $ {{ (row.PriceSale * row.Units * (1 + row.iva / 100)).toLocaleString() }}
                 </span>
               </td>
+
+              <!-- iva -->
               <td class="px-1  py-4">
                 <span class=" text-green-700 bg-blue-50 px-3 py-1.5 rounded-xl text-[12px]">
                   {{ row.iva }}%
                 </span>
               </td>
 
-              <td class="px-1  py-4">
+              <!-- categoria -->
+              <!-- <td class="px-1  py-4">
                 <span class="text-[12px] text-gray-600 font-bold">
                   {{ row.category_id?.name || 'Sin categoría' }}
                 </span>
-              </td>
+              </td> -->
+
+              <!-- estado -->
               <td class="py-4">
                 <span :class="getStateBadge(row.State)" class="px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-sm border">
                   {{ row.State }}
                 </span>
               </td>
+
+              <!-- opciones -->
               <td class="px-1  py-4">
                 <div class="flex justify-center items-center gap-2">
-                  <button @click="inputStock(row)" class="p-2 hover:bg-green-50 text-green-600 rounded-xl transition-colors">
+                  <button @click="inputStock(row)" class="p-2 hover:bg-green-50 text-green-600 rounded-xl transition-colors" title="sumarle al Stock">
                     <span class="material-icons text-lg">add</span>
                   </button>
-                  <button @click="openEdit(row)" class="p-2 hover:bg-blue-50 text-blue-600 rounded-xl transition-colors">
+                  <button @click="openEdit(row)" class="p-2 hover:bg-blue-50 text-blue-600 rounded-xl transition-colors" title="Editar Producto">
                     <span class="material-icons text-lg">edit</span>
                   </button>
-                  <button @click="openExit(row)" class="p-2 hover:bg-orange-50 text-orange-600 rounded-xl transition-colors">
+                  <button @click="openExit(row)" class="p-2 hover:bg-orange-50 text-orange-600 rounded-xl transition-colors" title="Registrar venta">
                     <span class="material-icons text-lg">sell</span>
                   </button>
-                  <button @click="deleteItem(row)" class="p-2 hover:bg-red-50 text-red-600 rounded-xl transition-colors">
+                  <button @click="deleteItem(row)" class="p-2 hover:bg-red-50 text-red-600 rounded-xl transition-colors" title="Eliminar Producto">
                     <span class="material-icons text-lg">delete</span>
+                  </button>
+
+                  <button @click="openInfo(row)" class="p-2 hover:bg-gray-50 text-gray-600 rounded-xl transition-colors" title="Eliminar Producto">
+                    <span class="material-icons text-lg">info</span>
                   </button>
                 </div>
               </td>
@@ -231,7 +254,7 @@
     <div class="bg-white w-full max-w-lg rounded-[10px] shadow-2xl z-10 overflow-hidden flex flex-col max-h-[100vh] animate-modal">
       
       <!-- Header (Fijo) -->
-      <div class="bg-[#1a2332] px-4 py-3 sm:px-6 sm:py-4 text-white flex justify-between items-center shrink-0">
+      <div class="bg-[#1a2332] px-4 py-6 sm:px-6 sm:py-8 text-white flex justify-between items-center shrink-0">
         <h3 class="font-black uppercase tracking-tight text-base sm:text-lg">Agregar producto</h3>
         <button @click="showModal = false" type="button" class="hover:text-purple-400 transition-colors flex items-center">
           <span class="material-icons text-xl">close</span>
@@ -772,12 +795,12 @@
         <option value="Efectivo">Efectivo</option>
         <option value="Tarjeta">Tarjeta</option>
         <option value="Transferencia">Transferencia</option>
-        <option value="Otro">Híbrido (Mixto)</option>
+        <option value="Híbrido">Híbrido (Mixto)</option>
       </select>
     </div>
 
     <!-- Desglose de Pago Híbrido -->
-    <div v-if="methodPayment === 'Otro'" class="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 space-y-3">
+    <div v-if="methodPayment === 'Híbrido'" class="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 space-y-3">
       <p class="text-[11px] font-bold text-orange-700 uppercase tracking-wider">Desglose de Pago Mixto</p>
 
       <div class="grid grid-cols-2 sm:grid-cols-2 gap-3">
@@ -853,6 +876,225 @@
 </form>
       </div>
     </div>
+
+<!-- Overlay Backdrop -->
+  <Transition
+    enter-active-class="transition opacity-0 duration-200 ease-out"
+    enter-to-class="opacity-100"
+    leave-active-class="transition opacity-100 duration-150 ease-in"
+    leave-to-class="opacity-0"
+  >
+    <div 
+      v-if="showModalInfo" 
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+      @click.self="showModalInfo = false"
+    >
+      <!-- Modal Card -->
+      <div class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl  overflow-hidden transform transition-all">
+        
+        <!-- Header -->
+        <div class="px-6 py-5 bg-slate-900 text-white flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 bg-indigo-600/30 rounded-2xl border border-indigo-400/30">
+              <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold tracking-wide leading-snug">
+                {{ getInfo.Name || 'Detalle del Producto' }}
+              </h3>
+              <p class="text-xs text-slate-400 font-mono">ID: {{ getInfo._id }}</p>
+            </div>
+          </div>
+
+          <button 
+            @click="showModalInfo = false" 
+            class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors outline-none"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Body Scrollable -->
+        <div class="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+
+          <!-- Fila 1: Estado y Badges Clave -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <!-- Estado -->
+            <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Estado</span>
+              <div class="mt-1">
+                <span 
+                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
+                  :class="getInfo.State === 'Disponible' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-red-100 text-red-800 border border-red-200'"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full mr-1.5" :class="getInfo.State === 'Disponible' ? 'bg-emerald-500' : 'bg-red-500'"></span>
+                  {{ getInfo.State || 'Sin Estado' }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Stock Actual -->
+            <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Existencias</span>
+              <div class="mt-1 flex items-baseline gap-1">
+                <span class="text-xl font-extrabold text-slate-800">
+                  {{ Number(getInfo.Units) }}
+                </span>
+                <span class="text-xs font-semibold text-slate-500 uppercase">
+                  {{ getInfo.unit_measurement || 'Unidades' }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Stock Mínimo -->
+            <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Stock Mínimo</span>
+              <div class="mt-1 flex items-center gap-2">
+                <span class="text-xl font-extrabold text-slate-800">{{ getInfo.MinStock }}</span>
+                <span 
+                  v-if="getInfo.Units <= getInfo.MinStock" 
+                  class="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md border border-amber-200"
+                >
+                  ¡Bajo Stock!
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Fila 2: Precios y Rentabilidad -->
+          <div class="bg-indigo-50/50 rounded-2xl p-4 border border-indigo-100/80">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-900 mb-3 flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Estructura de Precios (Por Unidad/Kg)
+            </h4>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div>
+                <span class="text-xs text-slate-500 block">Precio Compra</span>
+                <span class="text-base font-bold text-slate-700">
+                  {{ formatearMoneda(getInfo.PriceBuy)   }}
+                </span>
+              </div>
+
+              <div>
+                <span class="text-xs text-slate-500 block">Precio Venta</span>
+                <span class="text-base font-extrabold text-indigo-700">
+                  {{ formatearMoneda(getInfo.PriceSale) }}
+                </span>
+              </div>
+
+              <div>
+                <span class="text-xs text-slate-500 block">Margen Unidad</span>
+                <span class="text-base font-bold text-emerald-600">
+                  +{{ formatearMoneda(getInfo.PriceSale - getInfo.PriceBuy) }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Inversión Total Stock -->
+            <div class="mt-4 pt-3 border-t border-indigo-100 grid grid-cols-3 gap-4">
+              <div>
+                <span class="text-xs text-slate-500 block">Inversión Stock Total</span>
+                <span class="text-sm font-semibold text-slate-700">{{ formatearMoneda(getInfo.PriceBuy * getInfo.Units) }}</span>
+              </div>
+              <div>
+                <span class="text-xs text-slate-500 block">Valor Venta </span>
+                <span class="text-sm font-semibold text-slate-700">{{ formatearMoneda(getInfo.PriceSale * getInfo.Units) }}</span>
+              </div>
+
+               <div>
+                <span class="text-xs text-slate-500 block">Valor Venta con iva</span>
+                <span class="text-sm font-semibold text-slate-700">{{ formatearMoneda(getInfo.PriceSale * getInfo.Units * (1 + getInfo.iva / 100)) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fila 3: Clasificación y Proveedor -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Categoria -->
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">Categoría</span>
+              <p class="text-sm font-bold text-slate-800">
+                {{ getInfo.category_id?.name || 'Sin Categoría' }}
+              </p>
+              <p class="text-xs text-slate-500 mt-0.5">
+                {{ getInfo.category_id?.description || 'Sin descripción' }}
+              </p>
+            </div>
+
+            <!-- Proveedor -->
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-1">Proveedor</span>
+              <p class="text-sm font-bold text-slate-800">
+                {{ getInfo.Supplier?.Name || 'Proveedor no asignado' }}
+              </p>
+              <div class="flex gap-3 text-xs text-slate-500 mt-1">
+                <span>NIT: {{ getInfo.Supplier?.Nit || 'N/A' }}</span>
+                <span>•</span>
+                <span>Tel: {{ getInfo.Supplier?.telephone || 'N/A' }}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Fila 4: Detalles Técnicos y Fechas -->
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs space-y-2 text-slate-600">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div>
+                <span class="font-bold block text-slate-400">TIPO MEDIDA:</span>
+                <span class="uppercase font-medium">{{ getInfo.measurement_type }}</span>
+              </div>
+              <div>
+                <span class="font-bold block text-slate-400">IVA %:</span>
+                <span class="font-medium">{{ getInfo.iva }}%</span>
+              </div>
+              <div>
+                <span class="font-bold block text-slate-400">IVA $:</span>
+                <span class="font-medium">{{ formatearMoneda(getInfo.PriceBuy * getInfo.Units * getInfo.iva / 100) }}</span>
+              </div>
+
+              <div>
+                <span class="font-bold block text-slate-400">VENCIMIENTO:</span>
+                <span class="font-medium">{{ formatearFecha(getInfo.ExpirationDate) || 'No aplica' }}</span>
+              </div>
+              <div>
+                <span class="font-bold block text-slate-400">SERIE:</span>
+                <span class="font-medium">{{ getInfo.Serial || 'N/A' }}</span>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-200/60 flex justify-between text-[11px] text-slate-400">
+              <span>Registrado por: <strong>{{ getInfo.UserEmail }}</strong></span>
+              <span>Actualizado: <strong>{{ formatearFecha(getInfo.updatedAt) }}</strong></span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+          <button 
+            @click="showModalInfo = false"
+            class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all duration-200"
+          >
+            Cerrar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </Transition>
+
+
   </div>
 </template>
 
@@ -926,6 +1168,8 @@ let outOfStockProducts = ref(0);
 let dateExit = ref()
 let methodPayment = ref("Efectivo");
 let ivaExit = ref(0); 
+let showModalInfo = ref(false);
+let getInfo = ref({});
 
 // Variables Entrada de Stock
 let nameProduct = ref("");
@@ -1023,6 +1267,32 @@ function openExit(row) {
   showModalExits.value = true;
 }
 
+function openInfo(row) {
+  index.value = row._id;
+  showModalInfo.value = true;
+  getInfo.value = row;
+  console.log(getInfo.value);
+}
+
+function formatearMoneda(valor) {
+  const num = Number(valor) || 0;
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    maximumFractionDigits: 0
+  }).format(num);
+}
+
+function formatearFecha(fechaIso) {
+  if (!fechaIso) return 'N/A';
+  return new Date(fechaIso).toLocaleDateString('es-CO', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
+}
+
+
 function inputStock(row) {
   index.value = row._id;
   goInfo3(row);
@@ -1046,7 +1316,8 @@ async function InventoryGet() {
     });
     if (res?.status < 299) {
       rows.value = res.data.products;
-     
+      console.log(rows.value);
+      
       
       TotalUnits.value = res.data.statistics.totalProducts;
       expiredProducts.value = res.data.statistics.expiredProducts;
@@ -1167,7 +1438,7 @@ async function StockPut() {
 }
 
 async function ExitsPost() {
-  console.log(customerExit.value);
+
   
  
   const cantSalida = Number(unitsExit.value);
@@ -1188,8 +1459,10 @@ async function ExitsPost() {
       Price: parseFloat(priceExit.value),
       iva: parseFloat(ivaExit.value),
       description: descriptionExit.value,
+      transferAmount: transferAmount.value,
+      cashAmount: cashAmount.value,
       Discount: parseFloat(discount.value),
-      IdCustomer: customerExit.value,
+      customer_id: customerExit.value,
       UserEmail: user.value,
       Serial: serialExit.value,
       unit_measurement: unit_measurementExit.value,
@@ -1210,10 +1483,15 @@ async function ExitsPost() {
 
 async function deleteItem(data) {
   sweetDelete(data, async () => {
-    await storeInventory.DeleteInventory(data._id);
+    await storeInventory.DeleteInventory(data._id, {
+      user: storeLogin.Email
+    });
     InventoryGet();
   });
 }
+
+
+
 
 function goInfo(data) {
   cleanForm()

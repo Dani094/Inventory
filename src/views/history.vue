@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:p-20 p-6 bg-[#f8fafc] min-h-screen">
+  <div class="lg:p-10 p-6 bg-[#f8fafc] min-h-screen">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
       <div>
         <h1 class="text-[#1a2332] text-4xl font-black tracking-tight flex items-center gap-2">

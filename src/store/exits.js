@@ -27,6 +27,8 @@ export const exitStore = defineStore("exitStore", () => {
 
 
   async function PostExits(data) {
+    console.log("data ", data);
+    
     try {
       return ( await requestAxios.post("/exits/post", data,
           {

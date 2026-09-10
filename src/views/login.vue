@@ -34,13 +34,13 @@
         <!-- Campo: Usuario / Correo -->
         <div>
           <label for="user" class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-            Usuario / Correo
+             Correo
           </label>
           <div class="relative">
             <input 
               id="user"
               v-model.trim="user"
-              type="text"
+              type="Email"
               required
               minlength="3"
               placeholder="correo@ejemplo.com"
@@ -136,21 +136,24 @@ const isPwd = ref(true);
 const loading = ref(false);
 const serverError = ref("");
 
-async function validar() {
-  // Cuando la función ejecuta, el navegador YA VALIDÓ que los campos tengan contenido
-  // y cumplan con los atributos 'required' y 'minlength'.
+async function validar(e) {
+  if (e) e.preventDefault();
+
   serverError.value = "";
   loading.value = true;
 
   try {
     await store.newLogin({
-      user: user.value,
+      user: user.value.trim(),
       password: password.value,
     });
     pasarHome();
   } catch (error) {
-    console.error("Error en autenticación:", error);
-    serverError.value = error?.response?.data?.message || "Usuario o contraseña incorrectos.";
+    console.error("Error capturado en la vista:", error);
+    serverError.value = 
+      error.response?.data?.msg || 
+      error.response?.data?.message || 
+      "Error al iniciar sesión. Inténtalo de nuevo.";
   } finally {
     loading.value = false;
   }

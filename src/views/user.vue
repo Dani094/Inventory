@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full min-h-screen  bg-[#F4F7FE] lg:p-20 font-sans text-[#1e293b] p-2 mb-20 ">
+  <div class="w-full min-h-screen  bg-[#F4F7FE] lg:p-10 font-sans text-[#1e293b] p-2 mb-20 ">
     
     <header class="mb-10">
       <div class="flex items-center gap-2 mb-1">

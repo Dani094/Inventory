@@ -1,6 +1,6 @@
 <template>
   <!-- Contenedor principal con padding adaptativo y pb-24 para dejar espacio a la barra móvil -->
-  <div class="p-4 sm:p-6 md:p-10 lg:p-16 w-full max-w-[1600px] mx-auto pb-24 lg:pb-10">
+  <div class="p-4 sm:p-6 md:p-10 lg:p-12 w-full max-w-[1600px] mx-auto pb-24 lg:pb-12">
     
     <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -24,28 +24,28 @@
     </div>
 
     <!-- Grid de Métricas Principales -->
-    <div class="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-4   gap-4 sm:gap-6 md:gap-2 mb-8 lg:gap-4 sm:mb-10">
+    <div class="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-4   gap-4 sm:gap-6 md:gap-4 mb-8 lg:gap-4 sm:mb-10">
       <CardInfo 
         :num="TotalUnits" 
-        :title="'Total Inventario'" 
+        :title="'Costo en insumo'" 
         :newRoute="'/inventory'"
         class="bg-white rounded-2xl sm:rounded-[2rem] p-2 shadow-sm hover:shadow-md transition-all border-none" 
       />
       <CardInfo 
         :num="TotalUnits2" 
-        :title="'Total Ventas'" 
+        :title="'Total Vendido del mes'" 
         :newRoute="'/exits'" 
         class="bg-white rounded-2xl sm:rounded-[2rem] p-2 shadow-sm hover:shadow-md transition-all border-none"
       />
       <CardInfo 
         :num="estimatedExits" 
-        :title="'Valor Potencial de Venta'" 
+        :title="'Proyección de Venta Total'" 
         :newRoute="'/inventory'"
         class="bg-white rounded-2xl sm:rounded-[2rem] p-2 shadow-sm hover:shadow-md transition-all border-none" 
       />
       <CardInfo 
         :num="estimatedProfit" 
-        :title="'Margen de Ganancia'" 
+        :title="'margen de ganancia'" 
         :newRoute="'/inventory'" 
         class="bg-white rounded-2xl sm:rounded-[2rem] p-2 shadow-sm hover:shadow-md transition-all border-none"
       />
@@ -92,7 +92,7 @@
                 </div>
                 
                 <span class="font-bold text-green-400 shrink-0">
-                  {{ product.qty || product.TotalUnits }} unds
+                  {{ product.qty || product.TotalUnits }} {{ product.unit_measurement || 'unds' }}
                 </span>
               </div>
 

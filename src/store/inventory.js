@@ -32,7 +32,7 @@ export const inventoryStore = defineStore("inventoryStore", () => {
     categoryId,
     ivaTax
   ) {
-    console.log(ivaTax)
+
 
     try {
       return (
@@ -128,10 +128,13 @@ export const inventoryStore = defineStore("inventoryStore", () => {
       notifyError("No se pudo Actualizar el Inventario Correctamente");
     }
   }
-  async function DeleteInventory(id) {
+  async function DeleteInventory(id, user) {
+    console.log("user", user);
     try {
       return (
-        await requestAxios.delete(`/inventory/delete/${id}`),
+        await requestAxios.delete(`/inventory/delete/${id}`, {
+          data: { UserEmail: user }
+        }),
         notifySuccess("Articulo Eliminado Correctamente")
       );
     } catch (error) {

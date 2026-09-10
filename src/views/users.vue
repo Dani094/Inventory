@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#F4F7FE] lg:p-20 p-6 font-sans text-[#1e293b]">
+  <div class="min-h-screen bg-[#F4F7FE] lg:p-14 p-6 font-sans text-[#1e293b]">
     
     <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
       <div>
@@ -61,6 +61,7 @@
                   <span class="text-[10px] text-slate-400 uppercase tracking-tighter">{{ row.Municipio }}</span>
                 </div>
               </td>
+              <td class="px-6 py-4 text-sm text-slate-500">{{ row.rol }}</td>
               <td class="px-6 py-4">
                 <span :class="row.state == 1 ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'" class="px-3 py-1 rounded-full text-[10px] font-black uppercase">
                   {{ row.state == 1 ? 'Activo' : 'Inactivo' }}
@@ -107,6 +108,14 @@
             <div class="space-y-1">
               <label class="input-label">Nombre</label>
               <input v-model="name" type="text" class="meridian-input" required>
+            </div>
+            <div class="space-y-1">
+              <label class="input-label">tipo de usuario</label>
+              <select v-model="rol" class="meridian-input" required>
+                <option  value="" disabled><span class="text-gray-200">Seleccione un rol</span> </option>
+                <option value="Admin">Administrador</option>
+                <option value="Cliente">Cliente</option>
+              </select>
             </div>
             <div class="space-y-1">
               <label class="input-label">Apellidos</label>
@@ -208,6 +217,7 @@ const municipality = ref();
 const password = ref();
 const user = ref(storeLogin.Email);
 const expirationDateUser = ref();
+const rol = ref();
 
 // Filtro computado (reemplazo del filter de q-table)
 const filter = ref("");
@@ -233,7 +243,7 @@ async function UsersGet() {
 
 async function UsersPost() {
   loading.value = true;
-  await storeUsers.PostUsers(document.value, name.value, lastName.value, cel.value, address.value, email.value, municipality.value, password.value, expirationDateUser.value, user.value);
+  await storeUsers.PostUsers(document.value, name.value, lastName.value, cel.value, address.value, email.value, municipality.value, password.value, expirationDateUser.value, user.value, rol.value);
   showModal.value = false;
   await UsersGet();
   loading.value = false;
@@ -241,7 +251,7 @@ async function UsersPost() {
 
 async function UsersPut() {
   loading.value = true;
-  await storeUsers.PutUser(index.value, document.value, name.value, lastName.value, cel.value, address.value, email.value, municipality.value, password.value, expirationDateUser.value, user.value);
+  await storeUsers.PutUser(index.value, document.value, name.value, lastName.value, cel.value, address.value, email.value, municipality.value, password.value, expirationDateUser.value, user.value, rol.value);
   showModalEdit.value = false;
   await UsersGet();
   loading.value = false;
@@ -273,11 +283,13 @@ function goInfo(data) {
   municipality.value = data.Municipio;
   password.value = data.Password;
   expirationDateUser.value = data.expiration_date
+  rol.value = data.rol;
 }
 
 function cleanForm() {
   document.value = ""; name.value = ""; lastName.value = ""; cel.value = "";
   address.value = ""; email.value = ""; municipality.value = ""; password.value = "";
+  rol.value = "";
 }
 
 const columns = [
@@ -286,6 +298,7 @@ const columns = [
   { name: "name", label: "Cliente" },
   { name: "tel", label: "Teléfono" },
   { name: "loc", label: "Ubicación / Email" },
+  { name: "rol", label: "Tipo de Usuario" },
   { name: "state", label: "Estado" },
   {name: "timExpiration", label: "plazo límite"},
   { name: "options", label: "Acciones" },

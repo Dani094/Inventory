@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:p-20 p-6 bg-[#f8fafc] min-h-screen">
+  <div class="lg:p-10 p-6 bg-[#f8fafc] min-h-screen">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
       <div>
         <h1 class="text-[#1a2332] text-4xl font-black tracking-tight flex items-center gap-2">
@@ -96,8 +96,7 @@
               </td>
               <td class="px-6 py-5">
                 <div class="flex flex-col">
-                  <span class="font-bold text-[#1a2332]">{{ row.customerName || 'Cliente no registrado' }}</span>
-                  <span class="text-[10px] text-gray-400">{{ row.customerDocument || 'Sin documento' }}</span>
+                  <span class="font-bold text-[#1a2332]">{{ row.customer_id.Name || 'Cliente no registrado' }}</span>
                 </div>
                 </td>
               <td class="px-6 py-5">
@@ -112,11 +111,14 @@
               </td>
               <td class="px-6 py-5">
                 <div class="flex justify-center items-center gap-2">
-                  <button @click="openEdit(row)" class="p-2 hover:bg-blue-50 text-blue-600 rounded-xl transition-colors">
+                  <button @click="openEdit(row)" class="p-2 hover:bg-blue-50 text-blue-600 rounded-xl transition-colors" title="Editar">
                     <span class="material-icons text-lg">edit</span>
                   </button>
-                  <button @click="deleteItem(row)" class="p-2 hover:bg-red-50 text-red-600 rounded-xl transition-colors">
+                  <button @click="deleteItem(row)" class="p-2 hover:bg-red-50 text-red-600 rounded-xl transition-colors" title="Eliminar">
                     <span class="material-icons text-lg">delete</span>
+                  </button>
+                  <button @click="openInfo(row)" class="p-2 hover:bg-red-50 text-gray-600 rounded-xl transition-colors"   title="Ver detalles de la venta">
+                    <span class="material-icons text-lg">info</span>
                   </button>
                 </div>
               </td>
@@ -215,6 +217,145 @@
         </form>
       </div>
     </div>
+
+
+     <!-- modal edit -->
+    <div v-if="showModalInfo" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalInfo = false"></div>
+      <div class="bg-white w-full max-w-lg rounded-[1rem] shadow-2xl z-10 overflow-hidden animate-modal">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl z-10 overflow-hidden animate-modal max-h-[90vh] flex flex-col">
+    
+    <!-- Encabezado -->
+    <div class="bg-[#1a2332] p-6 text-white flex justify-between items-center shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-orange-500/20 rounded-xl text-orange-400">
+          <span class="material-icons">receipt_long</span>
+        </div>
+        <div>
+          <h3 class="text-lg font-black uppercase tracking-tight">Detalle de Venta</h3>
+          <p class="text-xs text-gray-400">Factura #{{ getInfo?.NumBill || 'S/F' }}</p>
+        </div>
+      </div>
+      <button @click="showModalInfo = false" class="text-gray-400 hover:text-white hover:rotate-90 transition-all p-1">
+        <span class="material-icons text-2xl">close</span>
+      </button>
+    </div>
+
+    <!-- Cuerpo Escroleable -->
+    <div class="p-6 overflow-y-auto space-y-5 text-gray-700 text-sm">
+      
+      <!-- Card: Información del Cliente -->
+      <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 flex items-start justify-between">
+        <div class="space-y-1">
+          <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Cliente</span>
+          <p class="font-bold text-[#1a2332]">{{ getInfo?.customer_id?.Name || 'Cliente No Registrado' }}</p>
+          <p class="text-xs text-gray-500 flex items-center gap-1" v-if="getInfo?.customer_id?.document">
+            <span class="material-icons text-xs">badge</span> {{ getInfo.customer_id.document }}
+          </p>
+        </div>
+        <div class="text-right space-y-1">
+          <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Fecha Venta</span>
+          <p class="text-xs font-semibold text-gray-700">{{ getInfo?.Date?.slice(0, 10) || getInfo?.createdAt?.slice(0, 10) }}</p>
+        </div>
+      </div>
+
+      <!-- Card: Detalle del Producto -->
+      <div class="border border-gray-100 rounded-xl p-4 space-y-3">
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Producto Vendido</span>
+        
+        <div class="flex justify-between items-center bg-orange-50/50 p-3 rounded-xl border border-orange-100">
+          <div>
+            <p class="font-black text-[#1a2332] uppercase">{{ getInfo?.Name }}</p>
+            <p class="text-xs text-gray-500" v-if="getInfo?.Serial">Serial: {{ getInfo.Serial }}</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2.5 py-1 rounded-lg">
+              {{ getInfo?.Units }} {{ getInfo?.unit_measurement || 'und' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Desglose de Pago y Tipo -->
+      <div class="space-y-2">
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Método de Pago</span>
+        
+        <div class="flex items-center justify-between p-3 bg-purple-50/50 rounded-xl border border-purple-100">
+          <div class="flex items-center gap-2">
+            <span class="material-icons text-purple-600">payments</span>
+            <span class="font-bold text-purple-900">{{ getInfo?.methodPayment || 'N/A' }}</span>
+          </div>
+          <span class="text-xs font-bold text-purple-700">
+            $ {{ (getInfo?.Total || 0).toLocaleString('es-CO') }}
+          </span>
+        </div>
+
+        <!-- Si el pago fue Híbrido, muestra el desglose exacto -->
+        <div v-if="getInfo?.methodPayment === 'Híbrido'" class="grid grid-cols-2 gap-2 text-xs pt-1">
+          <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-100">
+            <span class="text-gray-400 block text-[10px]">Efectivo:</span>
+            <span class="font-bold text-emerald-600">$ {{ (getInfo?.cashAmount || 0).toLocaleString('es-CO') }}</span>
+          </div>
+          <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-100">
+            <span class="text-gray-400 block text-[10px]">Transferencia / Tarjeta:</span>
+            <span class="font-bold text-blue-600">$ {{ (getInfo?.transferAmount || 0).toLocaleString('es-CO') }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de Cálculos Financieros -->
+      <div class="bg-gray-50/80 rounded-xl p-4 border border-gray-100 space-y-2">
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-2">Resumen Financiero</span>
+        
+        <div class="flex justify-between text-xs text-gray-600">
+          <span>Precio Unitario:</span>
+          <span class="font-semibold">$ {{ (getInfo?.Price || 0).toLocaleString('es-CO') }}</span>
+        </div>
+
+        <div class="flex justify-between text-xs text-gray-600">
+          <span>Subtotal:</span>
+          <span class="font-semibold">$ {{ ((getInfo?.Units || 0) * (getInfo?.Price || 0)).toLocaleString('es-CO') }}</span>
+        </div>
+
+        <div v-if="getInfo?.Discount > 0" class="flex justify-between text-xs text-red-500 font-semibold">
+          <span>Descuento Aplicado:</span>
+          <span>- $ {{ getInfo.Discount.toLocaleString('es-CO') }}</span>
+        </div>
+
+        <div v-if="getInfo?.Iva > 0" class="flex justify-between text-xs text-gray-600">
+          <span>IVA ({{ getInfo.Iva }}%):</span>
+          <span class="font-semibold">$ {{ (((getInfo.Units * getInfo.Price - getInfo.Discount) * getInfo.Iva) / 100).toLocaleString('es-CO') }}</span>
+        </div>
+
+        <div class="pt-3 border-t border-gray-200 flex justify-between items-center">
+          <span class="font-black text-[#1a2332]">Total Cobrado:</span>
+          <span class="text-xl font-black text-orange-600">
+            $ {{ (getInfo?.Total || 0).toLocaleString('es-CO') }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Notas o Descripción Adicional -->
+      <div v-if="getInfo?.description" class="p-3 bg-amber-50/60 rounded-xl border border-amber-100 text-xs">
+        <span class="font-bold text-amber-800 block mb-0.5">Descripción / Observación:</span>
+        <p class="text-amber-700 italic">{{ getInfo.description }}</p>
+      </div>
+
+    </div>
+
+    <!-- Pie del Modal -->
+    <div class="p-4 bg-gray-50 border-t border-gray-100 flex justify-end shrink-0">
+      <button 
+        @click="showModalInfo = false" 
+        class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 active:scale-[0.98] text-gray-700 text-xs font-bold rounded-xl transition-all"
+      >
+        CERRAR
+      </button>
+    </div>
+    </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -233,6 +374,7 @@ const storeInventory = inventoryStore();
 
 // Estados de la Interfaz (UI)
 let showModalEdit = ref(false);
+let showModalInfo = ref(false);
 let loading = ref(false);
 let filter = ref("");
 
@@ -250,7 +392,7 @@ let salesToday = ref(0);
 let salesMonth = ref(0);
 let cantSalesToday = ref(0);
 
-
+let getInfo = ref(null);
 
 // variables paginacion 
 let rows = ref([]);
@@ -273,11 +415,12 @@ async function ExitsGet() {
       limit: itemsPerPage.value,
       search: filter.value
     });
-
+    console.log(res);
+    
     if (res && res.status < 299) {
       // Extraemos los arreglos según la estructura entregada por el backend
       rows.value = res.data?.exits || [];
-      console.log(rows.value);
+      
       if (res.data?.pagination) {
         totalPages.value = res.data.pagination.totalPages || 1;
         totalRecords.value = res.data.pagination.totalRecords || 0;
@@ -346,6 +489,14 @@ function openEdit(row) {
   showModalEdit.value = true;
 }
 
+// Prepara los datos del formulario con la información 
+function openInfo(row) {
+  index.value = row._id;
+  showModalInfo.value = true;
+  getInfo.value = row;
+  console.log(getInfo.value);
+}
+
 /**
  * Llena las variables reactivas con la información de la fila seleccionada
  */
@@ -356,6 +507,11 @@ function goInfo(data) {
   priceExit.value = data.Price;
   discount.value = data.Discount;
 }
+
+/**
+ * Llena las variables reactivas con la información de la fila seleccionada
+ */
+
 
 /**
  * Actualiza un registro de salida existente
@@ -431,16 +587,7 @@ async function deleteItem(data) {
  
 }
 
-/**
- * Limpia las variables del formulario
- */
-function cleanForm() {
-  nameExit.value = "";
-  serialExit.value = "";
-  units2.value = "";
-  priceExit.value = "";
-  discount.value = "";
-}
+
 
 /**
  * Filtro de búsqueda en tiempo real para la tabla

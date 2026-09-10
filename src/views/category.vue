@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:p-20 p-6 bg-[#f8fafc] min-h-screen">
+  <div class="lg:p-10 p-6 bg-[#f8fafc] min-h-screen">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
       <div>
@@ -126,8 +126,10 @@
               @click="prevPage" 
               :disabled="currentPage === 1"
               class="flex items-center justify-center p-2 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
+              title="Página anterior"
             >
               <span class="material-icons text-base">chevron_left</span>
+              
             </button>
 
             <span class="px-3 font-bold text-[#1a2332]">
@@ -138,6 +140,7 @@
               @click="nextPage" 
               :disabled="currentPage >= totalPages"
               class="flex items-center justify-center p-2 rounded-xl border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:hover:bg-transparent transition-all cursor-pointer disabled:cursor-not-allowed"
+              title="Siguiente página"
             >
               <span class="material-icons text-base">chevron_right</span>
             </button>
