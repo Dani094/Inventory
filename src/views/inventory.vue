@@ -1081,7 +1081,7 @@
         </div>
 
         <!-- Footer -->
-        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end mb-20">
           <button 
             @click="showModalInfo = false"
             class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all duration-200"

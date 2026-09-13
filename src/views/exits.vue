@@ -220,32 +220,34 @@
 
 
      <!-- modal edit -->
-    <div v-if="showModalInfo" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalInfo = false"></div>
-      <div class="bg-white w-full max-w-lg rounded-[1rem] shadow-2xl z-10 overflow-hidden animate-modal">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl z-10 overflow-hidden animate-modal max-h-[90vh] flex flex-col">
+<div v-if="showModalInfo" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalInfo = false"></div>
+
+  <!-- Tarjeta Modal Unificada -->
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl z-10 overflow-hidden animate-modal max-h-[90vh] flex flex-col">
     
-    <!-- Encabezado -->
-    <div class="bg-[#1a2332] p-6 text-white flex justify-between items-center shrink-0">
+    <!-- Encabezado (Fijo arriba) -->
+    <div class="bg-[#1a2332] p-4 sm:p-5 text-white flex justify-between items-center shrink-0">
       <div class="flex items-center gap-3">
         <div class="p-2 bg-orange-500/20 rounded-xl text-orange-400">
           <span class="material-icons">receipt_long</span>
         </div>
         <div>
-          <h3 class="text-lg font-black uppercase tracking-tight">Detalle de Venta</h3>
+          <h3 class="text-base sm:text-lg font-black uppercase tracking-tight leading-tight">Detalle de Venta</h3>
           <p class="text-xs text-gray-400">Factura #{{ getInfo?.NumBill || 'S/F' }}</p>
         </div>
       </div>
-      <button @click="showModalInfo = false" class="text-gray-400 hover:text-white hover:rotate-90 transition-all p-1">
+      <button @click="showModalInfo = false" class="text-gray-400 hover:text-white hover:rotate-90 transition-all p-1 outline-none">
         <span class="material-icons text-2xl">close</span>
       </button>
     </div>
 
-    <!-- Cuerpo Escroleable -->
-    <div class="p-6 overflow-y-auto space-y-5 text-gray-700 text-sm">
+    <!-- Cuerpo Escroleable (Flex Grow + Overflow) -->
+    <div class="p-4 sm:p-6 overflow-y-auto flex-1 min-h-0 space-y-4 sm:space-y-5 text-gray-700 text-sm">
       
       <!-- Card: Información del Cliente -->
-      <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 flex items-start justify-between">
+      <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-100 flex items-start justify-between">
         <div class="space-y-1">
           <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Cliente</span>
           <p class="font-bold text-[#1a2332]">{{ getInfo?.customer_id?.Name || 'Cliente No Registrado' }}</p>
@@ -260,7 +262,7 @@
       </div>
 
       <!-- Card: Detalle del Producto -->
-      <div class="border border-gray-100 rounded-xl p-4 space-y-3">
+      <div class="border border-gray-100 rounded-xl p-3.5 space-y-2">
         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Producto Vendido</span>
         
         <div class="flex justify-between items-center bg-orange-50/50 p-3 rounded-xl border border-orange-100">
@@ -268,7 +270,7 @@
             <p class="font-black text-[#1a2332] uppercase">{{ getInfo?.Name }}</p>
             <p class="text-xs text-gray-500" v-if="getInfo?.Serial">Serial: {{ getInfo.Serial }}</p>
           </div>
-          <div class="text-right">
+          <div class="text-right shrink-0">
             <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2.5 py-1 rounded-lg">
               {{ getInfo?.Units }} {{ getInfo?.unit_measurement || 'und' }}
             </span>
@@ -276,8 +278,7 @@
         </div>
       </div>
 
-
-      <!-- Desglose de Pago y Tipo -->
+      <!-- Desglose de Pago -->
       <div class="space-y-2">
         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Método de Pago</span>
         
@@ -286,12 +287,12 @@
             <span class="material-icons text-purple-600">payments</span>
             <span class="font-bold text-purple-900">{{ getInfo?.methodPayment || 'N/A' }}</span>
           </div>
-          <span class="text-xs font-bold text-purple-700">
+          <span class="text-xs sm:text-sm font-bold text-purple-700">
             $ {{ (getInfo?.Total || 0).toLocaleString('es-CO') }}
           </span>
         </div>
 
-        <!-- Si el pago fue Híbrido, muestra el desglose exacto -->
+        <!-- Pago Híbrido -->
         <div v-if="getInfo?.methodPayment === 'Híbrido'" class="grid grid-cols-2 gap-2 text-xs pt-1">
           <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-100">
             <span class="text-gray-400 block text-[10px]">Efectivo:</span>
@@ -305,7 +306,7 @@
       </div>
 
       <!-- Tabla de Cálculos Financieros -->
-      <div class="bg-gray-50/80 rounded-xl p-4 border border-gray-100 space-y-2">
+      <div class="bg-gray-50/80 rounded-xl p-3.5 sm:p-4 border border-gray-100 space-y-2">
         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-2">Resumen Financiero</span>
         
         <div class="flex justify-between text-xs text-gray-600">
@@ -328,9 +329,9 @@
           <span class="font-semibold">$ {{ (((getInfo.Units * getInfo.Price - getInfo.Discount) * getInfo.Iva) / 100).toLocaleString('es-CO') }}</span>
         </div>
 
-        <div class="pt-3 border-t border-gray-200 flex justify-between items-center">
+        <div class="pt-2.5 border-t border-gray-200 flex justify-between items-center">
           <span class="font-black text-[#1a2332]">Total Cobrado:</span>
-          <span class="text-xl font-black text-orange-600">
+          <span class="text-lg sm:text-xl font-black text-orange-600">
             $ {{ (getInfo?.Total || 0).toLocaleString('es-CO') }}
           </span>
         </div>
@@ -344,18 +345,8 @@
 
     </div>
 
-    <!-- Pie del Modal -->
-    <div class="p-4 bg-gray-50 border-t border-gray-100 flex justify-end shrink-0">
-      <button 
-        @click="showModalInfo = false" 
-        class="px-5 py-2.5 bg-gray-200 hover:bg-gray-300 active:scale-[0.98] text-gray-700 text-xs font-bold rounded-xl transition-all"
-      >
-        CERRAR
-      </button>
-    </div>
-    </div>
-      </div>
-    </div>
+  </div>
+</div>
   </div>
 </template>
 
