@@ -325,9 +325,9 @@
           <span>- $ {{ getInfo.Discount.toLocaleString('es-CO') }}</span>
         </div>
 
-        <div v-if="getInfo?.Iva > 0" class="flex justify-between text-xs text-gray-600">
-          <span>IVA ({{ getInfo.Iva }}%):</span>
-          <span class="font-semibold">$ {{ (((getInfo.Units * getInfo.Price - getInfo.Discount) * getInfo.Iva) / 100).toLocaleString('es-CO') }}</span>
+        <div v-if="getInfo?.iva > 0" class="flex justify-between text-xs text-gray-600">
+          <span>IVA ({{ getInfo.iva }}%):</span>
+          <span class="font-semibold">$ {{ (((getInfo.Units * getInfo.Price - getInfo.Discount) * getInfo.iva) / 100).toLocaleString('es-CO') }}</span>
         </div>
 
         <div class="pt-2.5 border-t border-gray-200 flex justify-between items-center">
@@ -486,7 +486,6 @@ function openInfo(row) {
   index.value = row._id;
   showModalInfo.value = true;
   getInfo.value = row;
-  console.log(getInfo.value);
 }
 
 /**
