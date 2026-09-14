@@ -219,16 +219,17 @@
     </div>
 
 
-     <!-- modal edit -->
+     <!-- modal info -->
 <div v-if="showModalInfo" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
   <!-- Backdrop -->
   <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalInfo = false"></div>
 
   <!-- Tarjeta Modal Unificada -->
-  <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl z-10 overflow-hidden animate-modal max-h-[90vh] flex flex-col">
+  <!-- OBLIGATORIO: 'flex flex-col' para que el encabezado y el cuerpo se apilen verticalmente -->
+  <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl z-10 overflow-hidden animate-modal max-h-[98vh] flex flex-col">
     
-    <!-- Encabezado (Fijo arriba) -->
-    <div class="bg-[#1a2332] p-4 sm:p-5 text-white flex justify-between items-center shrink-0">
+    <!-- Encabezado (shrink-0 para evitar que se reduzca) -->
+    <div class="bg-[#1a2332] p-4 sm:p-5 text-white flex justify-between items-center shrink-0 w-full">
       <div class="flex items-center gap-3">
         <div class="p-2 bg-orange-500/20 rounded-xl text-orange-400">
           <span class="material-icons">receipt_long</span>
@@ -243,7 +244,7 @@
       </button>
     </div>
 
-    <!-- Cuerpo Escroleable (Flex Grow + Overflow) -->
+    <!-- Cuerpo Escroleable (flex-1 toma el espacio restante y activa el scroll) -->
     <div class="p-4 sm:p-6 overflow-y-auto flex-1 min-h-0 space-y-4 sm:space-y-5 text-gray-700 text-sm">
       
       <!-- Card: Información del Cliente -->
@@ -601,9 +602,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.animate-modal {
-  animation: pop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+  .animate-modal {
+    animation: pop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
 @keyframes pop {
   from { opacity: 0; transform: scale(0.9) translateY(10px); }
   to { opacity: 1; transform: scale(1) translateY(0); }

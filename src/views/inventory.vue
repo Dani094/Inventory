@@ -901,8 +901,8 @@
               </svg>
             </div>
             <div>
-              <h3 class="text-lg font-bold tracking-wide leading-snug">
-                {{ getInfo.Name || 'Detalle del Producto' }}
+              <h3 class="text-[18px] font-bold tracking-wide leading-snug">
+                {{ (getInfo.Name || 'Detalle del Producto').slice(0, 18) }}
               </h3>
               <p class="text-xs text-slate-400 font-mono">ID: {{ getInfo._id }}</p>
             </div>
@@ -1081,14 +1081,14 @@
         </div>
 
         <!-- Footer -->
-        <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end mb-20">
+        <!-- <div class="px-6  bg-slate-50 border-t border-slate-100 flex justify-end ">
           <button 
             @click="showModalInfo = false"
             class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all duration-200"
           >
             Cerrar
           </button>
-        </div>
+        </div> -->
 
       </div>
     </div>
