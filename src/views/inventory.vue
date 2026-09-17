@@ -499,6 +499,7 @@
             >
           </div>
             
+          <!-- Nombre -->
           <div>
              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">nombre *</span>
             <input required v-model="name" placeholder="Nombre" type="text"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El nombre es obligatorio')"
@@ -506,6 +507,7 @@
             >
           </div>
 
+          <!-- Unidades -->
           <div>
              <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">unidades *</span>
             <input required v-model="units" placeholder="Unidades" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('Anote las unidades del producto')"
@@ -513,6 +515,7 @@
             >
           </div>
 
+          <!-- IVA -->
           <div>
             <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">IVA *</span>
             <input 
@@ -528,16 +531,18 @@
             >
           </div>
 
+          <!-- Precio de Compra -->
           <div>
               <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Precio de Compra *</span>
-            <input required  v-model="priceBuy" placeholder="Precio de Compra" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El precio de compra es obligatorio')"
+            <input required  v-model.number="priceBuy" placeholder="Precio de Compra" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El precio de compra es obligatorio')"
             onchange="this.setCustomValidity('')"
             >
           </div>
 
+          <!-- Stock Mínimo -->
             <div>
               <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">stock mínimo *</span>
-              <input required v-model="minStock" placeholder="Stock mínimo"  inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El stock mínimo es obligatorio')"
+              <input required v-model.number="minStock" placeholder="Stock mínimo"  inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" oninvalid="this.setCustomValidity('El stock mínimo es obligatorio')"
               onchange="this.setCustomValidity('')"
               >
             </div>
@@ -574,9 +579,10 @@
             </select>
           </div>
 
+            <!-- Precio de Venta -->
             <div>
               <span class="text-[10px] text-gray-400 pl-1 font-semibold uppercase tracking-wider block mb-0.5">Precio de Venta *</span>
-              <input v-model="priceSale"  placeholder="Precio de Venta" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="bg-gray-50 rounded-2xl p-3 border-none text-sm" oninvalid="this.setCustomValidity('El precio de venta es obligatorio')" onchange="this.setCustomValidity('')">
+              <input v-model.number="priceSale"  placeholder="Precio de Venta" inputmode="decimal" pattern="[0-9]+([.,][0-9]+)?"  class="bg-gray-50 rounded-2xl p-3 border-none text-sm" oninvalid="this.setCustomValidity('El precio de venta es obligatorio')" onchange="this.setCustomValidity('')">
             </div>
 
             <div>
@@ -704,103 +710,158 @@
 <!-- --------------------------------------------------------------------------------------
       MODAL Exits
 -------------------------------------------------------------------------------------- -->
-    <div v-if="showModalExits" class="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalExits = false"></div>
-      <div class="bg-white w-full max-w-lg rounded-[1rem] shadow-2xl z-10 overflow-hidden animate-modal">
-        <div class="bg-orange-600 p-6 text-white flex justify-between">
-          <h3 class="font-black uppercase tracking-tight">Registrar Venta</h3>
-          <button @click="showModalExits = false"><span class="material-icons">close</span></button>
+<div v-if="showModalExits" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-[#04162d]/40 backdrop-blur-sm" @click="showModalExits = false"></div>
+  <div class="bg-white w-full max-w-lg rounded-[1rem] shadow-2xl z-10 overflow-hidden animate-modal">
+    
+    <div class="bg-orange-600 p-6 text-white flex justify-between">
+      <h3 class="font-black uppercase tracking-tight">Registrar Venta</h3>
+      <button @click="showModalExits = false; cleanExitForm()"><span class="material-icons">close</span></button>
+    </div>
+
+    <form @submit.prevent="ExitsPost" class="p-4 sm:p-8 space-y-4 overflow-y-auto max-h-[85vh]">
+      <!-- Banner del producto -->
+      <div class="p-3 bg-orange-50 rounded-xl text-orange-700 text-xs font-bold flex justify-between items-center">
+        <span>{{ nameExit }}</span>
+        <span class="text-[10px] bg-orange-200/60 px-2 py-0.5 rounded-md">Stock: {{ units2 }}</span>
+      </div>
+
+      <!-- Selector de Modo de Venta -->
+      <div class="space-y-1">
+        <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider block">¿Cómo deseas vender?</label>
+        <div class="grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-2xl">
+          <button 
+            type="button" 
+            @click="saleMode = 'quantity'"
+            :class="saleMode === 'quantity' ? 'bg-white text-orange-600 shadow-sm' : 'text-gray-500'"
+            class="py-2 text-xs font-bold rounded-xl transition-all"
+          >
+             Cantidad / Peso
+          </button>
+          <button 
+            type="button" 
+            @click="saleMode = 'money'"
+            :class="saleMode === 'money' ? 'bg-white text-orange-600 shadow-sm' : 'text-gray-500'"
+            class="py-2 text-xs font-bold rounded-xl transition-all"
+          >
+             Por Dinero ($)
+          </button>
         </div>
-       <form @submit.prevent="ExitsPost" class=" p-4 sm:p-8 space-y-4 overflow-y-auto">
-  <!-- Banner del producto -->
-  <div class="p-3 bg-orange-50 rounded-xl text-orange-700 text-xs font-bold">
-    {{ nameExit }}
-  </div>
+      </div>
 
-  <!-- Campos en Grid -->
-  <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
-    <!-- Cantidad -->
-    <div class="flex flex-col gap-1">
-      <label class="text-xs font-semibold text-gray-600">Cantidad:</label>
-      <input 
-        required 
-        step="any" 
-        v-model.number="unitsExit" 
-        placeholder="Cantidad" 
-        type="number" 
-        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20" 
-        oninvalid="this.setCustomValidity('Cantidad requerida')"
-        onchange="this.setCustomValidity('')"
-      >
-    </div>
+      <!-- Campos en Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
 
-    <!-- Descuento -->
-    <div class="flex flex-col gap-1">
-      <label class="text-xs font-semibold text-gray-600">Descuento ($):</label>
-      <input 
-        step="any" 
-        v-model.number="discount" 
-        placeholder="Descuento" 
-        type="number" 
-        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
-      >
-    </div>
+        <!-- MODO 1: Ingresar por Cantidad / Peso -->
+        <div v-if="saleMode === 'quantity'" class="flex flex-col gap-1">
+          <div class="flex justify-between items-center">
+            <label class="text-xs font-semibold text-gray-600">Cantidad:</label>
+            <!-- Selector de Medida -->
+            <select v-model="unitType" class="text-[10px] font-bold text-orange-600 bg-orange-50 rounded px-1 outline-none">
+              <option value="kg">Kilos (Kg)</option>
+              <option value="g">Gramos (g)</option>
+              <option value="und">Unidades</option>
+            </select>
+          </div>
 
-    <!-- Fecha de venta -->
-    <div class="flex flex-col gap-1">
+          <!-- INPUT CONECTADO A rawInputQuantity -->
+          <input 
+            required 
+            step="any" 
+            v-model.number="rawInputQuantity" 
+            :placeholder="unitType === 'g' ? 'Ej: 500 (gramos)' : 'Ej: 1 (kilo)'" 
+            type="number" 
+            class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20" 
+          >
+          
+          <!-- Ayuda visual que confirma la conversión real -->
+          <span v-if="unitType === 'g'" class="text-[10px] text-gray-500 font-medium pl-1">
+            Equivale en Inventario a: <strong class="text-orange-600">{{ unitsExit }} Kg</strong>
+          </span>
+        </div>
+
+        <!-- MODO 2: Ingresar por Valor en Dinero ($) -->
+        <div v-else class="flex flex-col gap-1">
+          <label class="text-xs font-semibold text-gray-600">Monto deseado ($):</label>
+          <input 
+            required 
+            v-model.number="moneyInput" 
+            placeholder="Ej: 2000" 
+            type="number" 
+            min="0"
+            class="w-full bg-orange-50/50 rounded-2xl p-3 border border-orange-200 text-sm font-bold text-orange-700 outline-none transition-all focus:ring-2 focus:ring-orange-500/20" 
+          >
+          <!-- Aquí sí se usa displayQuantity de manera activa -->
+          <span class="text-[10px] text-gray-500 font-medium pl-1">
+            Equivale a: <strong class="text-orange-600">{{ displayQuantity }}</strong>
+          </span>
+        </div>
+
+        <!-- Descuento -->
+        <div class="flex flex-col gap-1">
+          <label class="text-xs font-semibold text-gray-600">Descuento ($):</label>
+          <input 
+            step="any" 
+            v-model.number="discount" 
+            placeholder="Descuento" 
+            type="number" 
+            class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
+          >
+        </div>
+
+        <!-- Fecha de venta -->
+          <div class="flex flex-col gap-1">
       <label class="text-xs font-semibold text-gray-600">Fecha de venta:</label>
       <input 
         v-model="dateExit" 
         type="date" 
         class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20" 
       >
-    </div>
+      </div>
 
-    <!-- Descripción -->
-    <div class="flex flex-col gap-1">
-      <label class="text-xs font-semibold text-gray-600">Descripción:</label>
-      <input 
-        v-model="descriptionExit" 
-        placeholder="Descripción opcional" 
-        type="text" 
-        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
-      >
-    </div>
+        <!-- Descripción -->
+        <div class="flex flex-col gap-1">
+          <label class="text-xs font-semibold text-gray-600">Descripción:</label>
+          <input 
+            v-model="descriptionExit" 
+            placeholder="Descripción opcional" 
+            type="text" 
+            class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
+          >
+        </div>
 
-      <!-- Cliente -->
-       <div class="flex flex-col gap-1 ">
-        <label class="text-xs font-semibold text-gray-600">Cliente:</label>
-      <select 
-        v-model="customerExit" 
-        required
-        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
-        oninvalid="this.setCustomValidity('Seleccione un cliente')"
-        onchange="this.setCustomValidity('')">
-        <option value="" disabled>Seleccione clientes *</option>
-        <option v-for="item in customersList" :key="item._id" :value="item._id">
-          {{ item.Name }}
-        </option>
-      </select>
-    </div>
+        <!-- Cliente -->
+        <div class="flex flex-col gap-1 col-span-2">
+          <label class="text-xs font-semibold text-gray-600">Cliente:</label>
+          <select 
+            v-model="customerExit" 
+            required
+            class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
+          >
+            <option value="" disabled>Seleccione clientes *</option>
+            <option v-for="item in customersList" :key="item._id" :value="item._id">
+              {{ item.Name }}
+            </option>
+          </select>
+        </div>
 
-  
-<!-- Método de Pago -->
-  <div class="flex flex-col gap-3 md:col-span-2">
-    <div class="flex flex-col gap-1">
-      <label class="text-xs font-semibold text-gray-600">Método de Pago:</label>
-      <select 
-        v-model="methodPayment" 
-        class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
-      >
-        <option value="Efectivo">Efectivo</option>
-        <option value="Tarjeta">Tarjeta</option>
-        <option value="Transferencia">Transferencia</option>
-        <option value="Híbrido">Híbrido (Mixto)</option>
-      </select>
-    </div>
+        <!-- Método de Pago -->
+        <div class="flex flex-col gap-3 col-span-2">
+          <div class="flex flex-col gap-1">
+            <label class="text-xs font-semibold text-gray-600">Método de Pago:</label>
+            <select 
+              v-model="methodPayment" 
+              class="w-full bg-gray-50 rounded-2xl p-3 border border-transparent text-sm text-gray-600 cursor-pointer outline-none transition-all focus:ring-2 focus:ring-purple-500/20"
+            >
+              <option value="Efectivo">Efectivo</option>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Transferencia">Transferencia</option>
+              <option value="Híbrido">Híbrido (Mixto)</option>
+            </select>
+          </div>
 
-    <!-- Desglose de Pago Híbrido -->
-    <div v-if="methodPayment === 'Híbrido'" class="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 space-y-3">
+
+              <div v-if="methodPayment === 'Híbrido'" class="p-4 bg-orange-50/50 rounded-2xl border border-orange-100 space-y-3">
       <p class="text-[11px] font-bold text-orange-700 uppercase tracking-wider">Desglose de Pago Mixto</p>
 
       <div class="grid grid-cols-2 sm:grid-cols-2 gap-3">
@@ -837,45 +898,45 @@
         </span>
       </div>
     </div>
-  </div>
-    
-  
-  </div>
 
-  <!-- Resumen de Totales y Stock -->
-<div class="bg-orange-600/10 p-4 rounded-xl text-orange-800 space-y-1">
-  <div class="flex justify-between text-xs font-medium">
-    <span>Stock Restante:</span>
-    <span class="font-bold">{{ units2 - (unitsExit || 0) }}</span>
-  </div>
-  <div class="flex justify-between text-xs font-medium">
-    <span>Precio Unitario:</span>
-    <span class="font-bold">$ {{ (priceExit || 0).toLocaleString('es-CO') }}</span>
-  </div>
-  <div class="flex justify-between text-xs font-medium">
-    <span>IVA %:</span>
-    <span class="font-bold">{{ (ivaExit || 0) }}%</span>
-     <span class="font-bold">$ {{ (((unitsExit || 0) * (priceExit || 0)) * ((ivaExit || 0) / 100)).toLocaleString('es-CO') }}</span>
-  </div>
-  
-  <div class="pt-2 border-t border-orange-200/50 flex justify-between items-center">
-    <span class="text-sm font-bold">Total a Cobrar:</span>
-    <h4 class="text-xl font-black text-orange-700">
-      $ {{ Math.max(0, (((unitsExit || 0) * (priceExit || 0)) - (discount || 0)) * (1 + ((ivaExit || 0) / 100))).toLocaleString('es-CO') }}
-    </h4>
+        </div>
+
+      </div>
+
+      <!-- Resumen de Totales y Stock -->
+      <div class="bg-orange-600/10 p-4 rounded-xl text-orange-800 space-y-1">
+        <div class="flex justify-between text-xs font-medium">
+          <span>Stock Restante:</span>
+          <span class="font-bold">{{ (units2 - (unitsExit || 0)).toLocaleString(  ) }} {{ unit_measurementExit }}  </span>
+        </div>
+        <div class="flex justify-between text-xs font-medium">
+          <span>Precio Unitario :</span>
+          <span class="font-bold">$ {{ (priceExit || 0).toLocaleString('es-CO') }}</span>
+        </div>
+        <div class="flex justify-between text-xs font-medium">
+          <span>IVA %:</span>
+          <span class="font-bold">{{ (ivaExit || 0) }}%</span>
+          <span class="font-bold">$ {{ Math.round(((unitsExit || 0) * (priceExit || 0)) * ((ivaExit || 0) / 100)).toLocaleString('es-CO') }}</span>
+        </div>
+
+        <div class="pt-2 border-t border-orange-200/50 flex justify-between items-center">
+          <span class="text-sm font-bold">Total a Cobrar:</span>
+          <h4 class="text-xl font-black text-orange-700">
+            $ {{ totalSale.toLocaleString('es-CO') }}
+          </h4>
+        </div>
+      </div>
+
+      <!-- Botón de Acción -->
+      <button 
+        type="submit" 
+        class="w-full bg-orange-600 hover:bg-orange-700 active:scale-[0.99] text-white font-bold py-3.5 rounded-2xl transition-all shadow-md shadow-orange-600/20"
+      >
+        CONFIRMAR REGISTRO
+      </button>
+    </form>
   </div>
 </div>
-
-  <!-- Botón de Acción -->
-  <button 
-    type="submit" 
-    class="w-full bg-orange-600 hover:bg-orange-700 active:scale-[0.99] text-white font-bold py-3.5 rounded-2xl transition-all shadow-md shadow-orange-600/20"
-  >
-    CONFIRMAR REGISTRO
-  </button>
-</form>
-      </div>
-    </div>
 
 <!-- Overlay Backdrop -->
   <Transition
@@ -1185,22 +1246,75 @@ const totalRecords = ref(0);
 // Estados para el pago híbrido
 const cashAmount = ref(0);
 const transferAmount = ref(0);
+const saleMode = ref('quantity');    // 'quantity' (Peso/Unidades) o 'money' (Monto $)
+const unitType = ref('kg');          // 'kg', 'g', o 'und'
+const moneyInput = ref(null);  
+const rawInputQuantity = ref(1);      // Valor ingresado si elige vender por dinero ($)
+         // Almacena siempre la cantidad base en KG/Unidades que va al backend
 
+
+
+watch([rawInputQuantity, unitType, saleMode], () => {
+  if (saleMode.value === 'quantity') {
+    const val = Number(rawInputQuantity.value) || 0;
+    
+    if (unitType.value === 'g') {
+      // Si digita 500 gramos -> unitsExit pasa a ser 0.5 Kg
+      unitsExit.value = val / 1000;
+    } else {
+      // Si son Kg o Unidades -> queda igual
+      unitsExit.value = val;
+    }
+  }
+});
+
+
+watch([moneyInput, priceExit], ([newMoney, price]) => {
+  if (saleMode.value === 'money') {
+    const dinero = Number(newMoney) || 0;
+    const p = Number(price) || 0;
+    unitsExit.value = p > 0 ? Number((dinero / p).toFixed(4)) : 0;
+  }
+});
+
+
+// C. MENSAGE INFORMATIVO PARA MODO DINERO ($)
+const displayQuantity = computed(() => {
+  const kilos = Number(unitsExit.value) || 0;
+    console.log(unitType.value);
+    
+  if (unitType.value === 'g') {
+    return `${(kilos * 1000).toLocaleString('es-CO')} Gramos`;
+  }
+  if (unitType.value === 'kg') {
+    return `${kilos.toLocaleString('es-CO')} Kg`;
+  }
+  return `${kilos.toLocaleString('es-CO')} Unidades`;
+});
+
+// Cálculo del Total a Cobrar
 const totalSale = computed(() => {
+  // Si el usuario vende por monto exacto ($), retornamos ese valor redondeado directamente
+  if (saleMode.value === 'money' && moneyInput.value !== null && moneyInput.value !== '') {
+    return Math.max(0, Math.round(Number(moneyInput.value) || 0));
+  }
+
+  // Si vende por Peso / Cantidad:
   const units = Number(unitsExit.value) || 0;
   const price = Number(priceExit.value) || 0;
   const disc = Number(discount.value) || 0;
   const iva = Number(ivaExit.value) || 0;
 
   const subtotal = (units * price) - disc;
-  const total = subtotal * (1 + (iva / 100));
+  const totalConIva = subtotal * (1 + (iva / 100));
 
-  return Math.max(0, Math.round(total)); // Redondeado para evitar decimales infinitos
+  return Math.max(0, Math.round(totalConIva));
 });
 
-
 const totalHybridPayment = computed(() => {
-  return (Number(cashAmount.value) || 0) + (Number(transferAmount.value) || 0);
+  const cash = Number(cashAmount.value) || 0;
+  const transfer = Number(transferAmount.value) || 0;
+  return Math.round(cash + transfer);
 });
 
 // Función para calcular automáticamente la contraparte
@@ -1421,6 +1535,8 @@ async function InventoryPost() {
 }
 
 async function InventoryPut() {
+  console.log(index.value, supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value, serial.value, minStock.value, ivaTax.value);
+  
   loading.value = true;
   await storeInventory.PutInventory(index.value, supplier.value, name.value, units.value, priceBuy.value, priceSale.value, expirationDate.value, user.value, unit_measurement.value, measurement_type.value, description.value,  serial.value, minStock.value, ivaTax);
   showModalEdit.value = false;
@@ -1472,7 +1588,7 @@ async function ExitsPost() {
     await storeInventory.PutUnits(index.value, -cantSalida);
     showModalExits.value = false;     
     await InventoryGet(); 
-    cleanForm();
+    cleanExitForm();
   } catch (error) {
     console.error("Error en el proceso de salida:", error);
     alert("Hubo un error al descontar del inventario");
@@ -1531,6 +1647,7 @@ function goInfo3(data) {
   priceExit.value = data.PriceBuy; 
   unit_measurement.value = data.unit_measurement
 
+  
 }
 
 function cleanForm() {
@@ -1542,17 +1659,27 @@ function cleanForm() {
   expirationDate.value = null;
   copias.value = "";
   crearCopias.value = null;
-  unitsExit.value = 0;
-  discount.value = 0;
   description.value = "";
   serial.value = "";
-  descriptionExit.value = "";
   unit_measurement.value = "";
   minStock.value = null;
   categoryId.value = "";
   ivaTax.value = 0;
 
 }
+
+function cleanExitForm() {
+  unitsExit.value = 0;
+  discount.value = 0;
+  descriptionExit.value = "";
+  customerExit.value = "";
+  methodPayment.value = "Efectivo";
+  cashAmount.value = 0;
+  transferAmount.value = 0;
+  dateExit.value = null;
+  rawInputQuantity.value = 0;
+} 
+
 </script>
 
 <!-- <style scoped>
